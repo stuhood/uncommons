@@ -9,5 +9,4 @@ lib_managed/
 *.swp
 *.iml
 .idea/
-.ensime
-.ivyjars
+.DS_Store
