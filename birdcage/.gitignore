@@ -1,3 +1,4 @@
+.idea/
 target/
 dist/
 project/boot/
@@ -8,7 +9,9 @@ project/plugins/src_managed/
 lib_managed/
 *.swp
 *.iml
-.idea/
-.DS_Store
+out/
 .ensime
+*~
+*#
+.#*
 .ivyjars
