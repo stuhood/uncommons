@@ -1,4 +1,3 @@
-finagle-native/lib/finaglenative.jar
 target/
 dist/
 project/boot/
@@ -9,11 +8,8 @@ project/plugins/src_managed/
 lib_managed/
 *.swp
 *.iml
-out/
-.ensime
-*~
-*#
-.#*
-.ivyjars
-.idea
+.idea/
 .DS_Store
+.ensime
+.ivyjars
+sbt
