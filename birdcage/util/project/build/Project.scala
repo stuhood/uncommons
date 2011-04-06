@@ -4,7 +4,7 @@ import com.twitter.sbt._
 class Project(info: ProjectInfo)
   extends StandardParentProject(info)
   with SubversionPublisher
-  with ParentProjectDependencies
+  with ProjectDependencies
   with TartifactoryRepos
 {
   override def proxyRepo = "open-source"
