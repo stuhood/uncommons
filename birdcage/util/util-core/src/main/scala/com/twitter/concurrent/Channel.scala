@@ -2,8 +2,6 @@ package com.twitter.concurrent
 
 import com.twitter.util._
 import scala.collection.mutable.ArrayBuffer
-import java.util.concurrent.ConcurrentHashMap
-import scala.collection.JavaConversions._
 
 /**
  * A Channel is a unidirectional, read-only communication object. It
@@ -34,8 +32,7 @@ trait Channel[+A] extends Serialized {
    *
    * ''Note'': hard references may be kept to callbacks added to a channel
    * It is the callers responsibility to dispose() of the Observer to
-   * prevent memory leaks. Consider adding finalizers to classes that
-   * create Observers, and dispose() all observers.
+   * prevent memory leaks.
    *
    * @param k A function returning Future[Unit] indicating that the message
    * has been fully processed.
@@ -111,11 +108,11 @@ trait Channel[+A] extends Serialized {
   }
 
   /**
-   * Produce a new channel, keeping elements only where the predicate
+   * Produce a new channel, eliminating elements where the predicate
    * obtains.
    */
   def filter(p: A => Boolean): Channel[A] = collect {
-    case a if p(a) => a
+    case a if !p(a) => a
   }
 
   /**
@@ -160,7 +157,7 @@ trait Channel[+A] extends Serialized {
    * this can be used to attach several observers at once without the possibility
    * of one of the observers being invoked before the others were attached. If
    * two or more observers share mutable state, this would be used to eliminate
-   * race-conditions leading to a sad data-integrity pickle, poor lad.
+   * race-conditions leading to data-integrity woes.
    */
   override def serialized[A](f: => A) = super.serialized(f)
 }
@@ -172,13 +169,10 @@ trait Channel[+A] extends Serialized {
  */
 class ChannelSource[A] extends Channel[A] {
   @volatile private[this] var open = true
-
-  // Behaving as a concurrent set with O(1) deletion.
-  private[this] val _observers =
-    new JConcurrentMapWrapper(new ConcurrentHashMap[ObserverSource[A], ObserverSource[A]])
+  private[this] val _observers = collection.mutable.Set[ObserverSource[A]]()
 
   // private as read-write.
-  // note that lazy-vals are @volatile and thus publish the XisDefined booleans.
+  // note that lazy-vals are volatile and thus publish the XisDefined booleans.
   private[this] var respondsIsDefined = false
   private[this] lazy val _responds = {
     respondsIsDefined = true
@@ -214,27 +208,16 @@ class ChannelSource[A] extends Channel[A] {
 
   /**
    * A Channel that emits an Int representing the current number of subscribers.
-   * This is often used to start/stop producing as Observers are added and removed.
-   *
-   *     channel.numObservers.respond {
-   *       case 0 => stop()
-   *       case 1 => start()
-   *       case _ =>
-   *     }
    */
   def numObservers: Channel[Int] = _numObservers
 
-  /**
-   * A Future[Unit] that indicates when the channel is closed.
-   */
   val closes:   Future[Unit]      = _closes
 
   def isOpen = open
 
   /**
    * Send a message to all observers. Returns a Seq[Future[Observer]]
-   * that indicates completion of delivery for each observer. The return
-   * value is used to exhibit backpressure from consumers to producers.
+   * that indicates completion of delivery for each observer.
    *
    * ''Note'': Delivery is serialized, meaning messages are always delivered
    * by one thread at a time. This ensures that messages arrive in-order,
@@ -246,14 +229,14 @@ class ChannelSource[A] extends Channel[A] {
      * delivery.
      */
     val observersCopy = new ArrayBuffer[ObserverSource[A]]
-    _observers.keys.copyToBuffer(observersCopy)
+    _observers.copyToBuffer(observersCopy)
 
     val result = observersCopy map { _ =>
       new Promise[Observer]
     }
 
     serialized {
-      observersCopy.zip(result) map { case (observer, promise) =>
+      _observers.zip(result) map { case (observer, promise) =>
         observer(a) map { _ => observer} proxyTo promise
       }
     }
@@ -285,7 +268,7 @@ class ChannelSource[A] extends Channel[A] {
     val observer = new ConcreteObserver(listener)
     serialized {
       if (open) {
-        _observers += observer -> observer
+        _observers += observer
         _numObservers.send(_observers.size)
         _responds.send(observer)
       }
@@ -293,15 +276,13 @@ class ChannelSource[A] extends Channel[A] {
     observer
   }
 
-  private[this] class ConcreteObserver(listener: A => Future[Unit]) extends ObserverSource[A] {
+  private[this] class ConcreteObserver(listener: A => Future[Unit]) extends ObserverSource[A] with Serialized {
     def apply(a: A) = { listener(a) }
 
     def dispose() {
-      ChannelSource.this.serialized {
-        _observers.remove(this)
-        _numObservers.send(_observers.size)
-        _disposes.send(this)
-      }
+      _observers.remove(this)
+      _numObservers.send(_observers.size)
+      _disposes.send(this)
     }
   }
 }
