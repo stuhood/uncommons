@@ -18,8 +18,3 @@ lib_managed/
 .ensime
 .ivyjars
 sbt
-#*
-*#
-.#*
-*~
-.*~
