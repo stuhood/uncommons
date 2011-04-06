@@ -3,15 +3,11 @@ dist/
 project/boot/
 project/plugins/project/
 project/plugins/src_managed/
-**/project/boot/
-**/project/plugins/project/
-**/project/plugins/src_managed/
 *.log
 *.tmproj
 lib_managed/
 *.swp
 *.iml
-*.pyc
 .idea/
 .idea/*
 .DS_Store
