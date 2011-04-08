@@ -19,3 +19,8 @@ lib_managed/
 .ivyjars
 /.py/
 sbt
+#*
+*#
+.#*
+*~
+.*~
