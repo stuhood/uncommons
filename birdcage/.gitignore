@@ -17,9 +17,5 @@ lib_managed/
 .DS_Store
 .ensime
 .ivyjars
+/.py/
 sbt
-#*
-*#
-.#*
-*~
-.*~
