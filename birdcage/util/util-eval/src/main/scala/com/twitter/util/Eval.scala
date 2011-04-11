@@ -33,29 +33,24 @@ import scala.tools.nsc.util.{BatchSourceFile, Position}
 /**
  * Evaluate a file or string and return the result.
  */
-@deprecated("use a throw-away instance of Eval instead")
-object Eval extends Eval {
-  private val jvmId = java.lang.Math.abs(new Random().nextInt())
-}
-
-class Eval {
-  import Eval.jvmId
-
-  private lazy val compilerPath = try {
+object Eval {
+  private val compilerPath = try {
     jarPathOfClass("scala.tools.nsc.Interpreter")
   } catch {
     case e =>
       throw new RuntimeException("Unable lo load scala interpreter from classpath (scala-compiler jar is missing?)", e)
   }
 
-  private lazy val libPath = try {
+  private val libPath = try {
     jarPathOfClass("scala.ScalaObject")
   } catch {
     case e =>
       throw new RuntimeException("Unable to load scala base object from classpath (scala-library jar is missing?)", e)
   }
 
-  private lazy val compiler = new StringCompiler(2)
+  private val jvmId = java.lang.Math.abs(new Random().nextInt())
+
+  val compiler = new StringCompiler(2)
 
   /**
    * Eval[Int]("1 + 1") // => 2
@@ -151,7 +146,7 @@ class Eval {
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
    */
-  private class StringCompiler(lineOffset: Int) {
+  class StringCompiler(lineOffset: Int) {
     val virtualDirectory = new VirtualDirectory("(memory)", None)
 
     val cache = new mutable.HashMap[String, Class[_]]()
