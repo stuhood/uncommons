@@ -17,6 +17,7 @@ lib_managed/
 .DS_Store
 .ensime
 .ivyjars
+.run_classpath
 /.py/
 sbt
 #*
