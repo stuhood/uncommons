@@ -22,10 +22,17 @@ import java.util.{logging => javalog}
 import org.specs.Specification
 import com.twitter.conversions.string._
 import com.twitter.conversions.time._
-import com.twitter.util.{Time, Duration}
+import com.twitter.util.Duration
 import config._
 
 class ScribeHandlerSpec extends Specification {
+  def config(time: Duration, max: Int, _formatter: FormatterConfig) = new ScribeHandlerConfig {
+    formatter = _formatter
+    category = "test"
+    bufferTime = time
+    maxMessagesToBuffer = max
+  }
+
   val record1 = new javalog.LogRecord(Level.INFO, "This is a message.")
   record1.setMillis(1206769996722L)
   record1.setLoggerName("hello")
@@ -40,38 +47,24 @@ class ScribeHandlerSpec extends Specification {
     }
 
     "build a scribe RPC call" in {
-      Time.withCurrentTimeFrozen { _ =>
-        val scribe = new ScribeHandlerConfig {
-          // This is a huge hack to make sure that the buffer doesn't
-          // get flushed.
-          port = 50505
-          bufferTime = 100.milliseconds
-          maxMessagesToBuffer = 10000
-          formatter = new FormatterConfig { timezone = "UTC" }
-          category = "test"
-          level = Level.DEBUG
-        }.apply()
-        scribe.publish(record1)
-        scribe.publish(record2)
-        scribe.queue must haveSize(2)
-        scribe.makeBuffer(2).array.hexlify mustEqual (
-          "000000b080010001000000034c6f67000000000f0001" +
-          "0c000000020b000100000004746573740b0002000000" +
-          "36494e46205b32303038303332392d30353a35333a31" +
-          "362e3732325d2068656c6c6f3a205468697320697320" +
-          "61206d6573736167652e0a000b000100000004746573" +
-          "740b00020000003c494e46205b32303038303332392d" +
-          "30353a35333a31362e3732325d2068656c6c6f3a2054" +
-          "68697320697320616e6f74686572206d657373616765" +
-          "2e0a0000")
-      }
+      val scribe = new ScribeHandlerConfig {
+        bufferTime = 100.milliseconds
+        maxMessagesToBuffer = 10000
+        formatter = new FormatterConfig { timezone = "UTC" }
+        category = "test"
+        level = Level.DEBUG
+      }.apply()
+      scribe.publish(record1)
+      scribe.publish(record2)
+      scribe.makeBuffer(2).array.hexlify mustEqual "000000b080010001000000034c6f67000000000f0001" +
+        "0c000000020b000100000004746573740b000200000036494e46205b32303038303332392d30353a35333a3" +
+        "1362e3732325d2068656c6c6f3a20546869732069732061206d6573736167652e0a000b0001000000047465" +
+        "73740b00020000003c494e46205b32303038303332392d30353a35333a31362e3732325d2068656c6c6f3a2" +
+        "05468697320697320616e6f74686572206d6573736167652e0a0000"
     }
 
     "be able to log binary data" in {
       val scribe = new ScribeHandlerConfig {
-        // This is a huge hack to make sure that the buffer doesn't
-        // get flushed.
-        port = 50505
         bufferTime = 100.milliseconds
         maxMessagesToBuffer = 10000
         formatter = new FormatterConfig { timezone = "UTC" }
@@ -88,9 +81,6 @@ class ScribeHandlerSpec extends Specification {
 
     "throw away log messages if scribe is too busy" in {
       val scribe = new ScribeHandlerConfig {
-        // This is a huge hack to make sure that the buffer doesn't
-        // get flushed.
-        port = 50505
         bufferTime = 5.seconds
         maxMessagesToBuffer = 1
         formatter = BareFormatterConfig
