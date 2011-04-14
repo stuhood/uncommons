@@ -19,9 +19,9 @@ lib_managed/
 .ivyjars
 .run_classpath
 /.py/
-sbt
 #*
 *#
 .#*
 *~
 .*~
+/bin/sbt-launch-0.7.5.jar
