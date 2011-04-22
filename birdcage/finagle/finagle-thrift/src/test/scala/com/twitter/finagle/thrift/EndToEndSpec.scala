@@ -14,8 +14,7 @@ import org.jboss.netty.channel.local._
 import org.jboss.netty.channel.socket.nio._
 
 import com.twitter.test.{B, SomeStruct, AnException, F}
-import com.twitter.finagle.tracing
-import com.twitter.finagle.tracing.{Trace, Annotation, Event}
+import com.twitter.finagle.tracing.Trace
 import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
 import com.twitter.finagle.util.Conversions._
 import com.twitter.silly.Silly
@@ -30,7 +29,7 @@ object EndToEndSpec extends Specification {
       def multiply(a: Int, b: Int) = Future { a * b }
       def complex_return(someString: String) = Future {
         Trace.record("hey it's me!")
-        new SomeStruct(123, Trace().parentId.get.toString)
+        new SomeStruct(123, Trace().traceID.parentSpan.get.toString)
       }
       def someway() = Future.void
     }
@@ -54,20 +53,14 @@ object EndToEndSpec extends Specification {
       val future = client.multiply(10, 30)
       future() must be_==(300)
 
-      Trace.debug(true)
+      import com.twitter.finagle.tracing.BufferingTranscript
+      Trace().transcript = new BufferingTranscript(Trace().traceID)
 
       client.complex_return("a string")().arg_two must be_==(
-        "%s".format(Trace().id.toString))
+        "%s".format(Trace().traceID.span.toString))
 
-      
-      Trace().children must haveSize(1)
-      val childSpan = Trace().children.head
-
-      childSpan.annotations must haveSize(5)
-      val events = childSpan.annotations map { _.event }
-      val texts = events collect { case Event.Message(text) => text }
-      texts must haveSize(1)
-      texts.head must be_==("hey it's me!")
+      Trace().transcript must haveSize(1)
+      Trace().transcript.head.message must be_==("hey it's me!")
 
       client.add(1, 2)() must throwA[AnException]
       client.add_one(1, 2)()  // don't block!

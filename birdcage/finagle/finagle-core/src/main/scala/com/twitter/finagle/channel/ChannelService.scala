@@ -19,9 +19,7 @@ import com.twitter.finagle.util.{Ok, Error, Cancelled, AsyncLatch}
  * channel. It is responsible for requests dispatched to a given
  * (connected) channel during its lifetime.
  */
-private[finagle] class ChannelService[Req, Rep](
-    channel: Channel,
-    factory: ChannelServiceFactory[Req, Rep])
+private[finagle] class ChannelService[Req, Rep](channel: Channel, factory: ChannelServiceFactory[Req, Rep])
   extends Service[Req, Rep]
 {
   private[this] val currentReplyFuture = new AtomicReference[Promise[Rep]]
@@ -113,7 +111,7 @@ private[finagle] class ChannelServiceFactory[Req, Rep](
       case Ok(channel) =>
         channelLatch.incr()
         connectLatencyStat.add(begin.untilNow.inMilliseconds)
-        prepareChannel(new ChannelService[Req, Rep](channel, this)) proxyTo promise
+        prepareChannel(new ChannelService[Req, Rep](channel, this)) respond { promise() = _ }
 
       case Error(cause) =>
         promise() = Throw(new WriteException(cause))

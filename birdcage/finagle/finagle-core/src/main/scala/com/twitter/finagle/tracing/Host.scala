@@ -4,7 +4,7 @@ import java.net.InetAddress
 import java.io.{DataInputStream, ByteArrayInputStream}
 import java.util.logging.Logger
 
-private[tracing] object Host {
+object Host {
   private[this] val log = Logger.getLogger(getClass.toString)
   private[this] lazy val localHost: Int =
     try {

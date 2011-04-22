@@ -13,6 +13,7 @@ class TracingFilter[Req, Rep](receiver: TraceReceiver)
   extends SimpleFilter[Req, Rep]
 {
   def apply(request: Req, service: Service[Req, Rep]) = {
+    Trace.startSpan()
     service(request) ensure {
       receiver.receiveSpan(Trace.endSpan())
     }

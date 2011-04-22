@@ -1,10 +1,10 @@
 package com.twitter.finagle.stream
 
-import org.jboss.netty.buffer.ChannelBuffer
-import org.jboss.netty.channel.{Channels, MessageEvent, ChannelHandlerContext, SimpleChannelUpstreamHandler}
-import java.util.concurrent.atomic.AtomicReference
 import com.twitter.concurrent.ChannelSource
 import com.twitter.util.Future
+import java.util.concurrent.atomic.AtomicReference
+import org.jboss.netty.buffer.ChannelBuffer
+import org.jboss.netty.channel.{Channels, MessageEvent, ChannelHandlerContext, SimpleChannelUpstreamHandler}
 import org.jboss.netty.handler.codec.http._
 
 /**
@@ -17,10 +17,7 @@ class HttpChunkToChannel extends SimpleChannelUpstreamHandler {
 
   override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) = e.getMessage match {
     case message: HttpResponse =>
-      require(message.getStatus == HttpResponseStatus.OK,
-        "Error: status code must be 200 OK: " + message.getStatus)
-      require(message.isChunked,
-        "Error: message must be chunked")
+      require(message.isChunked, "Error: message must be chunked")
 
       val source = new ChannelSource[ChannelBuffer]
       require(channelRef.compareAndSet(null, source),
@@ -34,17 +31,23 @@ class HttpChunkToChannel extends SimpleChannelUpstreamHandler {
           case 1 =>
             ctx.getChannel.setReadable(true)
           case 0 =>
+            // if there are no more observers, then shut everything down
             ctx.getChannel.setReadable(false)
+            ctx.getChannel.close()
+            source.close()
           case _ =>
         }
         Future.Done
       }
 
-      Channels.fireMessageReceived(ctx, source)
+      val response = StreamResponse(message, source)
+      Channels.fireMessageReceived(ctx, response)
+
     case trailer: HttpChunkTrailer =>
       val topic = channelRef.getAndSet(null)
       topic.close()
       ctx.getChannel.setReadable(true)
+
     case chunk: HttpChunk =>
       ctx.getChannel.setReadable(false)
       val topic = channelRef.get
