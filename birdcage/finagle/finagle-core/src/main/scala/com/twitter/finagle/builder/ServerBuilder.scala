@@ -153,9 +153,9 @@ final case class ServerConfig[Req, Rep](
 }
 
 /**
- * A handy Builder for constructing Servers (i.e., binding Services to
- * a port).  This class is subclassable. Override copy() and build()
- * to do your own dirty work.
+ * A handy Builder for constructing Servers (i.e., binding Services to a port).
+ * This class is subclassable. Override copy() and build() to do your own
+ * dirty work.
  */
 class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
   import ServerBuilder._
@@ -167,62 +167,59 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
   protected def copy[Req1, Rep1](config: ServerConfig[Req1, Rep1]) =
     new ServerBuilder(config)
 
-  protected def withConfig[Req1, Rep1](f: ServerConfig[Req, Rep] => ServerConfig[Req1, Rep1]) =
-    copy(f(config))
-
   def codec[Req1, Rep1](codec: Codec[Req1, Rep1]) =
-    withConfig(_.copy(_codec = Some(codec.serverCodec)))
+    copy(config.copy(_codec = Some(codec.serverCodec)))
 
   def codec[Req1, Rep1](codec: ServerCodec[Req1, Rep1]) =
-    withConfig(_.copy(_codec = Some(codec)))
+    copy(config.copy(_codec = Some(codec)))
 
   def reportTo(receiver: StatsReceiver) =
-    withConfig(_.copy(_statsReceiver = Some(receiver)))
+    copy(config.copy(_statsReceiver = Some(receiver)))
 
   def name(value: String) =
-    withConfig(_.copy(_name = Some(value)))
+    copy(config.copy(_name = Some(value)))
 
   def sendBufferSize(value: Int) =
-    withConfig(_.copy(_sendBufferSize = Some(value)))
+    copy(config.copy(_sendBufferSize = Some(value)))
 
   def recvBufferSize(value: Int) =
-    withConfig(_.copy(_recvBufferSize = Some(value)))
+    copy(config.copy(_recvBufferSize = Some(value)))
 
   def bindTo(address: SocketAddress) =
-    withConfig(_.copy(_bindTo = Some(address)))
+    copy(config.copy(_bindTo = Some(address)))
 
   def channelFactory(cf: ReferenceCountedChannelFactory) =
-    withConfig(_.copy(_channelFactory = cf))
+    copy(config.copy(_channelFactory = cf))
 
   def logger(logger: Logger) =
-    withConfig(_.copy(_logger = Some(logger)))
+    copy(config.copy(_logger = Some(logger)))
 
   def tls(certificatePath: String, keyPath: String) =
-    withConfig(_.copy(_tls = Some(certificatePath, keyPath)))
+    copy(config.copy(_tls = Some(certificatePath, keyPath)))
 
   def startTls(value: Boolean) =
-    withConfig(_.copy(_startTls = true))
+    copy(config.copy(_startTls = true))
 
   def maxConcurrentRequests(max: Int) =
-    withConfig(_.copy(_maxConcurrentRequests = Some(max)))
+    copy(config.copy(_maxConcurrentRequests = Some(max)))
 
   def hostConnectionMaxIdleTime(howlong: Duration) =
-    withConfig(_.copy(_hostConnectionMaxIdleTime = Some(howlong)))
+    copy(config.copy(_hostConnectionMaxIdleTime = Some(howlong)))
 
   def hostConnectionMaxLifeTime(howlong: Duration) =
-    withConfig(_.copy(_hostConnectionMaxLifeTime = Some(howlong)))
+    copy(config.copy(_hostConnectionMaxLifeTime = Some(howlong)))
 
   def requestTimeout(howlong: Duration) =
-    withConfig(_.copy(_requestTimeout = Some(howlong)))
+    copy(config.copy(_requestTimeout = Some(howlong)))
 
   def readTimeout(howlong: Duration) =
-    withConfig(_.copy(_readTimeout = Some(howlong)))
+    copy(config.copy(_readTimeout = Some(howlong)))
 
   def writeCompletionTimeout(howlong: Duration) =
-    withConfig(_.copy(_writeCompletionTimeout = Some(howlong)))
+    copy(config.copy(_writeCompletionTimeout = Some(howlong)))
 
   def traceReceiver(receiver: TraceReceiver) =
-    withConfig(_.copy(_traceReceiver = receiver))
+    copy(config.copy(_traceReceiver = receiver))
 
   /**
    * Construct the Server, given the provided Service.

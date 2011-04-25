@@ -14,7 +14,7 @@ import com.twitter.finagle.builder.{
 import com.twitter.finagle.ChannelClosedException
 
 object ClientSpec extends Specification {
-  def withServer(handler: ChannelHandler)(spec: ClientBuilder.Complete[HttpRequest, HttpResponse] => Unit) {
+  def withServer(handler: ChannelHandler)(spec: ClientBuilder[HttpRequest, HttpResponse] => Unit) {
     val cf = new DefaultLocalServerChannelFactory()
 
     val bs = new ServerBootstrap(cf)
@@ -33,7 +33,6 @@ object ClientSpec extends Specification {
       ClientBuilder()
         .channelFactory(new ReferenceCountedChannelFactory(new DefaultLocalClientChannelFactory))
         .hosts(Seq(serverAddress))
-        .hostConnectionLimit(1)
         .codec(Http)
 
     try {

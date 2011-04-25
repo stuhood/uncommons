@@ -38,7 +38,6 @@ object HttpClient {
     val clientWithoutErrorHandling: Service[HttpRequest, HttpResponse] = ClientBuilder()
       .codec(Http)
       .hosts(new InetSocketAddress(8080))
-      .hostConnectionLimit(1)
       .build()
 
     val handleErrors = new HandleErrors

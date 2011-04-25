@@ -9,7 +9,7 @@ import com.twitter.finagle.memcached.util.ChannelBufferUtils._
 import org.jboss.netty.util.CharsetUtil
 import org.jboss.netty.buffer.ChannelBuffer
 import scala.collection.JavaConversions._
-import com.twitter.finagle.builder.{ClientBuilder, ClientConfig}
+import com.twitter.finagle.builder.ClientBuilder
 import text.Memcached
 import com.twitter.finagle.Service
 import com.twitter.util.{Time, Future}
@@ -23,7 +23,6 @@ object Client {
   def apply(host: String): Client = Client(
     ClientBuilder()
       .hosts(host)
-      .hostConnectionLimit(1)
       .codec(new Memcached)
       .build())
 
@@ -358,10 +357,11 @@ class KetamaClient(clients: Map[(String, Int, Int), Client], keyHasher: KeyHashe
   }
 }
 
+
 case class KetamaClientBuilder(
   _nodes: Seq[(String, Int, Int)],
   _hashName: Option[String],
-  _clientBuilder: Option[ClientBuilder[_, _, Nothing, Nothing, ClientConfig.Yes]]) {
+  _clientBuilder: Option[ClientBuilder[Command, Response]]) {
 
   def this() = this(
     Nil,            // nodes
@@ -378,15 +378,13 @@ case class KetamaClientBuilder(
   def hashName(hashName: String): KetamaClientBuilder =
     copy(_hashName = Some(hashName))
 
-  def clientBuilder(clientBuilder: ClientBuilder[_, _, Nothing, Nothing, ClientConfig.Yes]): KetamaClientBuilder =
+  def clientBuilder(clientBuilder: ClientBuilder[Command, Response]): KetamaClientBuilder =
     copy(_clientBuilder = Some(clientBuilder))
 
   def build(): PartitionedClient = {
-    val builder = _clientBuilder getOrElse ClientBuilder().hostConnectionLimit(1)
-
+    val builder = _clientBuilder getOrElse ClientBuilder()
     val clients = Map() ++ _nodes.map { case (hostname, port, weight) =>
-      val b = builder.hosts(hostname + ":" + port).codec(new Memcached)
-      val client = Client(b.build())
+      val client = Client(builder.hosts(hostname + ":" + port).codec(new Memcached).build())
       ((hostname, port, weight) -> client)
     }
     val keyHasher = KeyHasher.byName(_hashName.getOrElse("ketama"))
@@ -411,7 +409,7 @@ class RubyMemCacheClient(clients: Seq[Client]) extends PartitionedClient {
  */
 case class RubyMemCacheClientBuilder(
   _nodes: Seq[(String, Int, Int)],
-  _clientBuilder: Option[ClientBuilder[_, _, Nothing, Nothing, ClientConfig.Yes]]) {
+  _clientBuilder: Option[ClientBuilder[Command, Response]]) {
 
   def this() = this(
     Nil,  // nodes
@@ -424,11 +422,11 @@ case class RubyMemCacheClientBuilder(
   def nodes(hostPortWeights: String): RubyMemCacheClientBuilder =
     copy(_nodes = PartitionedClient.parseHostPortWeights(hostPortWeights))
 
-  def clientBuilder(clientBuilder: ClientBuilder[_, _, Nothing, Nothing, ClientConfig.Yes]): RubyMemCacheClientBuilder =
+  def clientBuilder(clientBuilder: ClientBuilder[Command, Response]): RubyMemCacheClientBuilder =
     copy(_clientBuilder = Some(clientBuilder))
 
   def build(): PartitionedClient = {
-    val builder = _clientBuilder getOrElse ClientBuilder().hostConnectionLimit(1)
+    val builder = _clientBuilder getOrElse ClientBuilder()
     val clients = _nodes.map { case (hostname, port, weight) =>
       require(weight == 1, "Ruby memcache node weight must be 1")
       Client(builder.hosts(hostname + ":" + port).codec(new Memcached).build())

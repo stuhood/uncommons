@@ -82,7 +82,6 @@ object ZookeeperServerSetClusterSpec extends Specification {
       val client = ClientBuilder()
         .cluster(cluster)
         .codec(new StringCodec)
-        .hostConnectionLimit(1)
         .build()
 
       client("hello\n")(1.seconds) mustEqual "olleh"

@@ -1,47 +1,43 @@
 package com.twitter.finagle.stream
 
+import org.specs.Specification
+import com.twitter.finagle.Service
+import com.twitter.concurrent._
+import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
+import org.jboss.netty.handler.codec.http.{HttpMethod, HttpVersion, DefaultHttpRequest, HttpRequest}
+import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
+import com.twitter.util.{Future, RandomSocket, CountDownLatch}
+import com.twitter.conversions.time._
 import com.twitter.concurrent._
 import com.twitter.conversions.time._
-import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
-import com.twitter.finagle.Service
-import com.twitter.util.{Future, RandomSocket, CountDownLatch}
 import java.nio.charset.Charset
-import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
-import org.jboss.netty.handler.codec.http._
-import org.specs.Specification
 
 object PubSubSpec extends Specification {
-  case class MyStreamResponse(
-      httpResponse: HttpResponse,
-      channel: Channel[ChannelBuffer])
-      extends StreamResponse
-  {
-    def release() = ()
-  }
-  class MyService(response: StreamResponse) extends Service[HttpRequest, StreamResponse] {
-    def apply(request: HttpRequest) = Future.value(response)
+  class MyService(topic: ChannelSource[ChannelBuffer]) extends Service[HttpRequest, Channel[ChannelBuffer]] {
+    def apply(request: HttpRequest) = {
+      Future.value(topic)
+    }
   }
 
   "PubSub" should {
     "work" in {
       val address = RandomSocket()
-      val httpRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/")
-      val httpResponse = new DefaultHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK)
       val channelSource = new ChannelSource[ChannelBuffer]
       val server = ServerBuilder()
         .codec(new Stream)
         .bindTo(address)
-        .build(new MyService(MyStreamResponse(httpResponse, channelSource)))
+        .build(new MyService(channelSource))
       val client = ClientBuilder()
         .codec(new Stream)
         .hosts(Seq(address))
-        .hostConnectionLimit(2)
         .buildFactory()
+
+      val request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/")
 
       def makeChannel = for {
         client <- client.make()
-        streamResponse <- client(httpRequest)
-      } yield streamResponse.channel
+        channel <- client(request)
+      } yield channel
 
       // these two channels represent two TCP connections to the server
       val channel1 = makeChannel(1.second)
@@ -73,4 +69,5 @@ object PubSubSpec extends Specification {
       result.poll() mustEqual "2"
     }
   }
+
 }

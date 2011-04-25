@@ -18,12 +18,11 @@ public class TestClient extends TestCase {
 
   public void testGetAndSet() {
     Service<Command, Response> service =
-      ClientBuilder.safeBuild(
-        ClientBuilder
-          .get()
-          .hosts("localhost:11211")
-          .codec(new Memcached())
-          .hostConnectionLimit(1));
+      ClientBuilder
+        .get()
+        .hosts("localhost:11211")
+        .codec(new Memcached())
+        .build();
 
     Client client = ClientBase.newInstance(service);
     client.delete("foo").get();

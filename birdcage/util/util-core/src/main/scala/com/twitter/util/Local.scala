@@ -9,38 +9,24 @@ package com.twitter.util
 
 import collection.mutable.ArrayBuffer
 
-private[util] final object Locals {
-  @volatile private[this] var locals: Array[Local[_]] = Array()
+object Locals {
+  private[this] val locals = new ArrayBuffer[Local[_]]
 
   def +=(local: Local[_]) = synchronized {
-    val newLocals = new Array[Local[_]](locals.size + 1)
-    locals.copyToArray(newLocals)
-    newLocals(newLocals.size - 1) = local
-    locals = newLocals
+    locals += local
   }
 
-  private[this] val emptyLocals = new SavedLocals(Array.empty)
-
-  def save(): SavedLocals =
-    if (locals.isEmpty) {
-      emptyLocals
-    } else {
-      val locals0 = locals
-      val saved = new Array[SavedLocal[_]](locals0.size)
-      var i = 0: Int
-      while (i < locals0.size) {
-        saved(i) = locals0(i).save
-        i += 1
-      }
-
-      new SavedLocals(saved)
-    }
+  def save() = synchronized {
+    val saved = new SavedLocals
+    locals.foreach { saved += _.save() }
+    saved
+  }
 }
 
-final class Local[T] {
+class Local[T] {
   Locals += this
 
-  private[this] val threadLocal =
+  protected[this] val threadLocal =
     new ThreadLocal[Option[T]] {
       override def initialValue: Option[T] = None
     }
@@ -51,7 +37,7 @@ final class Local[T] {
   def save() = new SavedLocal[T](this)
 }
 
-private[util] class SavedLocal[T](local: Local[T]) {
+class SavedLocal[T](local: Local[T]) {
   private[this] val savedValue = local()
 
   def restore() {
@@ -62,12 +48,6 @@ private[util] class SavedLocal[T](local: Local[T]) {
   }
 }
 
-private[util] final class SavedLocals(locals: Array[SavedLocal[_]]) {
-  def restore(): Unit = {
-    var i = 0: Int
-    while (i < locals.size) {
-      locals(i).restore()
-      i += 1
-    }
-  }
+class SavedLocals extends ArrayBuffer[SavedLocal[_]] {
+  def restore() = foreach { _.restore() }
 }

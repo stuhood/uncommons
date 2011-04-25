@@ -19,7 +19,6 @@ object Client {
     val service = ClientBuilder()
       .codec(new Kestrel)
       .hosts(hosts)
-      .hostConnectionLimit(1)
       .buildFactory()
     apply(service)
   }

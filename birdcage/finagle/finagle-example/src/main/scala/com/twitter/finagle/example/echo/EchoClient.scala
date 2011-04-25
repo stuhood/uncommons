@@ -11,7 +11,6 @@ object EchoClient {
     val client: Service[String, String] = ClientBuilder()
       .codec(StringCodec)
       .hosts(new InetSocketAddress(8080))
-      .hostConnectionLimit(1)
       .build()
 
     // Issue a newline-delimited request, respond to the result

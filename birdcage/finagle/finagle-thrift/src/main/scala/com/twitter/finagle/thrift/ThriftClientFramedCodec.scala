@@ -7,9 +7,7 @@ import org.jboss.netty.channel.{
   SimpleChannelDownstreamHandler, MessageEvent, Channels,
   ChannelPipelineFactory}
 import org.jboss.netty.buffer.ChannelBuffers
-import org.apache.thrift.protocol.{
-  TBinaryProtocol, TMessage,
-  TMessageType, TProtocolFactory}
+import org.apache.thrift.protocol.{TBinaryProtocol, TMessage, TMessageType}
 import org.apache.thrift.transport.TMemoryInputTransport
 
 import com.twitter.util.Time
@@ -27,16 +25,10 @@ import conversions._
  * requests.
  */
 object ThriftClientFramedCodec {
-  /**
-   * Create a [[com.twitter.finagle.thrift.ThriftClientFramedCodec]]
-   * with a thrift `TBinaryProtocol` factory.
-   */
-  def apply(): ThriftClientFramedCodec =
-    new ThriftClientFramedCodec(new TBinaryProtocol.Factory())
+  def apply() = new ThriftClientFramedCodec
 }
 
-class ThriftClientFramedCodec(protocolFactory: TProtocolFactory)
-  extends ClientCodec[ThriftClientRequest, Array[Byte]]
+class ThriftClientFramedCodec extends ClientCodec[ThriftClientRequest, Array[Byte]]
 {
   def pipelineFactory =
     new ChannelPipelineFactory {
@@ -60,6 +52,7 @@ class ThriftClientFramedCodec(protocolFactory: TProtocolFactory)
     buffer().writeMessageEnd()
 
     underlying(new ThriftClientRequest(buffer.toArray, false)) map { bytes =>
+      val protocolFactory = new TBinaryProtocol.Factory()
       val memoryTransport = new TMemoryInputTransport(bytes)
       val iprot           = protocolFactory.getProtocol(memoryTransport)
       val reply           = iprot.readMessageBegin()

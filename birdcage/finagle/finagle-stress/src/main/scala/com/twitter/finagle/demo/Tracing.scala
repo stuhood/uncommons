@@ -15,7 +15,6 @@ object Tracing1Service extends Tracing1.ServiceIface {
   private[this] val transport = ClientBuilder()
     .hosts("localhost:6002")
     .codec(ThriftClientFramedCodec())
-    .hostConnectionLimit(1)
     .build()
 
   private[this] val t2Client =
@@ -42,7 +41,6 @@ object Tracing2Service extends Tracing2.ServiceIface {
   private[this] val transport = ClientBuilder()
     .hosts("localhost:6003")
     .codec(ThriftClientFramedCodec())
-    .hostConnectionLimit(1)
     .build()
 
   private[this] val t3Client =
@@ -93,7 +91,6 @@ object Client {
     val transport = ClientBuilder()
       .hosts("localhost:6001")
       .codec(ThriftClientFramedCodec())
-      .hostConnectionLimit(1)
       .build()
 
     val client = new Tracing1.ServiceToClient(

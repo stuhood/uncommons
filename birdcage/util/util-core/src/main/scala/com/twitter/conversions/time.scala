@@ -23,9 +23,7 @@ import java.util.concurrent.TimeUnit
 object time {
   class RichWholeNumber(wrapped: Long) {
     def nanoseconds = Duration(wrapped, TimeUnit.NANOSECONDS)
-    def nanosecond = nanoseconds
     def microseconds = Duration(wrapped, TimeUnit.MICROSECONDS)
-    def microsecond = microseconds
     def milliseconds = Duration(wrapped, TimeUnit.MILLISECONDS)
     def millisecond = milliseconds
     def millis = milliseconds

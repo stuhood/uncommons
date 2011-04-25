@@ -30,7 +30,7 @@ object LoadBalancerTest {
     // TODO: proper resource releasing, etc.
   }
 
-  def runSuite(clientBuilder: ClientBuilder[_, _, _, _, _]) {
+  def runSuite(clientBuilder: ClientBuilder[_, _]) {
     println("testing " + clientBuilder)
     println("\n== baseline (warmup) ==\n")
     new LoadBalancerTest(clientBuilder)({ case _ => }).run()
@@ -65,7 +65,7 @@ object LoadBalancerTest {
 }
 
 class LoadBalancerTest(
-  clientBuilder: ClientBuilder[_, _, _, _, _],
+  clientBuilder: ClientBuilder[_, _],
   serverLatency: Duration = 0.seconds,
   numRequests: Int = 100000,
   concurrency: Int = 20)(behavior: PartialFunction[(Int, Seq[EmbeddedServer]), Unit])
@@ -149,7 +149,6 @@ class LoadBalancerTest(
     val client = clientBuilder
       .codec(Http)
       .hosts(servers map(_.addr))
-      .hostConnectionLimit(Int.MaxValue)
       .reportTo(new OstrichStatsReceiver)
       .build()
 
