@@ -47,14 +47,13 @@ package com.twitter.finagle.builder
 
 import java.net.{InetSocketAddress, SocketAddress}
 import java.util.logging.Logger
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.Executors
 import javax.net.ssl.SSLContext
 
-import org.jboss.netty.bootstrap.ClientBootstrap
 import org.jboss.netty.channel._
 import org.jboss.netty.channel.socket.nio._
 import org.jboss.netty.handler.ssl._
-import org.jboss.netty.handler.timeout.IdleStateHandler
+import org.jboss.netty.bootstrap.ClientBootstrap
 
 import com.twitter.util.{Future, Duration}
 import com.twitter.util.TimeConversions._
@@ -113,14 +112,12 @@ object ClientConfig {
  * TODO: do we really need to specify HasCodec? -- it's implied in a
  * way by the proper Req, Rep
  */
+
 final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit](
   private val _cluster                   : Option[Cluster]               = None,
   private val _codec                     : Option[ClientCodec[Req, Rep]] = None,
   private val _connectionTimeout         : Duration                      = 10.milliseconds,
   private val _requestTimeout            : Duration                      = Duration.MaxValue,
-  private val _keepAlive                 : Option[Boolean]               = None,
-  private val _readerIdleTimeout         : Option[Duration]              = None,
-  private val _writerIdleTimeout         : Option[Duration]              = None,
   private val _statsReceiver             : Option[StatsReceiver]         = None,
   private val _name                      : Option[String]                = Some("client"),
   private val _hostConnectionCoresize    : Option[Int]                   = None,
@@ -148,9 +145,6 @@ final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionL
   val connectionTimeout         = _connectionTimeout
   val requestTimeout            = _requestTimeout
   val statsReceiver             = _statsReceiver
-  val keepAlive                 = _keepAlive
-  val readerIdleTimeout         = _readerIdleTimeout
-  val writerIdleTimeout         = _writerIdleTimeout
   val name                      = _name
   val hostConnectionCoresize    = _hostConnectionCoresize
   val hostConnectionLimit       = _hostConnectionLimit
@@ -170,9 +164,6 @@ final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionL
     "codec"                     -> _codec,
     "connectionTimeout"         -> Some(_connectionTimeout),
     "requestTimeout"            -> Some(_requestTimeout),
-    "keepAlive"                 -> Some(_keepAlive),
-    "readerIdleTimeout"         -> Some(_readerIdleTimeout),
-    "writerIdleTimeout"         -> Some(_writerIdleTimeout),
     "statsReceiver"             -> _statsReceiver,
     "name"                      -> _name,
     "hostConnectionCoresize"    -> _hostConnectionCoresize,
@@ -285,18 +276,6 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
   def connectionTimeout(duration: Duration): This =
     withConfig(_.copy(_connectionTimeout = duration))
 
-  def keepAlive(value: Boolean) =
-    withConfig(copy(_keepAlive = Some(value)))
-
-  def readerIdleTimeout(duration: Duration) =
-    withConfig(copy(_readerIdleTimeout = Some(duration)))
-
-  def writerIdleTimeout(duration: Duration) =
-    withConfig(copy(_writerIdleTimeout = Some(duration)))
-
-  def reportTo(receiver: StatsReceiver) =
-    withConfig(copy(_statsReceiver = Some(receiver)))
-
   def requestTimeout(duration: Duration): This =
     withConfig(_.copy(_requestTimeout = duration))
 
@@ -356,17 +335,6 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     val pf = new ChannelPipelineFactory {
       override def getPipeline = {
         val pipeline = codec.pipelineFactory.getPipeline
-
-        if (config.readerIdleTimeout.isDefined || config.writerIdleTimeout.isDefined) {
-          pipeline.addFirst("idleReactor", new IdleChannelHandler)
-          pipeline.addFirst("idleDetector",
-            new IdleStateHandler(Timer.defaultNettyTimer,
-              config.readerIdleTimeout.map(_.inMilliseconds).getOrElse(0L),
-              config.writerIdleTimeout.map(_.inMilliseconds).getOrElse(0L),
-              0,
-              TimeUnit.MILLISECONDS))
-        }
-
         for (ctx <- config.tls) {
           val sslEngine = ctx.createSSLEngine()
           sslEngine.setUseClientMode(true)
@@ -388,7 +356,6 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     bs.setOption("connectTimeoutMillis", config.connectionTimeout.inMilliseconds)
     bs.setOption("tcpNoDelay", true)  // fin NAGLE.  get it?
     // bs.setOption("soLinger", 0)  (TODO)
-    config.keepAlive foreach { value => bs.setOption("keepAlive", value) }
     bs.setOption("reuseAddress", true)
     config.sendBufferSize foreach { s => bs.setOption("sendBufferSize", s) }
     config.recvBufferSize foreach { s => bs.setOption("receiveBufferSize", s) }
@@ -415,7 +382,7 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     if (config.hostConnectionMaxIdleTime.isDefined ||
         config.hostConnectionMaxLifeTime.isDefined) {
       future = future map { underlying =>
-        new ExpiringService(
+        new ExpiringService( 
           underlying,
           config.hostConnectionMaxIdleTime,
           config.hostConnectionMaxLifeTime)
@@ -427,7 +394,7 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
 
   /**
    * Construct a ServiceFactory. This is useful for stateful protocols
-   * (e.g., those that support transactions or authentication).
+   * (e.g., those that support transactions or authentication). 
    */
   def buildFactory()(
     implicit THE_BUILDER_IS_NOT_FULLY_SPECIFIED_SEE_ClientBuilder_DOCUMENTATION:
