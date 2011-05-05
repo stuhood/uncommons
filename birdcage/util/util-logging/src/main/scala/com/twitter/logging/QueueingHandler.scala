@@ -36,14 +36,7 @@ class QueueingHandler(val handler: Handler, maxQueueSize: Int=Int.MaxValue)
       try {
         while (true) {
           val record = queue.take()
-          try {
-            handler.publish(record)
-          } catch {
-            case e: InterruptedException => throw e // re-raise
-            case e =>
-              System.err.println(Formatter.formatStackTrace(e, 30).mkString("\n"))
-          }
-
+          handler.publish(record)
           if (Thread.interrupted())
             throw new InterruptedException
         }
