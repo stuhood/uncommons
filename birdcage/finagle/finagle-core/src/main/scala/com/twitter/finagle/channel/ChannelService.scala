@@ -7,14 +7,12 @@ import org.jboss.netty.channel.{
   SimpleChannelUpstreamHandler, ExceptionEvent,
   ChannelStateEvent}
 
-import com.twitter.util.{Future, Promise, Throw, Try, Time, Return}
+import com.twitter.util.{Future, Promise, Throw, Try, Time}
 
 import com.twitter.finagle._
 import com.twitter.finagle.stats.{StatsReceiver, NullStatsReceiver}
 import com.twitter.finagle.util.Conversions._
 import com.twitter.finagle.util.{Ok, Error, Cancelled, AsyncLatch}
-
-case class ChannelServiceReply(message: Any, markDead: Boolean)
 
 /**
  * The ChannelService bridges a finagle service onto a Netty
@@ -29,8 +27,8 @@ private[finagle] class ChannelService[Req, Rep](
   private[this] val currentReplyFuture = new AtomicReference[Promise[Rep]]
   @volatile private[this] var isHealthy = true
 
-  private[this] def reply(message: Try[Rep], markDead: Boolean = false) {
-    if (message.isThrow || markDead) {
+  private[this] def reply(message: Try[Rep]) {
+    if (message.isThrow) {
       // We consider any channel with a channel-level failure doomed.
       // Application exceptions should be encoded by the codec itself,
       // eg. HTTP encodes erroneous replies by reply status codes,
@@ -56,19 +54,14 @@ private[finagle] class ChannelService[Req, Rep](
   // This bridges the 1:1 codec with this service.
   channel.getPipeline.addLast("finagleBridge", new SimpleChannelUpstreamHandler {
     override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) {
-      e.getMessage match {
-        // kill the cast here-- it's useless and only results in a
-        // compiler error.
-        case ChannelServiceReply(rep, markDead) => reply(Return(rep.asInstanceOf[Rep]), markDead)
-        case rep                                => reply(Return(rep.asInstanceOf[Rep]), false)
-      }
+      reply(Try { e.getMessage.asInstanceOf[Rep] })
     }
 
     override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) =
-      reply(Throw(ChannelException(e.getCause)), true)
+      reply(Throw(ChannelException(e.getCause)))
 
     override def channelClosed(ctx: ChannelHandlerContext, e: ChannelStateEvent) {
-      reply(Throw(new ChannelClosedException), true)
+      reply(Throw(new ChannelClosedException))
     }
   })
 

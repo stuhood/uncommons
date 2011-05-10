@@ -1,5 +1,4 @@
 package com.twitter.finagle.channel
-import com.sun.tools.hat.internal.model.JavaObject
 
 import scala.collection.JavaConversions._
 
@@ -117,27 +116,6 @@ object ChannelServiceSpec extends Specification with Mockito {
         future.isDefined must beTrue
         future() must throwA[ChannelClosedException]
         service.isAvailable must beFalse
-      }
-
-      "on ChannelServiceReply[markDead=true]" in {
-        event.getMessage returns ChannelServiceReply("olleh", true)
-        handler.handleUpstream(context, event)
-
-        // The channel was closed.
-        val eventCaptor = ArgumentCaptor.forClass(classOf[ChannelEvent])
-        there were two(sink).eventSunk(Matchers.eq(pipeline), eventCaptor.capture)
-        eventCaptor.getValue must haveClass[DownstreamChannelStateEvent]
-        (eventCaptor.getValue.asInstanceOf[DownstreamChannelStateEvent].getState
-         must be_==(ChannelState.OPEN))
-        (eventCaptor.getValue.asInstanceOf[DownstreamChannelStateEvent].getValue
-         must be_==(java.lang.Boolean.FALSE))
-      }
-
-      "on ChannelServiceReply[markDead=false]" in {
-        event.getMessage returns ChannelServiceReply("olleh", false)
-        handler.handleUpstream(context, event)
-        // No additional events on the channel.
-        there was one(sink).eventSunk(Matchers.eq(pipeline), Matchers.any[ChannelEvent])
       }
     }
 
