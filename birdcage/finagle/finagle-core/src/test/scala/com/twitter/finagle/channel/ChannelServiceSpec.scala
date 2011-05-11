@@ -1,4 +1,5 @@
 package com.twitter.finagle.channel
+import com.sun.tools.hat.internal.model.JavaObject
 
 import scala.collection.JavaConversions._
 
