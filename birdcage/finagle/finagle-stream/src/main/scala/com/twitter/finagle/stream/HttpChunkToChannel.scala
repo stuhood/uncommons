@@ -37,6 +37,12 @@ class HttpChunkToChannel extends SimpleChannelUpstreamHandler {
         numObservers = i
         i match {
           case 1 =>
+            if (!message.isChunked) {
+              val content = message.getContent
+              if (content.readable) {
+                Future.join(source.send(content))
+              }
+            }
             ctx.getChannel.setReadable(true)
           case 0 =>
             // if there are no more observers, then shut everything down
@@ -48,8 +54,12 @@ class HttpChunkToChannel extends SimpleChannelUpstreamHandler {
 
       Channels.fireMessageReceived(ctx, response)
 
-    case trailer: HttpChunkTrailer =>
+    case chunk: HttpChunk if chunk.isLast  =>
       val topic = channelRef.getAndSet(null)
+      val content = chunk.getContent
+      if (content.readable) {
+        Future.join(topic.send(content))
+      }
       topic.close()
       ctx.getChannel.setReadable(true)
 
