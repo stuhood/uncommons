@@ -118,14 +118,6 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     "finagle-b3", "finagle-b3",
     new B3Project(_), coreProject, thriftProject)
 
-  /**
-   * finagle-commons-stats contains bindings for using finagle in java projects
-   * that export their stats through the twitter commons libraries
-   */
-  val commonsStatsProject = project(
-    "finagle-commons-stats", "finagle-commons-stats",
-    new CommonsStatsProject(_), coreProject)
-
   trait Defaults
     extends ProjectDependencies
     with TartifactoryRepos
@@ -209,7 +201,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   class Ostrich4Project(info: ProjectInfo) extends StandardProject(info)
     with Defaults
   {
-    val ostrich4 = "com.twitter" % "ostrich" % "4.1.0"
+    val ostrich4 = "com.twitter" % "ostrich" % "4.2.0"
   }
 
   class NativeProject(info: ProjectInfo) extends StandardProject(info)
@@ -231,12 +223,4 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     val thrift    = "thrift"    % "libthrift" % "0.5.0"
     val slf4jNop  = "org.slf4j" % "slf4j-nop" % "1.5.2" % "provided"
   }
-
-  class CommonsStatsProject(info: ProjectInfo) extends StandardProject(info)
-    with Defaults with LibDirClasspath
-  {
-    override def compileOrder = CompileOrder.JavaThenScala
-    val commonsStats    = "com.twitter.common"    % "stats" % "0.0.14"
-  }
-
 }
