@@ -35,6 +35,16 @@ abstract class Service[-Req, +Rep] extends (Req => Future[Rep]) {
   def isAvailable: Boolean = true
 }
 
+/**
+ * A simple proxy Service that forwards all calls to another Service.  This is
+ * is useful if you to wrap-but-modify an exisiting service.
+ */
+abstract class ServiceProxy[-Req, +Rep](val self: Service[Req, Rep]) extends Service[Req, Rep] with Proxy {
+  def apply(request: Req) = self(request)
+  override def release() = self.release()
+  override def isAvailable = self.isAvailable
+}
+
 abstract class ServiceFactory[-Req, +Rep] {
   /**
    * Reserve the use of a given service instance. This pins the
