@@ -1,13 +1,12 @@
-package com.twitter.finagle.memcached
+package com.twitter.hashing
 
+import java.nio.{ByteBuffer, ByteOrder}
+import java.security.MessageDigest
 import scala.collection.mutable
-import _root_.java.nio.{ByteBuffer, ByteOrder}
-import _root_.java.security.MessageDigest
 
 /**
- * Hashes a memcache key into a 32-bit or 64-bit number (depending on the algorithm).
- * This is a purely optional trait, meant to allow NodeLocator implementations to share
- * hash functions.
+ * Hashes a key into a 32-bit or 64-bit number (depending on the algorithm).
+ *
  */
 trait KeyHasher {
   def hashKey(key: Array[Byte]): Long
@@ -205,16 +204,16 @@ object KeyHasher {
     override def toString() = "Hsieh"
   }
 
-  private val hashes = new mutable.HashMap[String, KeyHasher]
-  hashes += ("fnv" -> FNV1_32)
-  hashes += ("fnv1" -> FNV1_32)
-  hashes += ("fnv1-32" -> FNV1_32)
-  hashes += ("fnv1a-32" -> FNV1A_32)
-  hashes += ("fnv1-64" -> FNV1_64)
-  hashes += ("fnv1a-64" -> FNV1A_64)
-  hashes += ("ketama" -> KETAMA)
-  hashes += ("crc32-itu" -> CRC32_ITU)
-  hashes += ("hsieh" -> HSIEH)
+  private val hashes = new mutable.HashMap[String, KeyHasher] with mutable.SynchronizedMap[String, KeyHasher]
+  register("fnv", FNV1_32)
+  register("fnv1", FNV1_32)
+  register("fnv1-32", FNV1_32)
+  register("fnv1a-32", FNV1A_32)
+  register("fnv1-64", FNV1_64)
+  register("fnv1a-64", FNV1A_64)
+  register("ketama", KETAMA)
+  register("crc32-itu", CRC32_ITU)
+  register("hsieh", HSIEH)
 
   /**
    * Register a hash function by name. If used before creating a memcache client from a
@@ -231,9 +230,6 @@ object KeyHasher {
    * client from a config file.
    */
   def byName(name: String): KeyHasher = {
-    hashes.get(name) match {
-      case Some(h) => h
-      case None => throw new IllegalArgumentException("unknown hash: " + name)
-    }
+    hashes.getOrElse(name, throw new IllegalArgumentException("unknown hash: " + name))
   }
 }
