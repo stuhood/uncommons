@@ -92,21 +92,23 @@ private[finagle] class TimerToNettyTimer(underlying: ReferenceCountedTimer)
  * Implements a [[com.twitter.util.Timer]] in terms of a
  * [[org.jboss.netty.util.Timer]].
  */
-class Timer(underlying: org.jboss.netty.util.Timer) extends com.twitter.util.Timer {
+class Timer(underlying: org.jboss.netty.util.Timer) extends com.twitter.util.Timer
+{
   def schedule(when: Time)(f: => Unit): TimerTask = {
     val timeout = underlying.newTimeout(new org.jboss.netty.util.TimerTask {
       def run(to: Timeout) {
         if (!to.isCancelled) f
       }
-    }, (when - Time.now).inMilliseconds max 0, TimeUnit.MILLISECONDS)
+    }, (when - Time.now).inMilliseconds, TimeUnit.MILLISECONDS)
     toTimerTask(timeout)
   }
 
   def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = {
-    schedule(when) {
+    val task = schedule(when) {
       f
       schedule(period)(f)
     }
+    task
   }
 
   def stop() { underlying.stop() }
