@@ -4,9 +4,7 @@ import scala.annotation.tailrec
 import scala.collection.mutable.Queue
 
 import com.twitter.util.{Future, Promise, Return, Throw}
-import com.twitter.finagle.{
-  Service, ServiceFactory, ServiceClosedException, 
-  TooManyWaitersException, ServiceProxy}
+import com.twitter.finagle.{Service, ServiceFactory, ServiceClosedException, ServiceProxy}
 import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 
 /**
@@ -21,8 +19,7 @@ import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 class WatermarkPool[Req, Rep](
     factory: ServiceFactory[Req, Rep],
     lowWatermark: Int, highWatermark: Int = Int.MaxValue,
-    statsReceiver: StatsReceiver = NullStatsReceiver, 
-    maxWaiters: Int = Int.MaxValue)
+    statsReceiver: StatsReceiver = NullStatsReceiver)
   extends ServiceFactory[Req, Rep]
 {
   private[this] val queue       = Queue[Service[Req, Rep]]()
@@ -88,8 +85,6 @@ class WatermarkPool[Req, Rep](
         factory.make() map { new ServiceWrapper(_) } onFailure { f =>
           WatermarkPool.this.synchronized { numServices -= 1 }
         }
-      case None if waiters.size >= maxWaiters =>
-        Future.exception(new TooManyWaitersException)
       case None =>
         val promise = new Promise[Service[Req, Rep]]
         waiters += promise

@@ -1,8 +1,9 @@
 package com.twitter.finagle
 
-import com.twitter.util.Future
-
+import java.net.InetSocketAddress
 import com.twitter.finagle.service.RefcountedService
+import com.twitter.util.Future
+import org.jboss.netty.channel.Channel
 
 /**
  * A Service is an asynchronous function from Request to Future[Response]. It is the
@@ -33,6 +34,47 @@ abstract class Service[-Req, +Rep] extends (Req => Future[Rep]) {
    * with a reasonable likelihood of success).
    */
   def isAvailable: Boolean = true
+}
+
+/**
+ * Information about a client, passed to a Service factory for each new
+ * connection.
+ */
+trait ClientConnection {
+  /**
+   * Host/port of the client. This is only available after `Service#connected`
+   * has been signalled.
+   */
+  def remoteAddress: InetSocketAddress
+
+  /**
+   * Host/port of the local side of a client connection. This is only
+   * available after `Service#connected` has been signalled.
+   */
+  def localAddress: InetSocketAddress
+
+  /**
+   * Close the underlying client connection.
+   */
+  def close()
+}
+
+class PostponedService[Req, Rep] extends Service[Req, Rep] {
+  private[this] var underlying: Option[Service[Req, Rep]] = None
+
+  def create(service: Service[Req, Rep]) {
+    underlying = Some(service)
+  }
+
+  def apply(request: Req) = {
+    underlying.map { _(request) }.getOrElse { throw new IllegalArgumentException("No service yet") }
+  }
+
+  override def release() {
+    underlying.foreach { _.release() }
+  }
+
+  override def isAvailable = underlying.map { _.isAvailable }.getOrElse(false)
 }
 
 /**

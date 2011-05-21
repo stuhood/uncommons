@@ -1,7 +1,8 @@
 package com.twitter.finagle.stats
 
-import scala.ref.WeakReference
-import scala.collection.mutable.{WeakHashMap, ArrayBuffer}
+import ref.WeakReference
+import collection.mutable.WeakHashMap
+
 
 /**
  * CumulativeGauge provides a gauge that is composed of the (addition)
@@ -15,42 +16,36 @@ private[finagle] trait CumulativeGauge {
 
   private[this] var underlying: List[WeakReference[UnderlyingGauge]] = Nil
 
-  /**
-   * Returns a buffered version of the current gauges
-   */
-  private[this] def get(): Seq[UnderlyingGauge] = {
+  private[this] def get() = synchronized {
     removeGauge(null)  // GC.
-    synchronized {
-      val buffer = new ArrayBuffer[UnderlyingGauge]()
-      (underlying map { _.get } flatten).copyToBuffer(buffer)
-      buffer
-    }
+    underlying map { _.get } flatten
   }
 
   private[this] def removeGauge(underlyingGauge: UnderlyingGauge) = synchronized {
     // This does a GC also.
     underlying = underlying filter { _.get map { _ ne underlyingGauge } getOrElse false }
-    if (underlying.isEmpty) 
+    if (underlying.isEmpty)
       deregister()
   }
 
   def addGauge(f: => Float): Gauge = synchronized {
     val shouldRegister = underlying.isEmpty
-    val underlyingGauge = UnderlyingGauge(() => f)   
+    val underlyingGauge = UnderlyingGauge(() => f)
     underlying ::= new WeakReference(underlyingGauge)
-    if (shouldRegister) 
+
+    if (shouldRegister)
       register()
+
     underlyingGauge
   }
 
-  def getValue = get() map { _.f() } sum
+  def getValue = synchronized {
+    get() map { _.f() } sum
+  }
 
   /**
    * These need to be implemented by the gauge provider. They indicate
    * when the gauge needs to be registered & deregistered.
-   *
-   * Special care must be taken in implementing these so that they are free
-   * of race conditions.
    */
   def register(): Unit
   def deregister(): Unit

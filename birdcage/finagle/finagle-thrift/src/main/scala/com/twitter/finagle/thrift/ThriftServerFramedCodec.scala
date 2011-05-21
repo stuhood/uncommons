@@ -120,13 +120,7 @@ private[thrift] class ThriftServerTracingFilter
         // to parse them out.
         Future.value(buffer.toArray)
       } else {
-        Trace.startSpan()
-        Trace.record(Event.ServerRecv())
-
-        service(request) map { response =>
-          Trace.record(Event.ServerSend())
-          response
-        }
+        service(request)
       }
     }
   }

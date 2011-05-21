@@ -73,10 +73,17 @@ class ThriftClientFramedCodec(protocolFactory: TProtocolFactory, config: ClientC
       val iprot           = protocolFactory.getProtocol(memoryTransport)
       val reply           = iprot.readMessageBegin()
 
-      (new ThriftClientTracingFilter(
-        config.serviceName,
-        reply.`type` != TMessageType.EXCEPTION
-      )) andThen underlying
+      if (reply.`type` == TMessageType.EXCEPTION) {
+        // Return just the underlying service if we caused an
+        // exception: this means the remote end didn't support
+        // tracing.
+        underlying
+      } else {
+        // Otherwise, apply our tracing filter first. This will read
+        // the TraceData frames, and apply them to the current
+        // Trace.
+        (new ThriftClientTracingFilter(config.serviceName)) andThen underlying
+      }
     }
   }
 }
@@ -115,11 +122,9 @@ private[thrift] class ThriftClientChannelBufferEncoder
  * is applied *after* the Channel has been upgraded (via
  * negotiation). It serializes the current Trace into a header
  * on the wire. It is applied after all framing.
- *
- * @param isUpgraded Whether this connection is with a server that has tracing enabled
  */
 
-private[thrift] class ThriftClientTracingFilter(serviceName: Option[String], isUpgraded: Boolean)
+private[thrift] class ThriftClientTracingFilter(serviceName: Option[String])
   extends SimpleFilter[ThriftClientRequest, Array[Byte]]
 {
   def apply(
@@ -129,23 +134,21 @@ private[thrift] class ThriftClientTracingFilter(serviceName: Option[String], isU
     // Create a new span identifier for this request.
     val msg = new InputBuffer(request.message)().readMessageBegin()
     val childTracer = Trace.addChild(serviceName, Some(msg.name), Some(Endpoint.Unknown))
-    val thriftRequest = if (isUpgraded) {
-      val header = new thrift.TracedRequestHeader
-      header.setSpan_id(childTracer().id.toLong)
-      header.setTrace_id(childTracer().traceId.toLong)
-      childTracer().parentId foreach { parentId => header.setParent_span_id(parentId.toLong) }
-      header.setDebug(Trace.isDebugging)
+    // TODO need to get the actual endpoint called from the netty channel somehow
+    val header = new thrift.TracedRequestHeader
+    header.setSpan_id(childTracer().id.toLong)
+    header.setTrace_id(childTracer().traceId.toLong)
+    childTracer().parentId foreach { parentId => header.setParent_span_id(parentId.toLong) }
+    header.setDebug(Trace.isDebugging)
 
-      new ThriftClientRequest(
-        OutputBuffer.messageToArray(header) ++ request.message,
-        request.oneway)
-    } else {
-      new ThriftClientRequest(request.message, request.oneway)
-    }
+    val tracedRequest = new ThriftClientRequest(
+      OutputBuffer.messageToArray(header) ++ request.message,
+      request.oneway)
 
     childTracer.record(Event.ClientSend())
-    val reply = service(thriftRequest)
-    if (thriftRequest.oneway) {
+
+    val reply = service(tracedRequest)
+    if (tracedRequest.oneway) {
       // Oneway requests don't contain replies, and so they can't be
       // traced.
       reply
@@ -153,20 +156,16 @@ private[thrift] class ThriftClientTracingFilter(serviceName: Option[String], isU
       reply map { response =>
         childTracer.record(Event.ClientRecv())
 
-        if (isUpgraded) {
-          // Peel off the TracedResponseHeader and add any piggy-backed
-          // spans to our own transcript (if we're in debug mode).
-          val responseHeader = new thrift.TracedResponseHeader
-          val rest = InputBuffer.peelMessage(response, responseHeader)
+        // Peel off the TracedResponseHeader and add any piggy-backed
+        // spans to our own transcript (if we're in debug mode).
+        val responseHeader = new thrift.TracedResponseHeader
+        val rest = InputBuffer.peelMessage(response, responseHeader)
 
-          if (Trace.isDebugging && (responseHeader.spans ne null)) {
-            Trace.merge(responseHeader.spans map { _.toFinagleSpan })
-          }
-
-          rest
-        } else {
-          response
+        if (header.debug && (responseHeader.spans ne null)) {
+          Trace.merge(responseHeader.spans map { _.toFinagleSpan })
         }
+
+        rest
       }
     }
   }
