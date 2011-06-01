@@ -127,11 +127,6 @@ public abstract class Client {
     return this.prepend(key, toChannelBuffer(value));
   }
 
-  /**
-   * release the underlying service(s)
-   */
-  abstract public void release();
-
   private ChannelBuffer toChannelBuffer(String value) {
     return ChannelBuffers.wrappedBuffer(value.getBytes());
   }

@@ -138,8 +138,4 @@ public class ClientBase extends Client {
       }
     });
   }
-
-  public void release() {
-    underlying.release();
-  }
 }

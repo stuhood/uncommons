@@ -136,11 +136,6 @@ trait Client {
    * @return true if stored, false if not stored
    */
   def replace(key: String, value: ChannelBuffer): Future[Boolean] = replace(key, 0, Time.epoch, value)
-
-  /**
-   * release the underlying service(s)
-   */
-  def release(): Unit
 }
 
 /**
@@ -240,10 +235,6 @@ protected class ConnectedClient(service: Service[Command, Response]) extends Cli
       case _             => throw new IllegalStateException
     }
   }
-
-  def release() {
-    service.release()
-  }
 }
 
 /**
@@ -325,10 +316,6 @@ class KetamaClient(clients: Map[(String, Int, Int), Client], keyHasher: KeyHashe
   protected[memcached] def clientOf(key: String) = {
     distributor.nodeForKey(key)
   }
-
-  def release() {
-    clients.values foreach { _.release() }
-  }
 }
 
 case class KetamaClientBuilder(
@@ -376,10 +363,6 @@ class RubyMemCacheClient(clients: Seq[Client]) extends PartitionedClient {
     val hash = (KeyHasher.CRC32_ITU.hashKey(key) >> 16) & 0x7fff
     val index = hash % clients.size
     clients(index.toInt)
-  }
-
-  def release() {
-    clients foreach { _.release() }
   }
 }
 
