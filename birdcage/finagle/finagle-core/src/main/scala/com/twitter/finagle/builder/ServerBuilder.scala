@@ -38,7 +38,7 @@ import com.twitter.finagle.tracing.{TraceReceiver, TracingFilter, NullTraceRecei
 import com.twitter.finagle.util.Conversions._
 import com.twitter.finagle.util._
 import com.twitter.finagle.util.Timer._
-import com.twitter.util.Future
+import com.twitter.util.{Future, Promise}
 import com.twitter.concurrent.AsyncSemaphore
 
 import channel.{ChannelClosingHandler, ServiceToChannelHandler, ChannelSemaphoreHandler}
@@ -82,6 +82,8 @@ final case class ServerConfig[Req, Rep](
   private val _name:                            Option[String]                          = None,
   private val _sendBufferSize:                  Option[Int]                             = None,
   private val _recvBufferSize:                  Option[Int]                             = None,
+  private val _keepAlive:                       Option[Boolean]                         = None,
+  private val _backlog:                         Option[Int]                            = None,
   private val _bindTo:                          Option[SocketAddress]                   = None,
   private val _logger:                          Option[Logger]                          = None,
   private val _tls:                             Option[(String, String)]                = None,
@@ -107,6 +109,8 @@ final case class ServerConfig[Req, Rep](
   val name                            = _name
   val sendBufferSize                  = _sendBufferSize
   val recvBufferSize                  = _recvBufferSize
+  val keepAlive                       = _keepAlive
+  val backlog                         = _backlog
   val bindTo                          = _bindTo
   val logger                          = _logger
   val tls                             = _tls
@@ -128,6 +132,8 @@ final case class ServerConfig[Req, Rep](
     "name"                            -> _name,
     "sendBufferSize"                  -> _sendBufferSize,
     "recvBufferSize"                  -> _recvBufferSize,
+    "keepAlive"                       -> _keepAlive,
+    "backlog"                         -> _backlog,
     "bindTo"                          -> _bindTo,
     "logger"                          -> _logger,
     "tls"                             -> _tls,
@@ -203,6 +209,12 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
   def recvBufferSize(value: Int) =
     withConfig(_.copy(_recvBufferSize = Some(value)))
 
+  def keepAlive(value: Boolean) =
+    withConfig(_.copy(_keepAlive = Some(value)))
+
+  def backlog(value: Int) =
+    withConfig(_.copy(_backlog = Some(value)))
+
   def bindTo(address: SocketAddress) =
     withConfig(_.copy(_bindTo = Some(address)))
 
@@ -251,11 +263,16 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
   def build(service: Service[Req, Rep]): Server = build(() => service)
 
   /**
+   * Construct the Server, given the provided Service factory.
+   */
+  def build(serviceFactory: () => Service[Req, Rep]): Server = build(_ => serviceFactory())
+
+  /**
    * Construct the Server, given the provided ServiceFactory. This
    * is useful if the protocol is stateful (e.g., requires authentication
    * or supports transactions).
    */
-  def build(serviceFactory: () => Service[Req, Rep]): Server = {
+  def build(serviceFactory: (ClientConnection) => Service[Req, Rep]): Server = {
     config.assertValid()
 
     val scopedStatsReceiver =
@@ -274,8 +291,10 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
     bs.setOption("reuseAddress", true)
 
     bs.setOption("child.tcpNoDelay", true)
+    config.backlog.foreach { s => bs.setOption("backlog", s) }
     config.sendBufferSize foreach { s => bs.setOption("child.sendBufferSize", s) }
     config.recvBufferSize foreach { s => bs.setOption("child.receiveBufferSize", s) }
+    config.keepAlive.foreach { s => bs.setOption("child.keepAlive", s) }
 
     // TODO: we need something akin to a max queue depth.
     val queueingChannelHandlerAndGauges =
@@ -374,11 +393,15 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
         // per channel.
         queueingChannelHandler foreach { pipeline.addLast("queue", _) }
 
+        /*
+         * this is a wrapper for the factory-created service for this connection, which we'll
+         * build once we get an "open" event from netty.
+         */
+        val postponedService = new Promise[Service[Req, Rep]]
+
         // Compose the service stack.
         var service: Service[Req, Rep] = {
-          val underlying = serviceFactory()
-          val prepared   = codec.prepareService(underlying)
-          new ProxyService(prepared)
+          new ProxyService(postponedService flatMap { s => codec.prepareService(s) })
         }
 
         statsFilter foreach { sf =>
@@ -418,13 +441,14 @@ class ServerBuilder[Req, Rep](val config: ServerConfig[Req, Rep]) {
         // one here.
         service = (new TracingFilter(config.traceReceiver)) andThen service
 
-        // Register the channel so we can wait for them for a
-        // drain. We close the socket but wait for all handlers to
-        // complete (to drain them individually.)  Note: this would be
-        // complicated by the presence of pipelining.
         val channelHandler = new ServiceToChannelHandler(
-          service, scopedOrNullStatsReceiver)
+          service, postponedService, serviceFactory, scopedOrNullStatsReceiver, Logger.getLogger(getClass.getName))
 
+        /*
+         * Register the channel so we can wait for them for a drain. We close the socket but wait
+         * for all handlers to complete (to drain them individually.)  Note: this would be
+         * complicated by the presence of pipelining.
+         */
         val handle = new ChannelHandle {
           def close() =
             channelHandler.close()

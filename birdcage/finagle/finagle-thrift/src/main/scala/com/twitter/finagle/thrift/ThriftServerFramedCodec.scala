@@ -81,7 +81,7 @@ private[thrift] class ThriftServerTracingFilter
         Some(SpanId(header.getTrace_id)),
         serviceName,
         Some(msg.name),
-        Some(Endpoint.fromSocketAddress(boundAddress).boundEndpoint))
+        Some(Endpoint.fromSocketAddress(boundAddress)))
 
       if (header.debug)
         Trace.debug(true)  // (don't turn off when !header.debug)
