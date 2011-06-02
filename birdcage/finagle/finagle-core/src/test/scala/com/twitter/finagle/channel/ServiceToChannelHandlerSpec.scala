@@ -11,8 +11,8 @@ import org.jboss.netty.channel.{
   ChannelPipeline, DownstreamMessageEvent,
   ChannelStateEvent, Channels}
 
-import com.twitter.util.{Future, Promise}
-import com.twitter.finagle.{ClientConnection, Service}
+import com.twitter.util.Future
+import com.twitter.finagle.Service
 import com.twitter.finagle.stats.StatsReceiver
 
 object ServiceToChannelHandlerSpec extends Specification with Mockito {
@@ -22,16 +22,12 @@ object ServiceToChannelHandlerSpec extends Specification with Mockito {
     val log = mock[StatsReceiver]
     val request = new Foo
     val service = mock[Service[Foo, String]]
-    val postponedService = mock[Promise[Service[Foo, String]]]
-    val serviceFactory = { (clientConnection: ClientConnection) => service }
-    val handler = new ServiceToChannelHandler(service, postponedService, serviceFactory,
-      log, Logger.getLogger(getClass.getName))
+    val handler = new ServiceToChannelHandler(service, log)
     val pipeline = mock[ChannelPipeline]
     val channel = mock[Channel]
     val closeFuture = Channels.future(channel)
     channel.close returns closeFuture
     channel.isOpen returns true
-    channel.getCloseFuture returns closeFuture
     val ctx = mock[ChannelHandlerContext]
     channel.getPipeline returns pipeline
     ctx.getChannel returns channel
