@@ -1,3 +1,4 @@
+config
 target/
 dist/
 project/boot/
@@ -7,6 +8,7 @@ project/plugins/src_managed/
 **/project/plugins/project/
 **/project/plugins/src_managed/
 *.log
+*.json
 *.tmproj
 lib_managed/
 *.swp
