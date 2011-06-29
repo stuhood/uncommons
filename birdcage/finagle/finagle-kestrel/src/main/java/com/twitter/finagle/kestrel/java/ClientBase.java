@@ -49,8 +49,4 @@ public class ClientBase extends com.twitter.finagle.kestrel.java.Client {
   public ChannelSource<ChannelBuffer> source(String key) {
     return underlying.to(key);
   }
-
-  public void close() {
-    underlying.close();
-  }
 }

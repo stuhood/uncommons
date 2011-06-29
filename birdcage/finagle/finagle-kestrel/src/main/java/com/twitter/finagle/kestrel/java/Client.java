@@ -74,11 +74,6 @@ public abstract class Client {
   abstract public ChannelSource<ChannelBuffer> source(String key);
 
   /**
-   * Release any resources (like threadpools) used by this client.
-   */
-  abstract public void close();
-
-  /**
    * Dequeue an item
    *
    * @param key the queue name
@@ -99,14 +94,14 @@ public abstract class Client {
   }
 
   /**
-   * Enqueue an item with no expiry.
+   * Enqueue an item.
    *
    * @param key the queue
    * @param value the item as a ChannelBuffer
    * @return a Future<Reponse> indicating success or failure.
    */
   public Future<Response> set(String key, ChannelBuffer value) {
-    return this.set(key, value, Time.fromMilliseconds(0));
+    return this.set(key, value);
   }
 
   /**
