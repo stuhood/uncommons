@@ -1,5 +1,3 @@
-config
-!gluebird/config
 target/
 dist/
 project/boot/
