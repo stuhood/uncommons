@@ -24,7 +24,7 @@ class WriteTimedOutException                extends ChannelException
 class UnknownChannelException(e: Throwable) extends ChannelException {
   override def toString = "%s: %s".format(super.toString, e.toString)
 }
-case class WriteException(e: Throwable)     extends ChannelException {
+class WriteException(e: Throwable)          extends ChannelException {
   override def toString = "%s: %s".format(super.toString, e.toString)
 }
 
