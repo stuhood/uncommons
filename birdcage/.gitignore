@@ -1,4 +1,3 @@
-config
 !gluebird/config
 !gluebird/src/main/scala/com/twitter/gluebird/flock/config
 !gizmoduck/config

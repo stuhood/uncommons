@@ -151,6 +151,4 @@ object NullStatsReceiver extends StatsReceiver {
   }
 
   def addGauge(name: String*)(f: => Float) = new Gauge { def remove() {} }
-
-  def get = this
 }
