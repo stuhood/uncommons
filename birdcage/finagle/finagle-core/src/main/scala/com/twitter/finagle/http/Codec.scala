@@ -26,12 +26,8 @@ private[http] object BadHttpRequest {
 private[http] object BadRequestResponse
   extends DefaultHttpResponse(HttpVersion.HTTP_1_0, HttpResponseStatus.BAD_REQUEST)
 
-private[http] class SafeHttpServerCodec(
-    maxInitialLineLength: Int,
-    maxHeaderSize: Int,
-    maxChunkSize: Int)
-  extends HttpServerCodec(maxInitialLineLength, maxHeaderSize, maxChunkSize)
-{
+private[http] class SafeHttpServerCodec extends HttpServerCodec {
+
   override def handleUpstream(ctx: ChannelHandlerContext, e: ChannelEvent) {
     // this only catches Codec exceptions -- when a handler calls sendUpStream(), it
     // rescues exceptions from the upstream handlers and calls notifyHandlerException(),
@@ -120,14 +116,7 @@ case class Http(
             pipeline.addLast(
               "channelBufferManager", new ChannelBufferManager(_channelBufferUsageTracker.get))
           }
-
-          val maxRequestSizeInBytes = _maxRequestSize.inBytes.toInt
-          if (maxRequestSizeInBytes < 8192) {
-            pipeline.addLast("httpCodec", new SafeHttpServerCodec(4096, 8192, maxRequestSizeInBytes))
-          } else {
-            pipeline.addLast("httpCodec", new SafeHttpServerCodec(4096, 8192, 8192))
-          }
-
+          pipeline.addLast("httpCodec", new SafeHttpServerCodec())
           if (_compressionLevel > 0) {
             pipeline.addLast(
               "httpCompressor",
@@ -138,7 +127,7 @@ case class Http(
           pipeline.addLast("respondToExpectContinue", new RespondToExpectContinue)
           pipeline.addLast(
             "httpDechunker",
-            new HttpChunkAggregator(maxRequestSizeInBytes))
+            new HttpChunkAggregator(_maxRequestSize.inBytes.toInt))
 
           _annotateCipherHeader foreach { headerName: String =>
             pipeline.addLast("annotateCipher", new AnnotateCipher(headerName))
