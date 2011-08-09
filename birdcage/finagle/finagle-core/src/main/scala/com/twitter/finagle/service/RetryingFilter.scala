@@ -17,15 +17,15 @@ object RetryingService {
    * WriteException.
    */
   def tries[Req, Rep](numTries: Int, stats: StatsReceiver): SimpleFilter[Req, Rep] = {
-    implicit val fakeTimer = new Timer {
-      def schedule(when: Time)(f: => Unit): TimerTask = throw new Exception("illegal use!")
-      def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = throw new Exception("illegal use!")
-      def stop() { throw new Exception("illegal use!") }
+      implicit val fakeTimer = new Timer {
+        def schedule(when: Time)(f: => Unit): TimerTask = throw new Exception("illegal use!")
+        def schedule(when: Time, period: Duration)(f: => Unit): TimerTask = throw new Exception("illegal use!")
+        def stop() { throw new Exception("illegal use!") }
+      }
+      RetryingFilter[Req, Rep](Backoff.const(0.second) take (numTries - 1), stats) {
+        case Throw(ex: WriteException) => true
+      }
     }
-    RetryingFilter[Req, Rep](Backoff.const(0.second) take (numTries - 1), stats) {
-      case Throw(ex: WriteException) => true
-    }
-  }
 }
 
 object RetryingFilter {
@@ -50,8 +50,7 @@ class RetryingFilter[Req, Rep](
     timer: Timer)
   extends SimpleFilter[Req, Rep]
 {
-  private[this] val retriesStat = statsReceiver.stat("retries")
-  private[this] val retriesExhaustedStat = statsReceiver.stat("retries_exhausted")
+  private[this] val retriesStats = statsReceiver.stat("retries")
 
   private[this] def dispatch(
     request: Req, service: Service[Req, Rep],
@@ -71,12 +70,11 @@ class RetryingFilter[Req, Rep](
             dispatch(request, service, replyPromise, rest, count + 1)
 
           case _ =>
-            retriesStat.add(count)
-            retriesExhaustedStat.add(1)
+            retriesStats.add(count)
             replyPromise() = res
         }
       } else {
-        retriesStat.add(count)
+        retriesStats.add(count)
         replyPromise() = res
       }
     }
