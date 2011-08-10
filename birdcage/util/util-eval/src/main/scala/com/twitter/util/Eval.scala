@@ -27,11 +27,9 @@ import scala.collection.mutable
 import scala.io.Source
 import scala.tools.nsc.{Global, Settings}
 import scala.tools.nsc.interpreter.AbstractFileClassLoader
-import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
+import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.AbstractReporter
 import scala.tools.nsc.util.{BatchSourceFile, Position}
-
-case class LastMod(timestamp: Long, code: String)
 
 /**
  * Evaluate a file or string and return the result.
@@ -41,35 +39,7 @@ object Eval extends Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
 }
 
-/**
- * evaluates files, strings or input streams, and returns the result.
- * In all cases, code to be evaled is wrapped in an apply method in a
- * generated class. An instance of the class is instantiated, and the
- * result of apply is returned.
- *
- * If target is None, the results are compiled to memory (and are therefore
- * ephemeral). If target is Some(path), path must point to a directory, and
- * eval emits class files to that directory.
- *
- * eval also supports a limited set of preprocessors. Limited means
- * exactly one, that supports directives of the form #include <file>.
- *
- * The general flow of evaluation is
- * # convert arguments to a string
- * # run preprocessors on that string
- * # wrap processed code in a class
- * # compile the class
- * # create an instance of that class
- * # return the results of apply()
- */
-class Eval(target: Option[File]) {
-  /**
-   * empty constructor for backwards compatibility
-   */
-  def this() {
-    this(None)
-  }
-
+class Eval {
   import Eval.jvmId
 
   private lazy val compilerPath = try {
@@ -87,13 +57,9 @@ class Eval(target: Option[File]) {
   }
 
   /**
-   * Preprocessors to run the code through before it is passed to the Scala compiler.
-   * if you want to add new resolvers, you can do so with
-   * new Eval(...) {
-   *   lazy val preprocessors = {...}
-   * }
+   * Preprocessors to run the code through before it is passed to the Scala compiler
    */
-  protected lazy val preprocessors: Seq[Preprocessor] =
+  private lazy val preprocessors: Seq[Preprocessor] =
     Seq(
       new IncludePreprocessor(
         Seq(
@@ -104,95 +70,45 @@ class Eval(target: Option[File]) {
       )
     )
 
-  private lazy val compiler = new StringCompiler(2, target)
-
-  /**
-   * run preprocessors on our string, returning a LastMod
-   * where timestamp is the last modified time of any file in that contributed
-   * to the text.
-   * Last modified is computed here because we support includes
-   */
-  def sourceForString(code: String) = {
-    preprocessors.foldLeft(LastMod(0L, code)) { (acc, p) =>
-      val processed = p(acc.code)
-      LastMod(acc.timestamp max processed.timestamp, processed.code)
-    }
-  }
+  private lazy val compiler = new StringCompiler(2, preprocessors)
 
   /**
    * Eval[Int]("1 + 1") // => 2
    */
   def apply[T](code: String, resetState: Boolean = true): T = {
-    val processed = sourceForString(code)
-    applyProcessed(processed.code, resetState)
+    val id = uniqueId(code)
+    val className = "Evaluator__" + id
+    val cls = compiler(wrapCodeInClass(className, code), className, id, resetState)
+    cls.getConstructor().newInstance().asInstanceOf[() => Any].apply().asInstanceOf[T]
   }
 
   /**
    * Eval[Int](new File("..."))
    */
   def apply[T](files: File*): T = {
-    if (target.isDefined) {
-      val targetDir = target.get
-      val unprocessedSource = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
-      val processed = sourceForString(unprocessedSource)
-      val oldestTarget = targetDir.listFiles.foldLeft(Long.MaxValue)((oldest, f) => f.lastModified min oldest)
-      if (processed.timestamp > oldestTarget) {
-        compiler.reset()
-      }
-      val className = "Evaluator__" + files(0).getName.split("\\.")(0)
-      applyProcessed(className, processed.code, false)
-    } else {
-      apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
-    }
+    apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"))
   }
 
   /**
    * Eval[Int](getClass.getResourceAsStream("..."))
    */
   def apply[T](stream: InputStream): T = {
-    apply(sourceForString(Source.fromInputStream(stream).mkString).code)
+    apply(Source.fromInputStream(stream).mkString)
   }
 
-  /**
-   * same as apply[T], but does not run preprocessors.
-   * Will generate a classname of the form Evaluater__<unique>,
-   * where unique is computed from the jvmID (a random number)
-   * and a digest of code
-   */
-  def applyProcessed[T](code: String, resetState: Boolean): T = {
-    val id = uniqueId(code)
-    val className = "Evaluator__" + id
-    applyProcessed(className, code, resetState)
-  }
-
-  /**
-   * same as apply[T], but does not run preprocessors.
-   */
-  def applyProcessed[T](className: String, code: String, resetState: Boolean): T = {
-    val cls = compiler(wrapCodeInClass(className, code), className, resetState)
-    cls.getConstructor().newInstance().asInstanceOf[() => Any].apply().asInstanceOf[T]
-  }
-
-  /**
-   * converts the given file to evaluable source.
-   * delegates to toSource(code: String)
-   */
   def toSource(file: File): String = {
     toSource(scala.io.Source.fromFile(file).mkString)
   }
 
-  /**
-   * converts the given file to evaluable source.
-   */
   def toSource(code: String): String = {
-    sourceForString(code).code
+    compiler.sourceForString(code)
   }
 
   /**
    * Compile an entire source file into the virtual classloader.
    */
   def compile(code: String) {
-    compiler(sourceForString(code).code)
+    compiler(code)
   }
 
   /**
@@ -208,7 +124,7 @@ class Eval(target: Option[File]) {
    * @throw CompilerException if not Eval-able.
    */
   def check(code: String) {
-    val id = uniqueId(sourceForString(code).code)
+    val id = uniqueId(code)
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
     compile(wrappedCode) // may throw CompilerException
@@ -287,13 +203,12 @@ class Eval(target: Option[File]) {
   }
 
   trait Preprocessor {
-    def apply(code: String): LastMod
+    def apply(code: String): String
   }
 
   trait Resolver {
     def resolvable(path: String): Boolean
     def get(path: String): InputStream
-    def lastModified(path: String): Long
   }
 
   class FilesystemResolver(root: File) extends Resolver {
@@ -303,14 +218,6 @@ class Eval(target: Option[File]) {
 
     def resolvable(path: String): Boolean =
       file(path).exists
-
-    def lastModified(path: String): Long = {
-      if (resolvable(path)) {
-        file(path).lastModified
-      } else {
-        0
-      }
-    }
 
     def get(path: String): InputStream =
       new FileInputStream(file(path))
@@ -322,8 +229,6 @@ class Eval(target: Option[File]) {
 
     def resolvable(path: String): Boolean =
       clazz.getResourceAsStream(quotePath(path)) != null
-
-    def lastModified(path: String): Long = 0
 
     def get(path: String): InputStream =
       clazz.getResourceAsStream(quotePath(path))
@@ -340,51 +245,40 @@ class Eval(target: Option[File]) {
    * @example #include file-name.scala
    *
    * This is the only directive supported by this preprocessor.
-   *
-   * Note that it is *not* recursive. Included files cannot have includes
    */
-  class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
-    def apply(code: String): LastMod = {
-      var lastMod = 0L
-      val lines = code.lines map { line: String =>
+  private class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
+    def apply(code: String): String =
+      code.lines map { line: String =>
         val tokens = line.trim.split(' ')
         if (tokens.length == 2 && tokens(0).equals("#include")) {
           val path = tokens(1)
           resolvers find { resolver: Resolver =>
             resolver.resolvable(path)
           } match {
-            case Some(r: Resolver) => {
-              lastMod = lastMod max r.lastModified(path)
+            case Some(r: Resolver) =>
               StreamIO.buffer(r.get(path)).toString
-            }
             case _ =>
               throw new IllegalStateException("No resolver could find '%s'".format(path))
           }
         } else {
           line
         }
-      }
-      val processed = lines.mkString("\n")
-      LastMod(lastMod, processed)
-    }
+      } mkString("\n")
   }
 
   /**
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
    */
-  private class StringCompiler(lineOffset: Int, targetDir: Option[File]) {
-    val target = targetDir match {
-      case Some(dir) => AbstractFile.getDirectory(dir)
-      case None => new VirtualDirectory("(memory)", None)
-    }
+  private class StringCompiler(lineOffset: Int, preprocessors: Seq[Preprocessor]) {
+    val virtualDirectory = new VirtualDirectory("(memory)", None)
 
     val cache = new mutable.HashMap[String, Class[_]]()
 
     val settings = new Settings
     settings.deprecation.value = true // enable detailed deprecation warnings
     settings.unchecked.value = true // enable detailed unchecked warnings
-    settings.outputDirs.setSingleOutput(target)
+    settings.outputDirs.setSingleOutput(virtualDirectory)
 
     val pathList = compilerPath ::: libPath
     settings.bootclasspath.value = pathList.mkString(File.pathSeparator)
@@ -427,24 +321,12 @@ class Eval(target: Option[File]) {
      * Class loader for finding classes compiled by this StringCompiler.
      * After each reset, this class loader will not be able to find old compiled classes.
      */
-    var classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+    var classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
 
     def reset() {
-      targetDir match {
-        case None => {
-          target.asInstanceOf[VirtualDirectory].clear
-        }
-        case Some(t) => {
-          target.foreach { abstractFile =>
-            if (abstractFile.file == null || abstractFile.file.getName.endsWith(".class")) {
-              abstractFile.delete
-            }
-          }
-        }
-      }
-      cache.clear()
+      virtualDirectory.clear
       reporter.reset
-      classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+      classLoader = new AbstractFileClassLoader(virtualDirectory, this.getClass.getClassLoader)
     }
 
     object Debug {
@@ -480,12 +362,14 @@ class Eval(target: Option[File]) {
      * Compile scala code. It can be found using the above class loader.
      */
     def apply(code: String) {
+      val processedCode = sourceForString(code)
+
       if (Debug.enabled)
-        Debug.printWithLineNumbers(code)
+        Debug.printWithLineNumbers(processedCode)
 
       // if you're looking for the performance hit, it's 1/2 this line...
       val compiler = new global.Run
-      val sourceFiles = List(new BatchSourceFile("(inline)", code))
+      val sourceFiles = List(new BatchSourceFile("(inline)", processedCode))
       // ...and 1/2 this line:
       compiler.compileSources(sourceFiles)
 
@@ -494,10 +378,14 @@ class Eval(target: Option[File]) {
       }
     }
 
+    def sourceForString(code: String) = {
+      preprocessors.foldLeft(code) { case (c: String, p: Preprocessor) => p(c) }
+    }
+
     /**
      * Compile a new class, load it, and return it. Thread-safe.
      */
-    def apply(code: String, className: String, resetState: Boolean = true): Class[_] = {
+    def apply(code: String, className: String, id: String, resetState: Boolean = true): Class[_] = {
       synchronized {
         if (resetState) reset()
         findClass(className).getOrElse {
