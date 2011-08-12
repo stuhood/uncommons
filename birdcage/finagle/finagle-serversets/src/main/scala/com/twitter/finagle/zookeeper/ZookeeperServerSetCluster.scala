@@ -17,8 +17,6 @@ import com.twitter.finagle.ServiceFactory
  * membership is indicated by children Zookeeper node.
  */
 class ZookeeperServerSetCluster(serverSet: ServerSet) extends Cluster {
-  private[zookeeper] var thread: Thread = null
-
   def join(address: SocketAddress) {
     require(address.isInstanceOf[InetSocketAddress])
 
@@ -41,23 +39,17 @@ class ZookeeperServerSetCluster(serverSet: ServerSet) extends Cluster {
       private[this] val queuedChange =
         new AtomicReference[ImmutableSet[ServiceInstance]](null)
 
-      // serverSet.monitor will block until initial membership is available
-      thread = new Thread {
-        override def run {
-          serverSet.monitor(new DynamicHostSet.HostChangeMonitor[ServiceInstance] {
-            def onChange(serverSet: ImmutableSet[ServiceInstance]) = {
-              val lastValue = queuedChange.getAndSet(serverSet)
-              val firstToChange = lastValue eq null
-              if (firstToChange) {
-                do {
-                  performChange(serverSet)
-                } while (!queuedChange.compareAndSet(serverSet, null))
-              }
-            }
-          })
+      serverSet.monitor(new DynamicHostSet.HostChangeMonitor[ServiceInstance] {
+        def onChange(serverSet: ImmutableSet[ServiceInstance]) = {
+          val lastValue = queuedChange.getAndSet(serverSet)
+          val firstToChange = lastValue eq null
+          if (firstToChange) {
+            do {
+              performChange(serverSet)
+            } while (!queuedChange.compareAndSet(serverSet, null))
+          }
         }
-      }
-      thread.start()
+      })
 
       private[this] def performChange(serverSet: ImmutableSet[ServiceInstance]) {
         val oldMap = underlyingMap

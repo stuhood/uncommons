@@ -19,7 +19,7 @@ class Stream extends CodecFactory[HttpRequest, StreamResponse] {
         def getPipeline = {
           val pipeline = Channels.pipeline()
           pipeline.addLast("httpCodec", new HttpServerCodec)
-          pipeline.addLast("httpChunker", new HttpChunker)
+          pipeline.addLast("dechannelize", new ChannelToHttpChunk)
           pipeline
         }
       }
@@ -32,7 +32,7 @@ class Stream extends CodecFactory[HttpRequest, StreamResponse] {
         def getPipeline = {
           val pipeline = Channels.pipeline()
           pipeline.addLast("httpCodec", new HttpClientCodec)
-          pipeline.addLast("httpDechunker", new HttpDechunker)
+          pipeline.addLast("bechannelfy", new HttpChunkToChannel)
           pipeline
         }
       }

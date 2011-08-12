@@ -97,7 +97,7 @@ object Offer {
 
       val ha = System.identityHashCode(a)
       val hb = System.identityHashCode(b)
-      val d = ha compare hb
+      val d = ha - hb
       if (d != 0)
         return d
 

@@ -10,12 +10,6 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
 
   val nettyRepo =
     "repository.jboss.org" at "http://repository.jboss.org/nexus/content/groups/public/"
-    
-  val reflectionsRepo =
-    "reflections.googlecode.com" at "http://reflections.googlecode.com/svn/repo"
-    
-  val codahaleRepo =
-    "repo.codahale.com" at "http://repo.codahale.com"
 
   val twitterRepo = "twitter.com" at "http://maven.twttr.com/"
 
@@ -203,10 +197,9 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
         <exclude module="jms"/>
         <exclude module="jmxtools"/>
         <exclude module="jmxri"/>
-        <override org="commons-codec" rev="1.5"/>
       </dependencies>
 
-    val commonsZookeeper = "com.twitter.common" % "zookeeper" % "0.0.24"
+    val commonsZookeeper = "com.twitter.common" % "zookeeper" % "0.0.14"
   }
 
   class ExampleProject(info: ProjectInfo) extends StandardProject(info)
@@ -228,7 +221,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   class Ostrich4Project(info: ProjectInfo) extends StandardProject(info)
     with Defaults
   {
-    val ostrich = "com.twitter" % "ostrich" % "4.8.2"
+    val ostrich4 = "com.twitter" % "ostrich" % "4.7.3"
   }
 
   class NativeProject(info: ProjectInfo) extends StandardProject(info)
@@ -240,7 +233,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift   = "thrift"      % "libthrift" % "0.5.0"
     val slf4jNop = "org.slf4j"   % "slf4j-nop" % "1.5.8" % "provided"
-    val ostrich4 = "com.twitter" % "ostrich" % "4.8.2"
+    val ostrich4 = "com.twitter" % "ostrich" % "4.7.3"
   }
 
   class B3Project(info: ProjectInfo) extends StandardProject(info)
@@ -279,4 +272,5 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     override def compileOrder = CompileOrder.JavaThenScala
     val commonsStats    = "com.twitter.common"    % "stats" % "0.0.16"
   }
+
 }
