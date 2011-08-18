@@ -30,3 +30,5 @@ Gemfile.lock
 *~
 .*~
 /bin/sbt-launch-0.7.5.jar
+.ensime.msg.counter
+ensime_port
