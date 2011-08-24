@@ -1,11 +1,11 @@
 package com.twitter.util
 
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
-import scala.collection.mutable
+import java.util.concurrent.atomic.AtomicInteger
 import scala.annotation.tailrec
 
 import com.twitter.concurrent.{Offer, IVar}
 import com.twitter.conversions.time._
+import java.util.concurrent.{CancellationException, TimeUnit, Future => JavaFuture}
 
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
@@ -68,42 +68,6 @@ object Future {
    * @return a Future[Seq[A]] containing the collected values from fs.
    */
   def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
-    if (fs.isEmpty) {
-      Future(Seq[A]())
-    } else {
-      val results = new AtomicReferenceArray[A](fs.size)
-      val count = new AtomicInteger(fs.size)
-      val promise = new Promise[Seq[A]]
-
-      for (i <- 0 until fs.size) {
-        val f = fs(i)
-        promise.linkTo(f)
-        f onSuccess { x =>
-          results.set(i, x)
-          if (count.decrementAndGet() == 0) {
-            val resultsArray = new mutable.ArrayBuffer[A](fs.size)
-            for (j <- 0 until fs.size) resultsArray += results.get(j)
-            promise.setValue(resultsArray)
-          }
-        } onFailure { cause =>
-          try {
-            promise.setException(cause)
-          } catch {
-            case _ => // some earlier exception was set
-          }
-        }
-      }
-      promise
-    }
-  }
-
-  /*
-   * original version:
-   *
-   * often, this version will not trigger even after all of the collected
-   * futures have triggered. some debugging is required.
-   *
-  def collect[A](fs: Seq[Future[A]]): Future[Seq[A]] = {
     val collected = fs.foldLeft(Future.value(Nil: List[A])) { case (a, e) =>
       a flatMap { aa => e map { _ :: aa } }
     } map { _.reverse }
@@ -115,7 +79,6 @@ object Future {
 
     collected
   }
-  */
 
   /**
    * "Select" off the first future to be satisfied.  Return this as a
@@ -381,6 +344,52 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
       () => ()
     }
     def objects = Seq()
+  }
+
+  /**
+   * Convert a Twitter Future to a Java native Future. This should match the semantics
+   * of a Java Future as closely as possible to avoid issues with the way another API might
+   * use them. See:
+   *
+   * http://download.oracle.com/javase/6/docs/api/java/util/concurrent/Future.html#cancel(boolean)
+   */
+  def toJavaFuture: JavaFuture[_ <: A] = {
+    val f = this
+    new JavaFuture[A] {
+      override def cancel(cancel: Boolean): Boolean = {
+        if (isDone || isCancelled) {
+          false
+        } else {
+          f.cancel()
+          true
+        }
+      }
+
+      override def isCancelled: Boolean = {
+        f.isCancelled
+      }
+
+      override def isDone: Boolean = {
+        f.isCancelled || f.isDefined
+      }
+
+      override def get(): A = {
+        if (isCancelled) {
+          throw new CancellationException()
+        }
+        f()
+      }
+
+      override def get(time: Long, timeUnit: TimeUnit): A = {
+        if (isCancelled) {
+          throw new CancellationException()
+        }
+        f.get(Duration.fromTimeUnit(time, timeUnit)) match {
+          case Return(r) => r
+          case Throw(e) => throw e
+        }
+      }
+    }
   }
 }
 
