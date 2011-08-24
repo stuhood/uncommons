@@ -1,5 +1,3 @@
-package com.twitter.finagle.ssl
-
 import org.specs.Specification
 
 import java.io.File
@@ -13,6 +11,7 @@ import com.twitter.finagle.Service
 import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
 import com.twitter.finagle.ssl.Ssl
 import com.twitter.finagle.http.Http
+import Ssl.ContextFactory
 
 import com.twitter.util.{Future, RandomSocket}
 import com.twitter.util.TimeConversions._
@@ -34,6 +33,36 @@ object SslConfig {
 }
 
 object SslSpec extends Specification {
+  def isNativeProvider(provider: Provider) =
+    provider.toString.startsWith("HarmonyJSSE")
+  def isDefaultProvider(provider: Provider) =
+    provider.toString.startsWith("SunJSSE")
+
+  def testContextFactory(factory: ContextFactory) {
+    val ctx = factory.context(SslConfig.certificatePath, SslConfig.keyPath)
+
+    ctx mustNot beNull
+
+    if (factory == Ssl.DefaultJSSEContextFactory)
+      isDefaultProvider(ctx.getProvider) must beTrue
+    else
+      isNativeProvider(ctx.getProvider) must beTrue
+  }
+
+  "Default SSL provider" should {
+    "be backed by the Sun JSSE Provider and able to be instantiated" in {
+      testContextFactory(Ssl.DefaultJSSEContextFactory)
+    }
+  }
+
+  "Native SSL provider" should {
+    "be backed by the Harmony JSSE and able to be instantiated" in {
+      if (!Ssl.isNativeProviderAvailable())
+        skip("Native provider is not available.")
+      testContextFactory(Ssl.NativeJSSEContextFactory)
+    }
+  }
+
   "automatically detected available provider" should {
     "be able to send and receive various sized content" in {
       val address = RandomSocket.nextAddress
@@ -73,7 +102,7 @@ object SslSpec extends Specification {
           .name("SSLServer")
           .build(service)
 
-      def client =
+      val client =
         ClientBuilder()
           .name("http-client")
           .hosts(Seq(address))

@@ -4,14 +4,13 @@ import com.twitter.util.Duration
 import collection.mutable.HashMap
 import com.twitter.finagle.tracing.TraceId
 import com.twitter.finagle.util.Timer
-import com.twitter.finagle.stats.StatsReceiver
 
 /**
  * Takes care of storing the spans in a thread safe fashion. If a span
  * is not removed from the map it will expire after the deadline is reached
  * and sent off to B3 despite being incomplete.
  */
-class DeadlineSpanMap(tracer: BigBrotherBirdTracer, deadline: Duration, statsReceiver: StatsReceiver) {
+class DeadlineSpanMap(tracer: BigBrotherBirdTracer, deadline: Duration) {
 
   private[this] val spanMap = HashMap[TraceId, Span]()
   private[this] val timer = Timer.default
@@ -28,8 +27,7 @@ class DeadlineSpanMap(tracer: BigBrotherBirdTracer, deadline: Duration, statsRec
 
         // if this new span isn't triggered by a natural end we
         // send off what we have anyway
-        timer.schedule(deadline.fromNow) {
-          statsReceiver.counter("log_span_unfinished").incr()
+        timer.schedule(deadline) {
           remove(traceId) foreach { tracer.logSpan(_) }
         }
 
