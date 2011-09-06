@@ -23,12 +23,13 @@ class ResponseToEncoding extends OneToOneEncoder {
     case Exists()       => Tokens(Seq(EXISTS))
     case Deleted()      => Tokens(Seq(DELETED))
     case NotFound()     => Tokens(Seq(NOT_FOUND))
+    case NoOp()         => Tokens(Seq())
     case Number(value)  => Tokens(Seq(value.toString))
     case Values(values) =>
       val buffer = ChannelBuffers.dynamicBuffer(100 * values.size)
       val tokensWithData = values map {
         case Value(key, value, Some(casUnique)) =>
-          TokensWithData(Seq(VALUE, key, ZERO, casUnique.toString), value)
+          TokensWithData(Seq(VALUE, key, ZERO), value, Some(casUnique))
         case Value(key, value, None) =>
           TokensWithData(Seq(VALUE, key, ZERO), value)
       }
@@ -49,6 +50,8 @@ class CommandToEncoding extends OneToOneEncoder {
   private[this] val PREPEND       = "prepend"
   private[this] val REPLACE       = "replace"
   private[this] val CAS           = "cas"
+
+  private[this] val QUIT          = "quit"
 
   def encode(ctx: ChannelHandlerContext, ch: Channel, message: AnyRef): Decoding = message match {
     case Add(key, flags, expiry, value) =>
@@ -73,6 +76,8 @@ class CommandToEncoding extends OneToOneEncoder {
       Tokens(Seq(DECR, key, amount.toString))
     case Delete(key) =>
       Tokens(Seq(DELETE, key))
+    case Quit() =>
+      Tokens(Seq(QUIT))
   }
 }
 

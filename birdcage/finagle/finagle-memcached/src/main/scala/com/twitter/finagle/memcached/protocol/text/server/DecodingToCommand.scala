@@ -3,13 +3,13 @@ package com.twitter.finagle.memcached.protocol.text.server
 import scala.Function.tupled
 import com.twitter.finagle.memcached.protocol._
 import org.jboss.netty.buffer.ChannelBuffer
-import org.jboss.netty.buffer.ChannelBuffers.copiedBuffer
+import org.jboss.netty.buffer.ChannelBuffers.{copiedBuffer, hexDump}
 import com.twitter.finagle.memcached.util.ChannelBufferUtils._
 import com.twitter.finagle.memcached.util.ParserUtils
 import com.twitter.conversions.time._
+import com.twitter.util.Time
 import org.jboss.netty.handler.codec.oneone.OneToOneDecoder
 import org.jboss.netty.channel.{Channel, ChannelHandlerContext}
-import org.jboss.netty.util.CharsetUtil
 import text.{TokensWithData, Tokens}
 
 object DecodingToCommand {
@@ -24,10 +24,14 @@ object DecodingToCommand {
   private val DELETE  = copiedBuffer("delete" .getBytes)
   private val INCR    = copiedBuffer("incr"   .getBytes)
   private val DECR    = copiedBuffer("decr"   .getBytes)
+  private val QUIT    = copiedBuffer("quit"   .getBytes)
 }
 
 abstract class AbstractDecodingToCommand[C <: AnyRef] extends OneToOneDecoder {
   import ParserUtils._
+
+  // Taken from memcached.c
+  private val RealtimeMaxdelta = 60*60*24*30
 
   def decode(ctx: ChannelHandlerContext, ch: Channel, m: AnyRef) = m match {
     case Tokens(tokens) => parseNonStorageCommand(tokens)
@@ -38,7 +42,12 @@ abstract class AbstractDecodingToCommand[C <: AnyRef] extends OneToOneDecoder {
   protected def parseStorageCommand(tokens: Seq[ChannelBuffer], data: ChannelBuffer): C
 
   protected def validateStorageCommand(tokens: Seq[ChannelBuffer], data: ChannelBuffer) = {
-    (tokens(0), tokens(1).toInt, tokens(2).toInt.seconds.fromNow, data)
+    val expiry = tokens(2).toInt match {
+      case 0 => 0.seconds.afterEpoch
+      case unixtime if unixtime > RealtimeMaxdelta => Time.fromSeconds(unixtime)
+      case delta => delta.seconds.fromNow
+    }
+    (tokens(0), tokens(1).toInt, expiry, data)
   }
 
   protected def validateDeleteCommand(tokens: Seq[ChannelBuffer]) = {
@@ -71,7 +80,7 @@ class DecodingToCommand extends AbstractDecodingToCommand[Command] {
       case REPLACE   => tupled(Replace)(validateStorageCommand(args, data))
       case APPEND    => tupled(Append)(validateStorageCommand(args, data))
       case PREPEND   => tupled(Prepend)(validateStorageCommand(args, data))
-      case _         => throw new NonexistentCommand(commandName.toString)
+      case _         => throw new NonexistentCommand(hexDump(commandName))
     }
   }
 
@@ -84,7 +93,8 @@ class DecodingToCommand extends AbstractDecodingToCommand[Command] {
       case DELETE  => Delete(validateDeleteCommand(args))
       case INCR    => tupled(Incr)(validateArithmeticCommand(args))
       case DECR    => tupled(Decr)(validateArithmeticCommand(args))
-      case _       => throw new NonexistentCommand(commandName.toString)
+      case QUIT    => Quit()
+      case _       => throw new NonexistentCommand(hexDump(commandName))
     }
   }
 }
