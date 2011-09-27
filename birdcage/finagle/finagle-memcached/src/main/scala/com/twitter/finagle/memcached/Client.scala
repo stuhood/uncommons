@@ -1,11 +1,9 @@
 package com.twitter.finagle.memcached
 
 import scala.collection.JavaConversions._
-import scala.collection.immutable
 
 import _root_.java.util.{Map => JMap}
 
-import com.twitter.finagle.{ChannelException, RequestException}
 import com.twitter.finagle.builder.{ClientBuilder, ClientConfig}
 import com.twitter.finagle.memcached.protocol.text.Memcached
 import com.twitter.finagle.memcached.protocol._
@@ -35,23 +33,6 @@ object Client {
    */
   def apply(raw: Service[Command, Response]): Client = {
     new ConnectedClient(raw)
-  }
-}
-
-case class GetResult private[memcached](
-  hits: Map[String, Value] = Map.empty,
-  misses: immutable.Set[String] = immutable.Set.empty,
-  failures: Map[String, Throwable] = Map.empty
-) {
-  lazy val values = hits mapValues { _.value }
-  lazy val valuesWithTokens = hits mapValues { v => (v.value, v.casUnique.get) }
-
-  def ++(o: GetResult) = GetResult(hits ++ o.hits, misses ++ o.misses, failures ++ o.failures)
-}
-
-object GetResult {
-  private[memcached] def merged(results: Seq[GetResult]): GetResult = {
-    results.foldLeft(GetResult()) { _ ++ _ }
   }
 }
 
@@ -102,26 +83,23 @@ trait Client {
    */
   def cas(key: String, flags: Int, expiry: Time, value: ChannelBuffer, casUnique: ChannelBuffer): Future[Boolean]
 
-
   /**
    * Get a key from the server.
    */
-  def get(key: String): Future[Option[ChannelBuffer]] = get(Seq(key))  map { _.values.headOption }
+  def get(key: String):                           Future[Option[ChannelBuffer]]
 
   /**
    * Get a key from the server, with a "cas unique" token.  The token
    * is treated opaquely by the memcache client but is in reality a
    * string-encoded u64.
    */
-  def gets(key: String): Future[Option[(ChannelBuffer, ChannelBuffer)]] =
-    gets(Seq(key)) map { _.values.headOption }
+  def gets(key: String):                          Future[Option[(ChannelBuffer, ChannelBuffer)]]
 
   /**
    * Get a set of keys from the server.
    * @return a Map[String, ChannelBuffer] of all of the keys that the server had.
    */
-  def get(keys: Iterable[String]): Future[Map[String, ChannelBuffer]] =
-    getResult(keys) map { _.values }
+  def get(keys: Iterable[String]):                Future[Map[String, ChannelBuffer]]
 
   /**
    * Get a set of keys from the server, together with a "cas unique"
@@ -131,15 +109,7 @@ trait Client {
    * @return a Map[String, (ChannelBuffer, ChannelBuffer)] of all the
    * keys the server had, together with their "cas unique" token
    */
-  def gets(keys: Iterable[String]): Future[Map[String, (ChannelBuffer, ChannelBuffer)]] =
-    getResult(keys) map { _.valuesWithTokens }
-
-
-  /**
-   * Get a set of keys from the server. Returns a Future[GetResult] that
-   * encapsulates hits, misses and failures.
-   */
-  def getResult(keys: Iterable[String]):          Future[GetResult]
+  def gets(key: Iterable[String]):                Future[Map[String, (ChannelBuffer, ChannelBuffer)]]
 
   /**
    * Remove a key.
@@ -228,26 +198,38 @@ trait Client {
  * @param  underlying  the underlying Memcached Service.
  */
 protected class ConnectedClient(service: Service[Command, Response]) extends Client {
-  private[this] def rawGet(command: RetrievalCommand) = {
-    val keys = immutable.Set(command.keys map { _.toString(CharsetUtil.UTF_8) }: _*)
-
+  private[this] def rawGet(command: Command) = {
     service(command) map {
       case Values(values) =>
         val tuples = values.map {
-          case value => (value.key.toString(CharsetUtil.UTF_8), value)
+          case value@Value(key, _, _) =>
+            (key.toString(CharsetUtil.UTF_8), value)
         }
-        val hits = tuples.toMap
-        val misses = keys -- hits.keySet
-        GetResult(hits, misses)
+        Map(tuples: _*)
       case Error(e) => throw e
       case _        => throw new IllegalStateException
-    } handle {
-      case t: RequestException => GetResult(failures = (keys map { (_, t) }).toMap)
-      case t: ChannelException => GetResult(failures = (keys map { (_, t) }).toMap)
     }
   }
 
-  def getResult(keys: Iterable[String]) = rawGet(Gets(keys.toSeq))
+  def get(key: String) = rawGet(Get(Seq(key))) map { m =>
+    m.values.headOption map { _.value }
+  }
+
+  def get(keys: Iterable[String]) = rawGet(Get(keys.toSeq)) map { m =>
+    m mapValues { value => value.value }
+  }
+
+  def gets(key: String) = rawGet(Gets(Seq(key))) map { m =>
+    m.values.headOption collect {
+      case Value(_, bytes, Some(casUnique)) => (bytes, casUnique)
+    }
+  }
+
+  def gets(keys: Iterable[String]) = rawGet(Gets(keys.toSeq)) map { m =>
+    m collect {
+      case (k, Value(_, bytes, Some(casUnique))) => (k, (bytes, casUnique))
+    }
+  }
 
   def set(key: String, flags: Int, expiry: Time, value: ChannelBuffer) =
     service(Set(key, flags, expiry, value)) map {
@@ -338,19 +320,34 @@ protected class ConnectedClient(service: Service[Command, Response]) extends Cli
 trait PartitionedClient extends Client {
   protected[memcached] def clientOf(key: String): Client
 
-  def getResult(keys: Iterable[String]) = {
+  private[this] def queryGrouped[A]
+    (keys: Iterable[String])
+    (f: (Client, Iterable[String]) => Future[Map[String, A]])
+  : Future[Map[String, A]] = {
     if (!keys.isEmpty) {
       val keysGroupedByClient = keys.groupBy(clientOf(_))
 
-      val results = keysGroupedByClient map { case (client, keys) =>
-        client.getResult(keys)
+      val mapOfMaps = keysGroupedByClient.map { case (client, keys) =>
+        f(client, keys)
       }
 
-      Future.collect(results.toSeq) map { GetResult.merged(_) }
+      mapOfMaps.reduceLeft { (result, nextMap) =>
+        for {
+          result <- result
+          nextMap <- nextMap
+        } yield {
+          result ++ nextMap
+        }
+      }
     } else {
-      Future.value(GetResult())
+      Future(Map.empty)
     }
   }
+
+  def get(key: String)                    = clientOf(key).get(key)
+  def gets(key: String)                   = clientOf(key).gets(key)
+  def get(keys: Iterable[String])         = queryGrouped(keys) { (c, ks) => c.get(ks)  }
+  def gets(keys: Iterable[String])        = queryGrouped(keys) { (c, ks) => c.gets(ks) }
 
   def set(key: String, flags: Int, expiry: Time, value: ChannelBuffer) =
     clientOf(key).set(key, flags, expiry, value)
@@ -366,7 +363,7 @@ trait PartitionedClient extends Client {
     clientOf(key).cas(key, flags, expiry, value, casUnique)
 
 
-  def delete(key: String)            = clientOf(key).delete(key)
+  def delete(key: String)             = clientOf(key).delete(key)
   def incr(key: String)              = clientOf(key).incr(key)
   def incr(key: String, delta: Long) = clientOf(key).incr(key, delta)
   def decr(key: String)              = clientOf(key).decr(key)
