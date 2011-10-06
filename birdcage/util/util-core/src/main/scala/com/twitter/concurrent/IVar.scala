@@ -17,9 +17,6 @@ class IVar[A] {
   private[this] var chainq: List[IVar[A]] = Nil
   @volatile private[this] var result: Option[A] = None
 
-  override def toString =
-    "Ivar@%s(waitq=%s, chainq=%s, result=%s)".format(hashCode, waitq, chainq, result)
-
   /**
    * A blocking get.
    */
