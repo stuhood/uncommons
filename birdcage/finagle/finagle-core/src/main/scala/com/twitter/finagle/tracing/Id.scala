@@ -1,12 +1,12 @@
 package com.twitter.finagle.tracing
 
-import com.twitter.util.{RichU64String, RichU64Long}
-
 /**
  * Defines trace identifiers.  Span IDs name a particular (unique)
  * span, while TraceIds contain a span ID as well as context (parentId
  * and traceId).
  */
+
+import com.twitter.util.RichU64Long
 
 final class SpanId(val self: Long) extends Proxy {
   def toLong = self
@@ -17,7 +17,7 @@ object SpanId {
   def apply(spanId: Long) = new SpanId(spanId)
   def fromString(spanId: String): Option[SpanId] =
     try {
-      Some(this(new RichU64String(spanId).toU64Long))
+      Some(this(java.lang.Long.parseLong(spanId, 16)))
     } catch {
       case _ => None
     }
