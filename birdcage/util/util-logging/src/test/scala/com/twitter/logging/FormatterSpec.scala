@@ -22,8 +22,6 @@ import com.twitter.conversions.string._
 import config._
 
 class FormatterSpec extends Specification {
-  val basicFormatter = new Formatter
-
   val utcConfig = new FormatterConfig {
     timezone = "UTC"
   }
@@ -55,19 +53,19 @@ class FormatterSpec extends Specification {
 
   "Formatter" should {
     "create a prefix" in {
-      basicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") mustEqual
+      BasicFormatter.formatPrefix(Level.ERROR, "20080329-05:53:16.722", "(root)") mustEqual
         "ERR [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") mustEqual
+      BasicFormatter.formatPrefix(Level.DEBUG, "20080329-05:53:16.722", "(root)") mustEqual
         "DEB [20080329-05:53:16.722] (root): "
-      basicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") mustEqual
+      BasicFormatter.formatPrefix(Level.WARNING, "20080329-05:53:16.722", "(root)") mustEqual
         "WAR [20080329-05:53:16.722] (root): "
     }
 
     "format text" in {
       val record = new javalog.LogRecord(Level.ERROR, "error %s")
-      basicFormatter.formatText(record) mustEqual "error %s"
+      BasicFormatter.formatText(record) mustEqual "error %s"
       record.setParameters(Array("123"))
-      basicFormatter.formatText(record) mustEqual "error 123"
+      BasicFormatter.formatText(record) mustEqual "error 123"
     }
 
     "format a timestamp" in {
@@ -85,9 +83,9 @@ class FormatterSpec extends Specification {
       val record = new LazyLogRecord(Level.DEBUG, "this is " + getSideEffect)
 
       callCount mustEqual 0
-      basicFormatter.formatText(record) mustEqual "this is ok"
+      BasicFormatter.formatText(record) mustEqual "this is ok"
       callCount mustEqual 1
-      basicFormatter.formatText(record) mustEqual "this is ok"
+      BasicFormatter.formatText(record) mustEqual "this is ok"
       callCount mustEqual 1
     }
 

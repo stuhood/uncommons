@@ -109,37 +109,29 @@ class FileHandler(val filename: String, rollPolicy: Policy, val append: Boolean,
    * logfile roll.
    */
   def computeNextRollTime(now: Long): Option[Long] = {
-    lazy val next = {
-      val n = formatter.calendar.clone.asInstanceOf[Calendar]
-      n.setTimeInMillis(now)
-      n.set(Calendar.MILLISECOND, 0)
-      n.set(Calendar.SECOND, 0)
-      n.set(Calendar.MINUTE, 0)
-      n
-    }
-
-
-    val rv = rollPolicy match {
+    rollPolicy match {
       case Policy.MaxSize(_) | Policy.Never | Policy.SigHup => None
-      case Policy.Hourly => {
-        next.add(Calendar.HOUR_OF_DAY, 1)
-        Some(next)
-      }
-      case Policy.Daily => {
-        next.set(Calendar.HOUR_OF_DAY, 0)
-        next.add(Calendar.DAY_OF_MONTH, 1)
-        Some(next)
-      }
-      case Policy.Weekly(weekday) => {
-        next.set(Calendar.HOUR_OF_DAY, 0)
-        do {
-          next.add(Calendar.DAY_OF_MONTH, 1)
-        } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
-        Some(next)
-      }
-    }
+      case _ =>
+        val next = formatter.calendar.clone.asInstanceOf[Calendar]
+        next.setTimeInMillis(now)
+        next.set(Calendar.MILLISECOND, 0)
+        next.set(Calendar.SECOND, 0)
+        next.set(Calendar.MINUTE, 0)
+        rollPolicy match {
+          case Policy.Hourly =>
+            next.add(Calendar.HOUR_OF_DAY, 1)
+          case Policy.Daily =>
+            next.set(Calendar.HOUR_OF_DAY, 0)
+            next.add(Calendar.DAY_OF_MONTH, 1)
+          case Policy.Weekly(weekday) =>
+            next.set(Calendar.HOUR_OF_DAY, 0)
+            do {
+              next.add(Calendar.DAY_OF_MONTH, 1)
+            } while (next.get(Calendar.DAY_OF_WEEK) != weekday)
+        }
 
-    rv map { _.getTimeInMillis }
+        Some(next.getTimeInMillis)
+    }
   }
 
   /**

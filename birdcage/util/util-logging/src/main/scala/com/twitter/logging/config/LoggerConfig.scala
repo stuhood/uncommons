@@ -99,6 +99,10 @@ class FormatterConfig extends Config[Formatter] {
     prefix)
 }
 
+object BasicFormatterConfig extends FormatterConfig {
+  override def apply() = BasicFormatter
+}
+
 object BareFormatterConfig extends FormatterConfig {
   override def apply() = BareFormatter
 }
@@ -131,7 +135,7 @@ class SyslogFormatterConfig extends FormatterConfig {
 }
 
 trait HandlerConfig extends Config[Handler] {
-  var formatter: FormatterConfig = new FormatterConfig
+  var formatter: FormatterConfig = BasicFormatterConfig
 
   var level: Option[Level] = None
 }
