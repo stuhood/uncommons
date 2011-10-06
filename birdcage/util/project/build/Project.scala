@@ -53,9 +53,6 @@ class Project(info: ProjectInfo)
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
-  {
-    override def compileOrder = CompileOrder.Mixed
-  }
 
   class EvalProject(info: ProjectInfo)
     extends StandardProject(info)
