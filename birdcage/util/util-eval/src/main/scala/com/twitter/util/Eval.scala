@@ -100,10 +100,6 @@ class Eval(target: Option[File]) {
           new ClassScopedResolver(getClass),
           new FilesystemResolver(new File(".")),
           new FilesystemResolver(new File("." + File.separator + "config"))
-        ) ++ (
-          Option(System.getProperty("com.twitter.util.Eval.includePath")) map { path =>
-            new FilesystemResolver(new File(path))
-          }
         )
       )
     )
@@ -116,7 +112,7 @@ class Eval(target: Option[File]) {
    * to the text.
    * Last modified is computed here because we support includes
    */
-  def sourceForString(code: String): LastMod = {
+  def sourceForString(code: String) = {
     preprocessors.foldLeft(LastMod(0L, code)) { (acc, p) =>
       val processed = p(acc.code)
       LastMod(acc.timestamp max processed.timestamp, processed.code)
@@ -304,6 +300,7 @@ class Eval(target: Option[File]) {
     private[this] def file(path: String): File =
       new File(root.getAbsolutePath + File.separator + path)
 
+
     def resolvable(path: String): Boolean =
       file(path).exists
 
@@ -347,9 +344,7 @@ class Eval(target: Option[File]) {
    * Note that it is *not* recursive. Included files cannot have includes
    */
   class IncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
-    def maximumRecursionDepth = 100
-    def apply(code: String): LastMod = apply(code, maximumRecursionDepth)
-    def apply(code: String, maxDepth: Int): LastMod = {
+    def apply(code: String): LastMod = {
       var lastMod = 0L
       val lines = code.lines map { line: String =>
         val tokens = line.trim.split(' ')
@@ -360,16 +355,7 @@ class Eval(target: Option[File]) {
           } match {
             case Some(r: Resolver) => {
               lastMod = lastMod max r.lastModified(path)
-              // recursively process includes
-              if (maxDepth == 0) {
-                throw new IllegalStateException("Exceeded maximum recusion depth")
-              } else {
-                apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1) match {
-                  case LastMod(timestamp, code) =>
-                    lastMod = lastMod max timestamp
-                    code
-                }
-              }
+              StreamIO.buffer(r.get(path)).toString
             }
             case _ =>
               throw new IllegalStateException("No resolver could find '%s'".format(path))
