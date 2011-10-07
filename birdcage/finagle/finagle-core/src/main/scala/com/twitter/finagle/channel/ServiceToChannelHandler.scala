@@ -35,8 +35,13 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
   private[this] val state = new AtomicReference[State](Idle)
   private[this] val onShutdownPromise = new Promise[Unit]
 
+  // we know there's only one outstanding request at a time because ServerBuilder adds it in a separate layer.
+  @volatile private[this] var currentResponse: Option[Future[Rep]] = None
+
   private[this] def shutdown() =
     if (state.getAndSet(Shutdown) != Shutdown) {
+      currentResponse foreach { _.cancel() }
+      currentResponse = None
       close() onSuccessOrFailure { onShutdownPromise() = Return(()) }
       service.release()
     }
@@ -62,7 +67,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     } while (continue)
   }
 
-  override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent): Unit = {
+  override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) {
     val channel = ctx.getChannel
     val message = e.getMessage
 
@@ -82,12 +87,16 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     }
 
     try {
-      service(message.asInstanceOf[Req]) respond {
+      val promise = service(message.asInstanceOf[Req])
+      currentResponse = Some(promise)
+      promise respond {
         case Return(value) =>
           Channels.write(channel, value)
         case Throw(e: Throwable) =>
           log.log(Level.WARNING, "service exception", e)
           shutdown()
+      } ensure {
+        currentResponse = None
       }
     } catch {
       case e: ClassCastException =>
@@ -95,9 +104,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
           Level.SEVERE,
           "Got ClassCastException while processing a " +
           "message. This is a codec bug. %s".format(e))
-
         shutdown()
-
       case e =>
         Channels.fireExceptionCaught(channel, e)
     }
