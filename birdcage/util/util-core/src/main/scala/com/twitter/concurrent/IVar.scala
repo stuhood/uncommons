@@ -93,6 +93,9 @@ object IVar {
 final class IVar[A] extends IVarField[A] {
   import IVar._
 
+  override def toString =
+    "Ivar@%s(state=%s)".format(hashCode, state)
+
   state = initState: State[A]
   @inline private[this]
   def cas(expect: State[A], `new`: State[A]) =
