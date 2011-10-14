@@ -274,7 +274,7 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   override def foreach(k: A => Unit) =
     respond(_ foreach k)
 
-  def map[B](f: A => B) = flatMap { a => Future { f(a) } }
+  def map[B](f: A => B): Future[B] = flatMap { a => Future { f(a) } }
 
   /**
    * Invoke the function on the result, if the computation was
@@ -546,6 +546,7 @@ class Promise[A] private[Promise] (
   }
 
   override def respond(k: Try[A] => Unit): Future[A] = {
+    respond0(k)
     // Note that there's a race here, but that's
     // okay.  The resulting Futures are
     // equivalent, and it only makes the
@@ -558,9 +559,7 @@ class Promise[A] private[Promise] (
     // allocation (the chained ivar).
     if (chained eq null)
       chained = new Promise(ivar.chained, cancelled)
-    val next = chained
-    respond0(k)
-    next
+    chained
   }
 
   /**
@@ -579,7 +578,7 @@ class Promise[A] private[Promise] (
    */
   def flatMap[B, AlsoFuture[B] >: Future[B] <: Future[B]](
     f: A => AlsoFuture[B]
-  ) = {
+  ): Future[B] = {
     val promise = new Promise[B]
     val k = { _: Unit => this.cancel() }
     promise.cancelled.get(k)
@@ -604,7 +603,7 @@ class Promise[A] private[Promise] (
 
   def rescue[B >: A, AlsoFuture[B] >: Future[B] <: Future[B]](
     rescueException: PartialFunction[Throwable, AlsoFuture[B]]
-  ) = {
+  ): Future[B] = {
     val promise = new Promise[B]
     val k = { _: Unit => this.cancel() }
     promise.cancelled.get(k)
@@ -625,7 +624,7 @@ class Promise[A] private[Promise] (
     promise
   }
 
-  override def filter(p: A => Boolean) = {
+  override def filter(p: A => Boolean): Future[A] = {
     makePromise[A](this) { promise =>
       respond0 { x => promise() = x.filter(p) }
     }

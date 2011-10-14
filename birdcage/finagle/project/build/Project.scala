@@ -201,10 +201,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   {
     override def compileOrder = CompileOrder.ScalaThenJava
 
-    projectDependencies(
-      "util" ~ "util-codec",
-      "util" ~ "util-logging"
-    )
+    projectDependencies("util" ~ "util-logging")
 
     val commonsLang = "commons-lang" % "commons-lang" % "2.6" // for FastDateFormat
   }
@@ -249,7 +246,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   class Ostrich4Project(info: ProjectInfo) extends StandardProject(info)
     with Defaults
   {
-    projectDependencies("ostrich")
+    val ostrich = "com.twitter" % "ostrich" % "4.9.0"
   }
 
   class NativeProject(info: ProjectInfo) extends StandardProject(info)
@@ -261,7 +258,7 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     override def compileOrder = CompileOrder.JavaThenScala
     val thrift   = "thrift"      % "libthrift" % "0.5.0"
     val slf4jNop = "org.slf4j"   % "slf4j-nop" % "1.5.8" % "provided"
-    projectDependencies("ostrich")
+    val ostrich4 = "com.twitter" % "ostrich" % "4.8.2"
   }
 
   class B3Project(info: ProjectInfo) extends StandardProject(info)

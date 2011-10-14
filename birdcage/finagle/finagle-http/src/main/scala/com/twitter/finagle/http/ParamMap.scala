@@ -23,7 +23,7 @@ class ParamMap(val request: Request)
 
   private[this] val postParams: JMap[String, JList[String]] =
     if (request.method == Method.Post &&
-        request.mediaType == Some(MediaType.WwwForm) &&
+        request.mediaType == Some(Message.MediaTypeWwwForm) &&
         request.length > 0)
       parseParams("?" + request.contentString)
     else

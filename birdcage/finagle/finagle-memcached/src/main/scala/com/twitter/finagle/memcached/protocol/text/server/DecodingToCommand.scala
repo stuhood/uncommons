@@ -71,12 +71,7 @@ class DecodingToCommand extends AbstractDecodingToCommand[Command] {
     (tokens.head, tokens(1).toLong)
   }
 
-  private[this] def validateAnyStorageCommand(tokens: Seq[ChannelBuffer]) {
-    if (tokens.isEmpty) throw new ClientError("No arguments specified")
-  }
-
   protected def parseStorageCommand(tokens: Seq[ChannelBuffer], data: ChannelBuffer) = {
-    validateAnyStorageCommand(tokens)
     val commandName = tokens.head
     val args = tokens.tail
     commandName match {
@@ -90,7 +85,6 @@ class DecodingToCommand extends AbstractDecodingToCommand[Command] {
   }
 
   protected def parseNonStorageCommand(tokens: Seq[ChannelBuffer]) = {
-    validateAnyStorageCommand(tokens)
     val commandName = tokens.head
     val args = tokens.tail
     commandName match {
