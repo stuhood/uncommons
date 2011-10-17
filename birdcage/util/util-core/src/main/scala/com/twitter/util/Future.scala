@@ -232,6 +232,11 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
   def isDefined: Boolean
 
   /**
+   * Trigger a callback if this future is cancelled.
+   */
+  def onCancellation(f: => Unit)
+
+  /**
    * Demands that the result of the future be available within `timeout`. The result
    * is a Return[_] or Throw[_] depending upon whether the computation finished in
    * time.
@@ -444,6 +449,8 @@ class Promise[A] private[Promise] (
   @volatile private[this] var chained: Future[A] = null
   def this() = this(new IVar[Try[A]], new IVar[Unit])
 
+  override def toString = "Promise@%s(ivar=%s, cancelled=%s)".format(hashCode, ivar, cancelled)
+
   /**
    * Secondary constructor where result can be provided immediately.
    */
@@ -487,7 +494,7 @@ class Promise[A] private[Promise] (
     if (other.isInstanceOf[Promise[_]]) {
       val p = other.asInstanceOf[Promise[A]]
       this.ivar.merge(p.ivar)
-      this.cancelled.merge(p.cancelled)
+      this.cancelled.merge(p.cancelled, twoway=true)
     } else {
       other.proxyTo(this)
       this.linkTo(other)
