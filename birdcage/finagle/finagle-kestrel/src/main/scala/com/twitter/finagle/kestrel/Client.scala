@@ -363,9 +363,9 @@ protected[kestrel] class ConnectedClient(underlying: ServiceFactory[Command, Res
     val abort = Abort(queueName)
 
     def recv(service: Service[Command, Response], command: GetCommand) {
-      val reply = service(command)
+      val reply = service(command).toOffer
       Offer.select(
-        reply.toOffer {
+        reply {
           case Return(Values(Seq(Value(_, item)))) =>
             val ack = new Broker[Unit]
             messages ! ReadMessage(item, ack.send(()))
@@ -388,9 +388,12 @@ protected[kestrel] class ConnectedClient(underlying: ServiceFactory[Command, Res
         },
 
         close.recv { _ =>
-          service.release()
-          reply.cancel()
-          error ! ReadClosedException
+          reply andThen {
+            service(abort) ensure {
+              service.release()
+              error ! ReadClosedException
+            }
+          }
         }
       )
     }
