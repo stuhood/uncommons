@@ -66,7 +66,9 @@ import com.twitter.finagle._
 import com.twitter.finagle.service._
 import com.twitter.finagle.factory._
 import com.twitter.finagle.stats.{StatsReceiver, RollupStatsReceiver, NullStatsReceiver}
-import com.twitter.finagle.loadbalancer.{LoadBalancedFactory, LeastQueuedStrategy, HeapBalancer}
+import com.twitter.finagle.loadbalancer.{
+  LoadBalancedFactory, LeastQueuedStrategy,
+  HeapBalancer}
 import com.twitter.finagle.ssl.{Ssl, SslConnectHandler}
 import tracing.{NullTracer, TracingFilter, Tracer}
 
@@ -661,10 +663,7 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
       factory = buildPool(factory, hostStatsReceiver)
 
       if (config.requestTimeout < Duration.MaxValue) {
-        val filter = new TimeoutFilter[Req, Rep](
-          config.requestTimeout,
-          new IndividualRequestTimeoutException(config.requestTimeout))
-
+        val filter = new TimeoutFilter[Req, Rep](config.requestTimeout)
         factory = filter andThen factory
       }
 
@@ -687,12 +686,6 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
 
     var factory: ServiceFactory[Req, Rep] = if (config.cluster.get.isInstanceOf[SocketAddressCluster]) {
       new HeapBalancer(hostFactories, statsReceiver.scope("loadbalancer"))
-      {
-        override def close() = {
-          super.close()
-          Timer.default.stop()
-        }
-      }
     } else {
       new LoadBalancedFactory(
         hostFactories,
@@ -707,10 +700,7 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     }
 
     if (config.connectTimeout < Duration.MaxValue)
-      factory = new TimeoutFactory(
-        factory,
-        config.connectTimeout,
-        new ServiceTimeoutException(config.connectTimeout))
+      factory = new TimeoutFactory(factory, config.connectTimeout)
 
     // We maintain a separate log of factory failures here so that
     // factory failures are captured in the service failure
@@ -741,9 +731,7 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     }
 
     if (config.timeout < Duration.MaxValue) {
-      val filter = new TimeoutFilter[Req, Rep](
-        config.timeout,
-        new GlobalRequestTimeoutException(config.timeout))
+      val filter = new TimeoutFilter[Req, Rep](config.timeout)
       service = filter andThen service
     }
 

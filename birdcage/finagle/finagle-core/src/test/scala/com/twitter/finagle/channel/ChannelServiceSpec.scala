@@ -46,12 +46,12 @@ object ChannelServiceSpec extends Specification with Mockito {
 
       "cause write errors if the downstream write fails" in {
         messageEvent.getFuture.setFailure(new Exception("doh."))
-        future() must throwA[WriteException]
+        future() must throwA(new WriteException(new Exception("doh.")))
       }
 
       "silently ignore other errors after a downstream write failure" in {
         messageEvent.getFuture.setFailure(new Exception("doh."))
-        future() must throwA[WriteException]
+        future() must throwA(new WriteException(new Exception("doh.")))
 
         val stateEvent = mock[ChannelStateEvent]
         stateEvent.getState returns ChannelState.OPEN

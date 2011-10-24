@@ -516,8 +516,7 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
         }
 
         config.requestTimeout foreach { duration =>
-          val e = new IndividualRequestTimeoutException(duration)
-          service = (new TimeoutFilter(duration, e)) andThen service
+          service = (new TimeoutFilter(duration)) andThen service
         }
 
         // This has to go last (ie. first in the stack) so that
