@@ -11,12 +11,12 @@ object JsonStatsFetcherSpec extends Specification {
 
   val hasRuby = try {
     exec("ruby", "--version")
-    true
+    false // <-- change back to true when this works on hudson
   } catch {
     case e: Throwable => false
   }
 
-  if (hasRuby && false /* temporarily disabled */) {
+  if (hasRuby) {
     "json_stats_fetcher.rb" should {
       var service: AdminHttpService = null
       val script = TempFile.fromResourcePath("/json_stats_fetcher.rb").getAbsolutePath
