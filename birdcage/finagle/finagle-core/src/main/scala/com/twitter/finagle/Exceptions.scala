@@ -1,7 +1,5 @@
 package com.twitter.finagle
 
-import com.twitter.util.Duration
-
 trait NoStacktrace extends Exception {
   override def fillInStackTrace = this
 }
@@ -12,30 +10,14 @@ class RequestException(cause: Throwable) extends Exception(cause) with NoStacktr
   override def getStackTrace = if (cause != null) cause.getStackTrace else super.getStackTrace
 }
 
-trait TimeoutException { self: Exception =>
-  protected val timeout: Duration
-  protected val explanation: String
-
-  override def getMessage = "exceeded %s while %s".format(timeout, explanation)
-}
-
-class RequestTimeoutException(protected val timeout: Duration, protected val explanation: String)
-  extends RequestException with TimeoutException
-class IndividualRequestTimeoutException(timeout: Duration)
-  extends RequestTimeoutException(
-    timeout,
-    "waiting for a response for an individual request, excluding retries")
-class GlobalRequestTimeoutException(timeout: Duration)
-  extends RequestTimeoutException(
-    timeout,
-    "waiting for a response for the request, including retries (if applicable)")
-
-class RetryFailureException(cause: Throwable)        extends RequestException(cause)
-class CancelledRequestException                      extends RequestException
-class TooManyWaitersException                        extends RequestException
-class CancelledConnectionException                   extends RequestException
-class NoBrokersAvailableException                    extends RequestException
-class ReplyCastException                             extends RequestException
+class TimedoutRequestException     extends RequestException
+class RetryFailureException(cause: Throwable)
+  extends RequestException(cause)
+class CancelledRequestException    extends RequestException
+class TooManyWaitersException      extends RequestException
+class CancelledConnectionException extends RequestException
+class NoBrokersAvailableException  extends RequestException
+class ReplyCastException           extends RequestException
 
 class NotServableException          extends RequestException
 class NotShardableException         extends NotServableException
@@ -74,16 +56,10 @@ object ChannelException {
 }
 
 // Service layer errors.
-class ServiceException                                         extends Exception
-class ServiceClosedException                                   extends ServiceException
-class ServiceNotAvailableException                             extends ServiceException
-class ServiceTimeoutException(
-    protected val timeout: Duration)
-    extends ServiceException
-    with TimeoutException {
-  protected val explanation =
-    "creating a service/connection or reserving a service/connection from the service/connection pool"
-}
+class ServiceException             extends Exception
+class ServiceClosedException       extends ServiceException
+class ServiceNotAvailableException extends ServiceException
+class ServiceTimeoutException      extends ServiceException
 
 // Subclass this for application exceptions
 class ApplicationException extends Exception

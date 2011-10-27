@@ -1,19 +1,22 @@
 package com.twitter.finagle.factory
 
-import com.twitter.util
-import com.twitter.util.{Future, Duration}
-import com.twitter.finagle.util.Timer
-
-import com.twitter.finagle.{ServiceFactory, ServiceFactoryProxy, ServiceTimeoutException}
-
 /**
  * A factory wrapper that times out the service acquisition after the
  * given time.
  */
+
+import com.twitter.util
+import com.twitter.util.{Future, Duration, TimeoutException}
+
+import com.twitter.finagle.{
+  ServiceFactory, ServiceFactoryProxy,
+  ServiceTimeoutException}
+import com.twitter.finagle.stats.StatsReceiver
+import com.twitter.finagle.util.Timer
+
 class TimeoutFactory[Req, Rep](
     self: ServiceFactory[Req, Rep],
     timeout: Duration,
-    exception: ServiceTimeoutException,
     timer: util.Timer = Timer.default)
   extends ServiceFactoryProxy[Req, Rep](self)
 {
@@ -21,10 +24,10 @@ class TimeoutFactory[Req, Rep](
     val res = super.make()
 
     res.within(timer, timeout) rescue {
-      case _: java.util.concurrent.TimeoutException =>
+      case _: TimeoutException =>
         res.cancel()
         res onSuccess { _.release() }
-        Future.exception(exception)
+        Future.exception(new ServiceTimeoutException)
     }
   }
 }
