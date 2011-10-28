@@ -25,12 +25,12 @@ object TimerSpec extends Specification with Mockito {
     }
   }
 
-  "ReferenceCountingTimer" should {
+  "ReferenceCountedTimer" should {
     val underlying = mock[Timer]
     val factory = mock[() => Timer]
     factory() returns underlying
 
-    val refcounted = new ReferenceCountingTimer(factory)
+    val refcounted = new ReferenceCountedTimer(factory)
     there was no(factory)()
 
     "call the factory when it is first acquired" in {

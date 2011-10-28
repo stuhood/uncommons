@@ -78,13 +78,7 @@ class ThreadStoppingTimer(underlying: Timer, executor: ExecutorService) extends 
   }
 }
 
-trait ReferenceCountedTimer extends Timer {
-  def acquire()
-}
-
-class ReferenceCountingTimer(factory: () => Timer)
-  extends ReferenceCountedTimer
-{
+class ReferenceCountedTimer(factory: () => Timer) extends Timer {
   private[this] var refcount = 0
   private[this] var underlying: Timer = null
 
@@ -210,13 +204,13 @@ class MockTimer extends Timer {
     toRun filter { !_.isCancelled } foreach { _.runner() }
   }
 
-  def schedule(when: Time)(f: => Unit): TimerTask = {
+  def schedule(when: Time)(f: => Unit) = {
     val task = Task(when, () => f)
     tasks += task
     task
   }
 
-  def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
+  def schedule(when: Time, period: Duration)(f: => Unit) =
     throw new Exception("periodic scheduling not supported")
 
   def stop() { isStopped = true }

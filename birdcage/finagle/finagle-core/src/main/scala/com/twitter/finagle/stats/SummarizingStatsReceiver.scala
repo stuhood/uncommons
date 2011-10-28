@@ -11,8 +11,6 @@ import scala.collection.mutable.ArrayBuffer
 import com.twitter.util.MapMaker
 
 class SummarizingStatsReceiver extends StatsReceiverWithCumulativeGauges {
-  val repr = this
-
   private[this] val counters = MapMaker[Seq[String], AtomicInteger] { config =>
     config.compute { _ => new AtomicInteger(0) }
   }

@@ -3,16 +3,14 @@ package com.twitter.finagle.util
 import collection.mutable.HashSet
 
 import java.util.concurrent.{TimeUnit, Executors}
-import java.util.concurrent.atomic.{AtomicReference, AtomicInteger, AtomicBoolean}
+import java.util.concurrent.atomic.AtomicReference
 import org.jboss.netty.util.{HashedWheelTimer}
 import org.jboss.netty.{util => nu}
 
 import com.twitter.util.{
-  Time, Duration, TimerTask, ReferenceCountedTimer,
-  ReferenceCountingTimer, ThreadStoppingTimer}
+  Time, Duration, TimerTask,
+  ReferenceCountedTimer, ThreadStoppingTimer}
 import com.twitter.concurrent.NamedPoolThreadFactory
-
-import com.twitter.finagle.stats.{StatsReceiver, GlobalStatsReceiver}
 
 private[finagle] object Timer {
   private[this] val timerStoppingExecutor = Executors.newFixedThreadPool(
@@ -29,19 +27,13 @@ private[finagle] object Timer {
   //   `ThreadStoppingTimer` to ensure that timer threads themselves
   //   can shut down reliably (they cannot be shut down from the timer
   //   threads themselves.)
-  implicit val default: ReferenceCountedTimer = {
+  implicit val default = {
     def factory() = {
       val underlying = new Timer(new HashedWheelTimer(10, TimeUnit.MILLISECONDS))
       new ThreadStoppingTimer(underlying, timerStoppingExecutor)
     }
 
-    val underlying = new ReferenceCountingTimer(factory)
-    new CountingTimer(underlying) with ReferenceCountedTimer {
-      private[this] val gauge =
-        GlobalStatsReceiver.addGauge("timeouts") { count }
-
-      def acquire() = underlying.acquire()
-    }
+    new ReferenceCountedTimer(factory)
   }
 
   // Spin off a thread to close.
@@ -131,39 +123,4 @@ class Timer(underlying: nu.Timer) extends com.twitter.util.Timer {
   private[this] def toTimerTask(task: nu.Timeout) = new TimerTask {
     def cancel() { task.cancel() }
   }
-}
-
-class CountingTimer(underlying: com.twitter.util.Timer)
-  extends com.twitter.util.Timer
-{
-  private[this] val npending = new AtomicInteger(0)
-
-  def count = npending.get
-
-  private[this] def wrap(underlying: (=> Unit) => TimerTask, f: => Unit) = {
-    val decr = new AtomicBoolean(false)
-    npending.incrementAndGet()
-
-    val underlyingTask = underlying {
-      if (!decr.getAndSet(true))
-        npending.decrementAndGet()
-      f
-    }
-
-    new TimerTask {
-      def cancel() {
-        if (!decr.getAndSet(true))
-          npending.decrementAndGet()
-        underlyingTask.cancel()
-      }
-    }
-  }
-
-  def schedule(when: Time)(f: => Unit): TimerTask =
-    wrap(underlying.schedule(when), f)
-
-  override def schedule(when: Time, period: Duration)(f: => Unit): TimerTask =
-    wrap(underlying.schedule(when, period), f)
-
-  def stop() { underlying.stop() }
 }
