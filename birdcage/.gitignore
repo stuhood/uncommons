@@ -18,6 +18,8 @@ lib_managed/
 *.pyc
 .idea/
 .idea/*
+.scala
+.scala/*
 .DS_Store
 .ensime
 .bundle
