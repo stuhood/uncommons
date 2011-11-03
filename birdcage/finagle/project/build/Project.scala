@@ -113,7 +113,8 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     new ServersetsProject(_), coreProject)
 
   /**
-   * Examples for finagle
+   * finagle-stream contains a streaming http codec identical to
+   * Twitter's "firehose".
    */
   val exampleProject = project(
     "finagle-example", "finagle-example",
