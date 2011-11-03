@@ -72,7 +72,7 @@ object Time {
 
   def at(datetime: String) = defaultFormat.parse(datetime)
 
-  def withTimeFunction[A](timeFunction: => Time)(body: TimeControl => A): A = {
+  def withTimeAt[A](time: Time)(body: TimeControl => A): A = {
     val prevFn = Time.fn
     try {
       val timeControl = new TimeControl {
@@ -84,15 +84,12 @@ object Time {
           Time.fn = () => newTime
         }
       }
-      Time.fn = () => timeFunction
+      Time.fn = () => time
       body(timeControl)
     } finally {
       Time.fn = prevFn
     }
   }
-
-  def withTimeAt[A](time: Time)(body: TimeControl => A): A =
-    withTimeFunction(time)(body)
 
   def withCurrentTimeFrozen[A](body: TimeControl => A): A = {
     withTimeAt(Time.now)(body)
