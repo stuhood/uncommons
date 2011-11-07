@@ -1,4 +1,43 @@
 package com.twitter.finagle.builder
+/**
+ * Provides a class for building servers.
+ * The main class to use is [[com.twitter.finagle.builder.ServerBuilder]], as so
+ * {{{
+ * ServerBuilder()
+ *   .codec(Http)
+ *   .hostConnectionMaxLifeTime(5.minutes)
+ *   .readTimeout(2.minutes)
+ *   .name("servicename")
+ *   .bindTo(new InetSocketAddress(serverPort))
+ *   .build(plusOneService)
+ * }}}
+ *
+ * The `ServerBuilder` requires the definition of `codec`, `bindTo`
+ * and `name`. In Scala, these are statically type
+ * checked, and in Java the lack of any of the above causes a runtime
+ * error.
+ *
+ * The `build` method uses an implicit argument to statically
+ * typecheck the builder (to ensure completeness, see above). The Java
+ * compiler cannot provide such implicit, so we provide a separate
+ * function in Java to accomplish this. Thus, the Java code for the
+ * above is
+ *
+ * {{{
+ * ServerBuilder.safeBuild(
+ *  plusOneService,
+ *  ServerBuilder.get()
+ *   .codec(Http)
+ *   .hostConnectionMaxLifeTime(5.minutes)
+ *   .readTimeout(2.minutes)
+ *   .name("servicename")
+ *   .bindTo(new InetSocketAddress(serverPort)));
+ * }}}
+ *
+ * Alternatively, using the `unsafeBuild` method on `ServerBuilder`
+ * verifies the builder dynamically, resulting in a runtime error
+ * instead of a compiler error.
+ */
 
 import scala.collection.mutable.HashSet
 import scala.collection.JavaConversions._
@@ -18,10 +57,7 @@ import com.twitter.util.Duration
 import com.twitter.conversions.time._
 
 import com.twitter.finagle._
-import com.twitter.finagle.channel.{
-  WriteCompletionTimeoutHandler, ChannelStatsHandler,
-  ChannelRequestStatsHandler, ChannelOpenConnectionsHandler,
-  OpenConnectionsHealthThresholds}
+import channel._
 import com.twitter.finagle.health.{HealthEvent, NullHealthEventCallback}
 import com.twitter.finagle.tracing.{Tracer, TracingFilter, NullTracer}
 import com.twitter.finagle.util.Conversions._
@@ -30,11 +66,10 @@ import com.twitter.finagle.util.Timer._
 import com.twitter.util.{Future, Promise}
 import com.twitter.concurrent.AsyncSemaphore
 
-import channel.{ChannelClosingHandler, ServiceToChannelHandler, ChannelSemaphoreHandler}
 import service.{ExpiringService, TimeoutFilter, StatsFilter, ProxyService}
 import stats.{StatsReceiver, NullStatsReceiver, GlobalStatsReceiver}
 import exception._
-import ssl.{Engine, Ssl, SslIdentifierHandler, SslShutdownHandler}
+import ssl.Ssl
 
 trait Server {
   /**
@@ -76,6 +111,19 @@ object ServerConfig {
   type FullySpecified[Req, Rep] = ServerConfig[Req, Rep, Yes, Yes, Yes]
 }
 
+case class BufferSize(
+  send: Option[Int] = None,
+  recv: Option[Int] = None
+)
+
+case class TimeoutConfig(
+  hostConnectionMaxIdleTime: Option[Duration] = None,
+  hostConnectionMaxLifeTime: Option[Duration] = None,
+  requestTimeout: Option[Duration] = None,
+  readTimeout: Option[Duration] = None,
+  writeCompletionTimeout: Option[Duration] = None
+)
+
 /**
  * A configuration object that represents what shall be built.
  */
@@ -84,23 +132,20 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
   private val _statsReceiver:                   Option[StatsReceiver]                    = None,
   private val _exceptionReceiver:               Option[ServerExceptionReceiverBuilder]   = None,
   private val _name:                            Option[String]                           = None,
-  private val _sendBufferSize:                  Option[Int]                              = None,
-  private val _recvBufferSize:                  Option[Int]                              = None,
+  private val _bufferSize:                      BufferSize                               = BufferSize(),
   private val _keepAlive:                       Option[Boolean]                          = None,
   private val _backlog:                         Option[Int]                              = None,
   private val _bindTo:                          Option[SocketAddress]                    = None,
   private val _logger:                          Option[Logger]                           = None,
   private val _tls:                             Option[(String, String, String, String)] = None,
+  private val _startTls:                        Boolean                                  = false,
   private val _channelFactory:                  ReferenceCountedChannelFactory           = ServerBuilder.defaultChannelFactory,
   private val _maxConcurrentRequests:           Option[Int]                              = None,
   private val _healthEventCallback:             HealthEvent => Unit                      = NullHealthEventCallback,
-  private val _hostConnectionMaxIdleTime:       Option[Duration]                         = None,
-  private val _hostConnectionMaxLifeTime:       Option[Duration]                         = None,
+  private val _timeoutConfig:                   TimeoutConfig                            = TimeoutConfig(),
   private val _openConnectionsHealthThresholds: Option[OpenConnectionsHealthThresholds]  = None,
-  private val _requestTimeout:                  Option[Duration]                         = None,
-  private val _readTimeout:                     Option[Duration]                         = None,
-  private val _writeCompletionTimeout:          Option[Duration]                         = None,
-  private val _tracerFactory:                   Tracer.Factory                           = () => NullTracer)
+  private val _tracer:                          Tracer                                   = NullTracer,
+  private val _openConnectionsThresholds:       Option[OpenConnectionsThresholds]        = None)
 {
   import ServerConfig._
 
@@ -109,50 +154,61 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
    * Nevertheless, we want a friendly public API so we create delegators without
    * underscores.
    */
+
+case class TimeoutConfig(
+  hostConnectionMaxIdleTime: Option[Duration] = None,
+  hostConnectionMaxLifeTime: Option[Duration] = None,
+  requestTimeout: Option[Duration] = None,
+  readTimeout: Option[Duration] = None,
+  writeCompletionTimeout: Option[Duration] = None
+)
   val codecFactory                    = _codecFactory
   val statsReceiver                   = _statsReceiver
   val exceptionReceiver               = _exceptionReceiver
   val name                            = _name
-  val sendBufferSize                  = _sendBufferSize
-  val recvBufferSize                  = _recvBufferSize
+  val bufferSize                      = _bufferSize
   val keepAlive                       = _keepAlive
   val backlog                         = _backlog
   val bindTo                          = _bindTo
   val logger                          = _logger
   val tls                             = _tls
+  val startTls                        = _startTls
   val channelFactory                  = _channelFactory
   val maxConcurrentRequests           = _maxConcurrentRequests
   val healthEventCallback             = _healthEventCallback
-  val hostConnectionMaxIdleTime       = _hostConnectionMaxIdleTime
-  val hostConnectionMaxLifeTime       = _hostConnectionMaxLifeTime
+  val hostConnectionMaxIdleTime       = _timeoutConfig.hostConnectionMaxIdleTime
+  val hostConnectionMaxLifeTime       = _timeoutConfig.hostConnectionMaxLifeTime
+  val requestTimeout                  = _timeoutConfig.requestTimeout
+  val readTimeout                     = _timeoutConfig.readTimeout
+  val writeCompletionTimeout          = _timeoutConfig.writeCompletionTimeout
+  val timeoutConfig                   = _timeoutConfig
   val openConnectionsHealthThresholds = _openConnectionsHealthThresholds
-  val requestTimeout                  = _requestTimeout
-  val readTimeout                     = _readTimeout
-  val writeCompletionTimeout          = _writeCompletionTimeout
-  val tracerFactory                   = _tracerFactory
+  val tracer                          = _tracer
+  val openConnectionsThresholds       = _openConnectionsThresholds
 
   def toMap = Map(
     "codecFactory"                    -> _codecFactory,
     "statsReceiver"                   -> _statsReceiver,
     "exceptionReceiver"               -> _exceptionReceiver,
     "name"                            -> _name,
-    "sendBufferSize"                  -> _sendBufferSize,
-    "recvBufferSize"                  -> _recvBufferSize,
+    "bufferSize"                      -> _bufferSize,
     "keepAlive"                       -> _keepAlive,
     "backlog"                         -> _backlog,
     "bindTo"                          -> _bindTo,
     "logger"                          -> _logger,
     "tls"                             -> _tls,
+    "startTls"                        -> Some(_startTls),
     "channelFactory"                  -> Some(_channelFactory),
     "maxConcurrentRequests"           -> _maxConcurrentRequests,
     "healthEventCallback"             -> _healthEventCallback,
-    "hostConnectionMaxIdleTime"       -> _hostConnectionMaxIdleTime,
-    "hostConnectionMaxLifeTime"       -> _hostConnectionMaxLifeTime,
+    "hostConnectionMaxIdleTime"       -> _timeoutConfig.hostConnectionMaxIdleTime,
+    "hostConnectionMaxLifeTime"       -> _timeoutConfig.hostConnectionMaxLifeTime,
+    "requestTimeout"                  -> _timeoutConfig.requestTimeout,
+    "readTimeout"                     -> _timeoutConfig.readTimeout,
+    "writeCompletionTimeout"          -> _timeoutConfig.writeCompletionTimeout,
     "openConnectionsHealthThresholds" -> _openConnectionsHealthThresholds,
-    "requestTimeout"                  -> _requestTimeout,
-    "readTimeout"                     -> _readTimeout,
-    "writeCompletionTimeout"          -> _writeCompletionTimeout,
-    "tracerFactory"                   -> Some(_tracerFactory)
+    "tracer"                          -> Some(_tracer),
+    "openConnectionsThresholds"       -> Some(_openConnectionsThresholds)
   )
 
   override def toString = {
@@ -176,44 +232,7 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
 /**
  * A handy Builder for constructing Servers (i.e., binding Services to
  * a port).  This class is subclassable. Override copy() and build()
- * to do your own dirty work. 
- * 
- * The main class to use is [[com.twitter.finagle.builder.ServerBuilder]], as so
- * {{{
- * ServerBuilder()
- *   .codec(Http)
- *   .hostConnectionMaxLifeTime(5.minutes)
- *   .readTimeout(2.minutes)
- *   .name("servicename")
- *   .bindTo(new InetSocketAddress(serverPort))
- *   .build(plusOneService)
- * }}}
- *
- * The `ServerBuilder` requires the definition of `codec`, `bindTo`
- * and `name`. In Scala, these are statically type
- * checked, and in Java the lack of any of the above causes a runtime
- * error.
- *
- * The `build` method uses an implicit argument to statically
- * typecheck the builder (to ensure completeness, see above). The Java
- * compiler cannot provide such implicit, so we provide a separate
- * function in Java to accomplish this. Thus, the Java code for the
- * above is
- *
- * {{{
- * ServerBuilder.safeBuild(
- *  plusOneService,
- *  ServerBuilder.get()
- *   .codec(Http)
- *   .hostConnectionMaxLifeTime(5.minutes)
- *   .readTimeout(2.minutes)
- *   .name("servicename")
- *   .bindTo(new InetSocketAddress(serverPort)));
- * }}}
- *
- * Alternatively, using the `unsafeBuild` method on `ServerBuilder`
- * verifies the builder dynamically, resulting in a runtime error
- * instead of a compiler error.
+ * to do your own dirty work.
  */
 class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
   val config: ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName]
@@ -261,10 +280,10 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
     withConfig(_.copy(_name = Some(value)))
 
   def sendBufferSize(value: Int): This =
-    withConfig(_.copy(_sendBufferSize = Some(value)))
+    withConfig(_.copy(_bufferSize = config.bufferSize.copy(send = Some(value))))
 
   def recvBufferSize(value: Int): This =
-    withConfig(_.copy(_recvBufferSize = Some(value)))
+    withConfig(_.copy(_bufferSize = config.bufferSize.copy(recv = Some(value))))
 
   def keepAlive(value: Boolean): This =
     withConfig(_.copy(_keepAlive = Some(value)))
@@ -285,6 +304,9 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
           caCertificatePath: String = null, ciphers: String = null): This =
     withConfig(_.copy(_tls = Some(certificatePath, keyPath, caCertificatePath, ciphers)))
 
+  def startTls(value: Boolean): This =
+    withConfig(_.copy(_startTls = value))
+
   def maxConcurrentRequests(max: Int): This =
     withConfig(_.copy(_maxConcurrentRequests = Some(max)))
 
@@ -292,36 +314,31 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
     withConfig(_.copy(_healthEventCallback = callback))
 
   def hostConnectionMaxIdleTime(howlong: Duration): This =
-    withConfig(_.copy(_hostConnectionMaxIdleTime = Some(howlong)))
+    withConfig(c => c.copy(_timeoutConfig = c.timeoutConfig.copy(hostConnectionMaxIdleTime = Some(howlong))))
 
   def hostConnectionMaxLifeTime(howlong: Duration): This =
-    withConfig(_.copy(_hostConnectionMaxLifeTime = Some(howlong)))
+    withConfig(c => c.copy(_timeoutConfig = c.timeoutConfig.copy(hostConnectionMaxLifeTime = Some(howlong))))
 
   def openConnectionsHealthThresholds(thresholds: OpenConnectionsHealthThresholds): This =
     withConfig(_.copy(_openConnectionsHealthThresholds = Some(thresholds)))
 
   def requestTimeout(howlong: Duration): This =
-    withConfig(_.copy(_requestTimeout = Some(howlong)))
+    withConfig(c => c.copy(_timeoutConfig = c.timeoutConfig.copy(requestTimeout = Some(howlong))))
 
   def readTimeout(howlong: Duration): This =
-    withConfig(_.copy(_readTimeout = Some(howlong)))
+    withConfig(c => c.copy(_timeoutConfig = c.timeoutConfig.copy(readTimeout = Some(howlong))))
 
   def writeCompletionTimeout(howlong: Duration): This =
-    withConfig(_.copy(_writeCompletionTimeout = Some(howlong)))
+    withConfig(c => c.copy(_timeoutConfig = c.timeoutConfig.copy(writeCompletionTimeout = Some(howlong))))
 
   def exceptionReceiver(erFactory: ServerExceptionReceiverBuilder): This =
     withConfig(_.copy(_exceptionReceiver = Some(erFactory)))
 
-  def tracerFactory(factory: Tracer.Factory): This =
-    withConfig(_.copy(_tracerFactory = factory))
+  def tracer(receiver: Tracer): This =
+    withConfig(_.copy(_tracer = receiver))
 
-  @deprecated("Use tracerFactory instead")
-  def tracer(factory: Tracer.Factory): This =
-    withConfig(_.copy(_tracerFactory = factory))
-
-  @deprecated("Use tracerFactory instead")
-  def tracer(tracer: Tracer): This =
-    withConfig(_.copy(_tracerFactory = () => tracer))
+  def openConnectionsThresholds(thresholds: OpenConnectionsThresholds): This =
+    withConfig(_.copy(_openConnectionsThresholds = Some(thresholds)))
 
   /**
    * Construct the Server, given the provided Service.
@@ -374,8 +391,8 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
 
     bs.setOption("child.tcpNoDelay", true)
     config.backlog.foreach { s => bs.setOption("backlog", s) }
-    config.sendBufferSize foreach { s => bs.setOption("child.sendBufferSize", s) }
-    config.recvBufferSize foreach { s => bs.setOption("child.receiveBufferSize", s) }
+    config.bufferSize.send foreach { s => bs.setOption("child.send", s) }
+    config.bufferSize.recv foreach { s => bs.setOption("child.receiveBufferSize", s) }
     config.keepAlive.foreach { s => bs.setOption("child.keepAlive", s) }
 
     // TODO: we need something akin to a max queue depth.
@@ -415,7 +432,12 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
       new ChannelOpenConnectionsHandler(_, config.healthEventCallback, scopedOrNullStatsReceiver)
     }
 
-    val tracer = config.tracerFactory()
+    // connection-limiting system
+    val channelLimitHandler = config.openConnectionsThresholds map { threshold =>
+      val idleTimeout = config.hostConnectionMaxIdleTime.getOrElse(30.seconds)
+      val idleConnectionHandler = new BucketIdleConnectionHandler(idleTimeout)
+      new ChannelLimitHandler(threshold, idleConnectionHandler, scopedOrNullStatsReceiver)
+    }
 
     bs.setPipelineFactory(new ChannelPipelineFactory {
       def getPipeline = {
@@ -455,38 +477,11 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
 
         // SSL comes first so that ChannelSnooper gets plaintext
         config.tls foreach { case (certificatePath, keyPath, caCertificatePath, ciphers) =>
-          val engine: Engine = Ssl.server(certificatePath, keyPath, caCertificatePath, ciphers)
-          engine.self.setUseClientMode(false)
-          engine.self.setEnableSessionCreation(true)
+          val engine = Ssl.server(certificatePath, keyPath, caCertificatePath, ciphers)
+          engine.setUseClientMode(false)
+          engine.setEnableSessionCreation(true)
 
-          val handler = new SslHandler(engine.self)
-
-          // Certain engine implementations need to handle renegotiation internally,
-          // as Netty's TLS protocol parser implementation confuses renegotiation and
-          // notification events. Renegotiation will be enabled for those Engines with
-          // a true handlesRenegotiation value.
-          handler.setEnableRenegotiation(engine.handlesRenegotiation)
-
-          pipeline.addFirst("ssl", handler)
-
-          // Netty's SslHandler does not provide SSLEngine implementations any hints that they
-          // are no longer needed (namely, upon disconnection.) Since some engine implementations
-          // make use of objects that are not managed by the JVM's memory manager, we need to
-          // know when memory can be released. The SslShutdownHandler will invoke the shutdown
-          // method on implementations that define shutdown(): Unit.
-          pipeline.addFirst(
-            "sslShutdown",
-            new SslShutdownHandler(engine)
-          )
-
-          // Information useful for debugging SSL issues, such as the certificate, cipher spec,
-          // remote address is provided to the SSLEngine implementation by the SslIdentifierHandler.
-          // The SslIdentifierHandler will invoke the setIdentifier method on implementations
-          // that define setIdentifier(String): Unit.
-          pipeline.addFirst(
-            "sslIdentifier",
-            new SslIdentifierHandler(engine, certificatePath, ciphers)
-          )
+          pipeline.addFirst("ssl", new SslHandler(engine, config.startTls))
         }
 
         // Serialization keeps the codecs honest.
@@ -564,7 +559,7 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
         // This has to go last (ie. first in the stack) so that
         // protocol-specific trace support can override our generic
         // one here.
-        service = (new TracingFilter(tracer)) andThen service
+        service = (new TracingFilter(config.tracer)) andThen service
 
         val channelHandler = new ServiceToChannelHandler(
           service, postponedService, serviceFactory,
@@ -592,6 +587,12 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
         }
 
         pipeline.addLast("channelHandler", channelHandler)
+
+        // Connection limiting system comes first
+        channelLimitHandler foreach { handler =>
+          pipeline.addFirst("channelLimitHandler", handler)
+        }
+
         pipeline
       }
     })
@@ -636,7 +637,6 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
 
         bs.releaseExternalResources()
         Timer.default.stop()
-        tracer.release()
       }
 
       override def toString = "Server(%s)".format(config.toString)

@@ -64,3 +64,4 @@ private[loadbalancer] class Heap[T](
       left && right
     }
 }
+
