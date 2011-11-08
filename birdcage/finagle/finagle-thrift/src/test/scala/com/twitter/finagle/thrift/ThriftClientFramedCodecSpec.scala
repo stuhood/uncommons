@@ -19,11 +19,11 @@ class ThriftClientFramedCodecSpec extends Specification with Mockito {
 
       Trace.clear()
 
-      val filter = new ThriftClientTracingFilter("service", true, None)
+      val filter = new ThriftClientTracingFilter("service", true)
       val buffer = new OutputBuffer()
       buffer().writeMessageBegin(
         new TMessage(ThriftTracing.CanTraceMethodName, TMessageType.CALL, 0))
-      val options = new thrift.ConnectionOptions
+      val options = new thrift.TraceOptions
       options.write(buffer())
       buffer().writeMessageEnd()
 
@@ -35,7 +35,7 @@ class ThriftClientFramedCodecSpec extends Specification with Mockito {
       val stack = tracing andThen filter
       stack(new ThriftClientRequest(buffer.toArray, false), service)
 
-      val header = new thrift.RequestHeader
+      val header = new thrift.TracedRequestHeader
       InputBuffer.peelMessage(_request.getValue.message, header)
 
       header.isSampled mustBe true

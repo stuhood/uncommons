@@ -15,20 +15,18 @@ import com.twitter.finagle._
 import com.twitter.finagle.tracing.{Trace, Annotation, TraceId, SpanId}
 
 object ThriftServerFramedCodec {
-  def apply() =
-    new ThriftServerFramedCodecFactory()
-
+  def apply() = ThriftServerFramedCodecFactory
   def get() = apply()
 }
 
-class ThriftServerFramedCodecFactory extends CodecFactory[Array[Byte], Array[Byte]]#Server {
-  def apply(config: ServerCodecConfig) =
-    new ThriftServerFramedCodec(config)
+object ThriftServerFramedCodecFactory
+  extends CodecFactory[Array[Byte], Array[Byte]]#Server
+{
+  def apply(config: ServerCodecConfig) = new ThriftServerFramedCodec(config)
 }
 
-class ThriftServerFramedCodec(
-  config: ServerCodecConfig
-) extends Codec[Array[Byte], Array[Byte]]
+class ThriftServerFramedCodec(config: ServerCodecConfig)
+  extends Codec[Array[Byte], Array[Byte]]
 {
   def pipelineFactory =
     new ChannelPipelineFactory {
@@ -41,13 +39,12 @@ class ThriftServerFramedCodec(
       }
     }
 
-  override def prepareService(service: Service[Array[Byte], Array[Byte]]) = Future {
+  override def prepareService(service: Service[Array[Byte], Array[Byte]]) = {
     val ia = config.boundAddress match {
       case ia: InetSocketAddress => ia
       case _ => new InetSocketAddress(0)
     }
-    val filter = new ThriftServerTracingFilter(config.serviceName, ia)
-    filter andThen service
+    Future.value((new ThriftServerTracingFilter(config.serviceName, ia)) andThen service)
   }
 }
 
@@ -67,8 +64,7 @@ private[thrift] class ThriftServerChannelBufferEncoder
 }
 
 private[thrift] class ThriftServerTracingFilter(
-  serviceName: String,
-  boundAddress: InetSocketAddress
+  serviceName: String, boundAddress: InetSocketAddress
 ) extends SimpleFilter[Array[Byte], Array[Byte]]
 {
   // Concurrency is not an issue here since we have an instance per
@@ -77,23 +73,10 @@ private[thrift] class ThriftServerTracingFilter(
   // serializing requests.
   private[this] var isUpgraded = false
 
-  private[this] lazy val successfulUpgradeReply = Future {
-    val buffer = new OutputBuffer
-    buffer().writeMessageBegin(
-      new TMessage(ThriftTracing.CanTraceMethodName, TMessageType.REPLY, 0))
-    val upgradeReply = new thrift.UpgradeReply
-    upgradeReply.write(buffer())
-    buffer().writeMessageEnd()
-
-    // Note: currently there are no options, so there's no need
-    // to parse them out.
-    buffer.toArray
-  }
-
   def apply(request: Array[Byte], service: Service[Array[Byte], Array[Byte]]) = Trace.unwind {
     // What to do on exceptions here?
     if (isUpgraded) {
-      val header = new thrift.RequestHeader
+      val header = new thrift.TracedRequestHeader
       val request_ = InputBuffer.peelMessage(request, header)
 
       val msg = new InputBuffer(request_)().readMessageBegin()
@@ -111,17 +94,11 @@ private[thrift] class ThriftServerTracingFilter(
       Trace.recordServerAddr(boundAddress)
       Trace.record(Annotation.ServerRecv())
 
-      try {
-        ClientId.set(extractClientId(header))
-        service(request_) map { response =>
-          Trace.record(Annotation.ServerSend())
-          val responseHeader = new thrift.ResponseHeader
-          OutputBuffer.messageToArray(responseHeader) ++ response
-        }
-      } finally {
-        ClientId.clear()
+      service(request_) map { response =>
+        Trace.record(Annotation.ServerSend())
+        val responseHeader = new thrift.TracedResponseHeader
+        OutputBuffer.messageToArray(responseHeader) ++ response
       }
-
     } else {
       val buffer = new InputBuffer(request)
       val msg = buffer().readMessageBegin()
@@ -129,13 +106,20 @@ private[thrift] class ThriftServerTracingFilter(
       // TODO: only try once?
       if (msg.`type` == TMessageType.CALL &&
           msg.name == ThriftTracing.CanTraceMethodName) {
-
-        val connectionOptions = new thrift.ConnectionOptions
-        connectionOptions.read(buffer())
-
         // upgrade & reply.
         isUpgraded = true
-        successfulUpgradeReply
+
+        val buffer = new OutputBuffer
+        buffer().writeMessageBegin(
+          new TMessage(ThriftTracing.CanTraceMethodName, TMessageType.REPLY, msg.seqid))
+        buffer().writeStructBegin(new TStruct())
+        buffer().writeFieldStop()
+        buffer().writeStructEnd()
+        buffer().writeMessageEnd()
+
+        // Note: currently there are no options, so there's no need
+        // to parse them out.
+        Future.value(buffer.toArray)
       } else {
         // request from client without tracing support
 
@@ -150,10 +134,6 @@ private[thrift] class ThriftServerTracingFilter(
         }
       }
     }
-  }
-
-  private[this] def extractClientId(header: thrift.RequestHeader) = {
-    Option(header.client_id) map { clientId => ClientId(clientId.name) }
   }
 }
 

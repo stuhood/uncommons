@@ -25,12 +25,8 @@ class HttpChunker extends BrokerChannelHandler {
     def close() {
       res.release()
       if (ctx.getChannel.isOpen) ctx.getChannel.close()
-      upstreamEvent foreach {
-        case Message(_, _) => /* drop */
-        case e => e.sendUpstream()
-      }
+      proxyUpstream()
     }
-
     Offer.select(
       ack match {
         // if we're awaiting an ack, don't offer to synchronize
@@ -63,10 +59,6 @@ class HttpChunker extends BrokerChannelHandler {
      },
 
      upstreamEvent {
-       case Message(_, _) =>
-         // A pipelined request. We don't support this,
-         // and will just drop it.
-         write(ctx, res)
        case e@(Closed(_, _) | Disconnected(_, _)) =>
          e.sendUpstream()
          close()
@@ -88,6 +80,7 @@ class HttpChunker extends BrokerChannelHandler {
           val writeComplete = Channels.future(ctx.getChannel)
           Channels.write(ctx, writeComplete, httpRes)
           writeComplete.proxyTo(e.e.getFuture)
+
           proxyDownstream()
           write(ctx, res)
 

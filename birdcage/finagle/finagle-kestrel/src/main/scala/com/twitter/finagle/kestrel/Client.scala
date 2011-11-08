@@ -19,7 +19,6 @@ import com.twitter.concurrent.{Offer, Broker}
 object ReadClosedException extends Exception
 object OutOfRetriesException extends Exception
 
-// TODO(Raghavendra Prabhu): Move ReadHandle and ReadMessage to util-core.
 
 /**
  * A message that has been read: consists of the message itself, and
@@ -117,13 +116,14 @@ trait ReadHandle {
   }
 }
 
+
 object ReadHandle {
   // A convenience constructor using an offer for closing.
-  def apply(
+  private[kestrel] def apply(
     _messages: Offer[ReadMessage],
     _error: Offer[Throwable],
     closeOf: Offer[Unit]
-  ): ReadHandle = new ReadHandle {
+  ) = new ReadHandle {
     val messages = _messages
     val error = _error
     def close() = closeOf()
