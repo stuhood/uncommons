@@ -1,6 +1,6 @@
 package com.twitter.util
 
-import java.util.concurrent.{CancellationException, ExecutorService, Executors}
+import java.util.concurrent.{ExecutorService, Executors}
 
 /**
  * A FuturePool executes tasks asynchronously, typically using a pool
@@ -25,8 +25,7 @@ object FuturePool {
   }
 
   /**
-   * A default shared FuturePool, configured at 2 times the number of cores, similar to Netty.
-   * Convenient, but higher demand systems should configure their own.
+   * A default shared FuturePool, configured at 2 times the number of cores, similar to Netty. Convenient, but higher demand systems should configure their own.
    */
   lazy val defaultPool = new ExecutorServiceFuturePool(
     Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() * 2)
@@ -42,7 +41,7 @@ class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePoo
     val saved = Locals.save()
 
     try {
-      val javaFuture = executor.submit(new Runnable {
+      executor.submit(new Runnable {
         def run = {
           // Make an effort to skip work in the case the promise
           // has been cancelled or already defined.
@@ -58,15 +57,10 @@ class ExecutorServiceFuturePool(val executor: ExecutorService) extends FuturePoo
         }
       })
 
-      // basically out.linkTo(javaFuture)
-      out onCancellation {
-        javaFuture.cancel(true)
-        out.updateIfEmpty(Throw(new CancellationException))
-      }
-    } catch {
-      case e => out.updateIfEmpty(Throw(e))
-    }
+      out
 
-    out
+    } catch {
+      case e => Future.exception(e)
+    }
   }
 }

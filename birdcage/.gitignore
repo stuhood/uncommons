@@ -2,8 +2,6 @@
 !gluebird/src/main/scala/com/twitter/gluebird/flock/config
 !gizmoduck/config
 !gizmoduck/src/main/scala/com/twitter/gizmoduck/config
-macaw/macaw
-macaw/run
 target/
 dist/
 project/boot/

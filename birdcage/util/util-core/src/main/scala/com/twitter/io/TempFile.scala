@@ -1,6 +1,6 @@
 package com.twitter.io
 
-import java.io.{File, FileNotFoundException, BufferedOutputStream, FileOutputStream}
+import java.io.{File, BufferedOutputStream, FileOutputStream}
 
 object TempFile {
   /**
@@ -41,18 +41,15 @@ object TempFile {
       }
     }
 
-    klass.getResourceAsStream(path) match {
-      case null =>
-        throw new FileNotFoundException(path)
-      case stream =>
-        val file = File.createTempFile(basename, ext)
-        file.deleteOnExit()
-        val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
-        StreamIO.copy(stream, fos)
-        fos.flush()
-        fos.close()
-        stream.close()
-        file
-    }
+    val stream = klass.getResourceAsStream(path)
+    val file = File.createTempFile(basename, ext)
+    file.deleteOnExit()
+    val fos = new BufferedOutputStream(new FileOutputStream(file), 1<<20)
+    StreamIO.copy(stream, fos)
+    fos.flush()
+    fos.close()
+    stream.close()
+
+    file
   }
 }
