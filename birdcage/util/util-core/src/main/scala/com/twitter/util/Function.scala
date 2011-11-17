@@ -15,15 +15,7 @@ abstract class Function[-T1, R] extends PartialFunction[T1, R] {
   override def compose[A](g: A => T1): A => R = super.compose(g)
   override def andThen[A](g: R => A): PartialFunction[T1, A] = super.andThen(g)
 
-  override def isDefinedAt(x: T1) = true
-}
-abstract class ExceptionalFunction[-T1, R] extends Function[T1, R] {
-  /**
-   * Implements apply in terms of abstract applyE, to allow Java code to throw checked exceptions.
-   */
-  final override def apply(in: T1): R = applyE(in)
-  @throws(classOf[Throwable])
-  def applyE(in: T1): R
+  def isDefinedAt(x: T1) = true
 }
 
 abstract class Function2[-T1, -T2, R] extends ((T1, T2) => R)
