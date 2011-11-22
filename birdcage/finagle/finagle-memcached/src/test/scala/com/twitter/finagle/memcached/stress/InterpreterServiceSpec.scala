@@ -32,13 +32,12 @@ object InterpreterServiceSpec extends Specification {
     "set & get" in {
       val _key   = "key"
       val value = "value"
-      val zero = "0"
       val start = System.currentTimeMillis
       (0 until 100) map { i =>
         val key = _key + i
         client(Delete(key))()
         client(Set(key, 0, Time.epoch, value))()
-        client(Get(Seq(key)))() mustEqual Values(Seq(Value(key, value, None, Some(zero))))
+        client(Get(Seq(key)))() mustEqual Values(Seq(Value(key, value)))
       }
       val end = System.currentTimeMillis
       // println("%d ms".format(end - start))

@@ -52,9 +52,8 @@ class DecodingToResponse extends AbstractDecodingToResponse[Response] {
   protected def parseValues(valueLines: Seq[TokensWithData]) = {
     val values = valueLines.map { valueLine =>
       val tokens = valueLine.tokens
-      val flag = if (tokens.length >= 3) Some(tokens(2)) else None
       val casUnique = if (tokens.length == 5) Some(tokens(4)) else None
-      Value(tokens(1), valueLine.data, casUnique, flag)
+      Value(tokens(1), valueLine.data, casUnique)
     }
     Values(values)
   }

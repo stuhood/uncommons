@@ -32,7 +32,6 @@ trait TestLogging { self: Specification =>
     beforeSpec {
       oldLevel = logger.getLevel()
       logger.setLevel(logLevel)
-      logger.addHandler(new ConsoleHandler(new Formatter(), None))
     }
 
     afterSpec {

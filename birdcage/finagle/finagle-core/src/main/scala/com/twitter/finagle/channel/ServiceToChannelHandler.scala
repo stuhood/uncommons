@@ -2,16 +2,13 @@ package com.twitter.finagle.channel
 
 import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.{Level, Logger}
-
-import org.jboss.netty.channel._
-import org.jboss.netty.handler.timeout.ReadTimeoutException
-
-import com.twitter.util.{Future, Promise, Return, Throw, Monitor}
-
 import com.twitter.finagle.{ClientConnection, CodecException, Service, WriteTimedOutException}
 import com.twitter.finagle.util.Conversions._
 import com.twitter.finagle.service.ProxyService
 import com.twitter.finagle.stats.{StatsReceiver, NullStatsReceiver}
+import com.twitter.util.{Future, Promise, Return, Throw}
+import org.jboss.netty.channel._
+import org.jboss.netty.handler.timeout.ReadTimeoutException
 
 private[finagle] object ServiceToChannelHandler {
   // valid transitions are:
@@ -29,8 +26,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     postponedService: Promise[Service[Req, Rep]],
     serviceFactory: (ClientConnection) => Service[Req, Rep],
     statsReceiver: StatsReceiver,
-    log: Logger,
-    parentMonitor: Monitor)
+    log: Logger)
   extends ChannelClosingHandler with ConnectionLifecycleHandler
 {
   import ServiceToChannelHandler._
@@ -38,19 +34,6 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
 
   private[this] val state = new AtomicReference[State](Idle)
   private[this] val onShutdownPromise = new Promise[Unit]
-  private[this] val monitor =
-    parentMonitor andThen Monitor.mk {
-      case _ =>
-        shutdown()
-        true
-    }
-
-  private[this] lazy val serviceMonitor =
-    monitor andThen Monitor.mk {
-      case exc =>
-        log.log(Level.SEVERE, "A Service threw an exception", exc)
-        false
-    }
 
   // we know there's only one outstanding request at a time because
   // ServerBuilder adds it in a separate layer.
@@ -85,10 +68,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     } while (continue)
   }
 
-  override def messageReceived(
-    ctx: ChannelHandlerContext,
-    e: MessageEvent
-  ): Unit = {
+  override def messageReceived(ctx: ChannelHandlerContext, e: MessageEvent) {
     val channel = ctx.getChannel
     val message = e.getMessage
 
@@ -103,31 +83,40 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
 
     oldState match {
       case Idle => ()
-      case Busy =>
-        val exc = new CodecException("Codec issued concurrent requests")
-        log.log(Level.SEVERE, "Codec error", exc)
-        throw exc
+      case Busy => throw new CodecException("Codec issued concurrent requests")
       case _    => /* let these fall on the floor */ return
     }
 
-    Future.monitored {
-      val res = service(message.asInstanceOf[Req])
-      currentResponse = Some(res)
-      res
-    } onSuccess { value =>
-      currentResponse = None
-      Channels.write(channel, value)
-    } onFailure { exc =>
-      serviceMonitor.handle(exc)
+    try {
+      val promise = service(message.asInstanceOf[Req])
+      currentResponse = Some(promise)
+      promise respond {
+        case Return(value) =>
+          currentResponse = None
+          Channels.write(channel, value)
+        case Throw(e: Throwable) =>
+          log.log(Level.WARNING, "service exception", e)
+          shutdown()
+      }
+    } catch {
+      case e: ClassCastException =>
+        log.log(
+          Level.SEVERE,
+          "Got ClassCastException while processing a " +
+          "message. This is a codec bug. %s".format(e))
+        shutdown()
+      case e =>
+        Channels.fireExceptionCaught(channel, e)
     }
   }
 
   protected def channelConnected(ctx: ChannelHandlerContext, onClose: Future[Unit]) {
-    val channel = ctx.getChannel
     val clientConnection = new ClientConnection {
+      def channel = ctx.getChannel
       def remoteAddress = channel.getRemoteAddress
       def localAddress = channel.getLocalAddress
       def close() { channel.disconnect() }
+      val closeFuture = onClose
     }
     postponedService.setValue(serviceFactory(clientConnection))
   }
@@ -153,19 +142,34 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
   }
 
   /**
-   * Hand the exception to our monitor.
+   * Catch and silence certain closed channel exceptions to avoid spamming
+   * the logger.
    */
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) {
     val cause = e.getCause
-    monitor.handle(cause)
-
-    cause match {
+    val level = cause match {
+      case e: java.nio.channels.ClosedChannelException =>
+        Level.FINEST
       case e: ReadTimeoutException =>
         statsReceiver.counter("read_timeout").incr()
+        Level.FINEST
       case e: WriteTimedOutException =>
         statsReceiver.counter("write_timeout").incr()
-      case _ =>
-        ()
+        Level.FINEST
+      case e: java.io.IOException
+      if (e.getMessage == "Connection reset by peer" ||
+          e.getMessage == "Broken pipe" ||
+           e.getMessage == "Connection timed out" ||
+          e.getMessage == "No route to host") =>
+        Level.FINEST
+      case e: javax.net.ssl.SSLException =>
+        Level.FINEST
+      case e: Throwable =>
+        Level.WARNING
     }
+
+    log.log(level, "Exception caught by service channel handler", cause)
+
+    shutdown()
   }
 }

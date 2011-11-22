@@ -9,6 +9,7 @@ package com.twitter.finagle
 import java.net.SocketAddress
 import org.jboss.netty.channel.{ChannelPipelineFactory, ChannelPipeline}
 import com.twitter.util.Future
+import com.twitter.finagle.builder.{ClientConfig, ServerConfig}
 
 /**
  * Superclass for all codecs.
@@ -23,8 +24,9 @@ trait Codec[Req, Rep] {
    * Prepare a newly-created (connected) Service endpoint.  It becomes
    * available once the returned Future is satisfied.
    */
-  def prepareService(underlying: Service[Req, Rep]): Future[Service[Req, Rep]] =
-    Future.value(underlying)
+  def prepareService(
+    underlying: Service[Req, Rep]
+  ): Future[Service[Req, Rep]] = Future.value(underlying)
 }
 
 object Codec {

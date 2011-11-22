@@ -1,8 +1,7 @@
 package com.twitter.util
 
 import org.specs.Specification
-import java.io.{File, FileOutputStream, FileWriter}
-import scala.io.Source
+import java.io.{File, FileOutputStream}
 
 import com.twitter.io.TempFile
 
@@ -33,12 +32,12 @@ object EvalSpec extends Specification {
       val res: String = e(sourceFile)
       res mustEqual "hello"
       val className = e.fileToClassName(sourceFile)
-      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines.mkString("\n"))
       val fullClassName = "Evaluator__%s_%s.class".format(
-        className, e.uniqueId(processedSource, None))
+        className, e.uniqueId(sourceFile.getCanonicalPath, None))
       val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
       val targetFile = new File(targetFileName)
       targetFile.exists must be_==(true)
+      val targetMod = targetFile.lastModified
     }
 
     "apply(new File(...) with target" in {
@@ -52,9 +51,8 @@ object EvalSpec extends Specification {
 
       // make sure it created a class file with the expected name
       val className = e.fileToClassName(sourceFile)
-      val processedSource = e.sourceForString(Source.fromFile(sourceFile).getLines.mkString("\n"))
       val fullClassName = "Evaluator__%s_%s.class".format(
-        className, e.uniqueId(processedSource, None))
+        className, e.uniqueId(sourceFile.getCanonicalPath, None))
       val targetFileName = f.getAbsolutePath() + File.separator + fullClassName
       val targetFile = new File(targetFileName)
       targetFile.exists must be_==(true)
@@ -62,31 +60,21 @@ object EvalSpec extends Specification {
 
       // eval again, make sure it works
       val res2: Int = e(sourceFile)
-      // and make sure it didn't create a new file (1 + checksum)
-      f.listFiles.length mustEqual 2
+      // and make sure it didn't create a new file
+      f.listFiles.length mustEqual 1
       // and make sure it didn't update the file
       val targetFile2 = new File(targetFileName)
       targetFile2.lastModified mustEqual targetMod
 
-      // touch source, ensure no-recompile (checksum hasn't changed)
+      // touch source, ensure recompile
       sourceFile.setLastModified(System.currentTimeMillis())
       val res3: Int = e(sourceFile)
       res3 mustEqual 2
       // and make sure it didn't create a different file
-      f.listFiles.length mustEqual 2
+      f.listFiles.length mustEqual 1
       // and make sure it updated the file
       val targetFile3 = new File(targetFileName)
-      targetFile3.lastModified mustEqual targetMod
-
-      // append a newline, altering checksum, verify recompile
-      val writer = new FileWriter(sourceFile)
-      writer.write("//a comment\n2\n")
-      writer.close
-      val res4: Int = e(sourceFile)
-      res4 mustEqual 2
-      // and make sure it created a new file
-      val targetFile4 = new File(targetFileName)
-      targetFile4.exists must beFalse
+      targetFile3.lastModified must be_>=(targetMod)
     }
 
     "apply(InputStream)" in {

@@ -69,14 +69,14 @@ public class FacebookService {
 
     /**
      * Gets the value of a single counter
-     * 
+     *
      * @param key
      */
     public long getCounter(String key) throws TException;
 
     /**
      * Sets an option
-     * 
+     *
      * @param key
      * @param value
      */
@@ -84,7 +84,7 @@ public class FacebookService {
 
     /**
      * Gets an option
-     * 
+     *
      * @param key
      */
     public String getOption(String key) throws TException;
@@ -97,7 +97,7 @@ public class FacebookService {
     /**
      * Returns a CPU profile over the given time interval (client and server
      * must agree on the profile format).
-     * 
+     *
      * @param profileDurationInSec
      */
     public String getCpuProfile(int profileDurationInSec) throws TException;
@@ -1045,7 +1045,7 @@ public class FacebookService {
         getName_args __args__ = new getName_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1074,7 +1074,7 @@ public class FacebookService {
         getVersion_args __args__ = new getVersion_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1103,7 +1103,7 @@ public class FacebookService {
         getStatus_args __args__ = new getStatus_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1132,7 +1132,7 @@ public class FacebookService {
         getStatusDetails_args __args__ = new getStatusDetails_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1161,7 +1161,7 @@ public class FacebookService {
         getCounters_args __args__ = new getCounters_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1191,7 +1191,7 @@ public class FacebookService {
         __args__.setKey(key);
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1222,7 +1222,7 @@ public class FacebookService {
         __args__.setValue(value);
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1253,7 +1253,7 @@ public class FacebookService {
         __args__.setKey(key);
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1282,7 +1282,7 @@ public class FacebookService {
         getOptions_args __args__ = new getOptions_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1312,7 +1312,7 @@ public class FacebookService {
         __args__.setProfileDurationInSec(profileDurationInSec);
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1341,7 +1341,7 @@ public class FacebookService {
         aliveSince_args __args__ = new aliveSince_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, false);
@@ -1370,7 +1370,7 @@ public class FacebookService {
         reinitialize_args __args__ = new reinitialize_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, true);
@@ -1399,7 +1399,7 @@ public class FacebookService {
         shutdown_args __args__ = new shutdown_args();
         __args__.write(__prot__);
         __prot__.writeMessageEnd();
-      
+
 
         byte[] __buffer__ = Arrays.copyOfRange(__memoryTransport__.getArray(), 0, __memoryTransport__.length());
         ThriftClientRequest __request__ = new ThriftClientRequest(__buffer__, true);
@@ -1816,7 +1816,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getName", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -1829,7 +1829,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -1847,15 +1847,15 @@ public class FacebookService {
                 getName_result result = new getName_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getName", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -1863,7 +1863,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getName");
+                  oprot.writeMessageBegin(new TMessage("getName", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -1871,7 +1882,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getVersion", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getVersion_args args = new getVersion_args();
@@ -1883,7 +1894,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getVersion", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -1896,7 +1907,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -1914,15 +1925,15 @@ public class FacebookService {
                 getVersion_result result = new getVersion_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getVersion", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -1930,7 +1941,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getVersion");
+                  oprot.writeMessageBegin(new TMessage("getVersion", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -1938,7 +1960,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getStatus", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getStatus_args args = new getStatus_args();
@@ -1950,7 +1972,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getStatus", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -1963,7 +1985,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -1981,15 +2003,15 @@ public class FacebookService {
                 getStatus_result result = new getStatus_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getStatus", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -1997,7 +2019,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getStatus");
+                  oprot.writeMessageBegin(new TMessage("getStatus", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2005,7 +2038,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getStatusDetails", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getStatusDetails_args args = new getStatusDetails_args();
@@ -2017,7 +2050,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getStatusDetails", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2030,7 +2063,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2048,15 +2081,15 @@ public class FacebookService {
                 getStatusDetails_result result = new getStatusDetails_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getStatusDetails", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2064,7 +2097,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getStatusDetails");
+                  oprot.writeMessageBegin(new TMessage("getStatusDetails", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2072,7 +2116,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getCounters", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getCounters_args args = new getCounters_args();
@@ -2084,7 +2128,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getCounters", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2097,7 +2141,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2115,15 +2159,15 @@ public class FacebookService {
                 getCounters_result result = new getCounters_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getCounters", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2131,7 +2175,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getCounters");
+                  oprot.writeMessageBegin(new TMessage("getCounters", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2139,7 +2194,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getCounter", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getCounter_args args = new getCounter_args();
@@ -2151,7 +2206,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getCounter", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2164,7 +2219,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2182,15 +2237,15 @@ public class FacebookService {
                 getCounter_result result = new getCounter_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getCounter", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2198,7 +2253,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getCounter");
+                  oprot.writeMessageBegin(new TMessage("getCounter", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2206,7 +2272,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("setOption", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           setOption_args args = new setOption_args();
@@ -2218,7 +2284,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("setOption", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2231,7 +2297,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2247,15 +2313,15 @@ public class FacebookService {
             return future.flatMap(new Function<Void, Future<byte[]>>() {
               public Future<byte[]> apply(Void value) {
                 setOption_result result = new setOption_result();
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("setOption", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2263,7 +2329,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing setOption");
+                  oprot.writeMessageBegin(new TMessage("setOption", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2271,7 +2348,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getOption", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getOption_args args = new getOption_args();
@@ -2283,7 +2360,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getOption", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2296,7 +2373,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2314,15 +2391,15 @@ public class FacebookService {
                 getOption_result result = new getOption_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getOption", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2330,7 +2407,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getOption");
+                  oprot.writeMessageBegin(new TMessage("getOption", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2338,7 +2426,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getOptions", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getOptions_args args = new getOptions_args();
@@ -2350,7 +2438,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getOptions", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2363,7 +2451,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2381,15 +2469,15 @@ public class FacebookService {
                 getOptions_result result = new getOptions_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getOptions", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2397,7 +2485,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getOptions");
+                  oprot.writeMessageBegin(new TMessage("getOptions", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2405,7 +2504,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("getCpuProfile", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           getCpuProfile_args args = new getCpuProfile_args();
@@ -2417,7 +2516,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("getCpuProfile", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2430,7 +2529,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2448,15 +2547,15 @@ public class FacebookService {
                 getCpuProfile_result result = new getCpuProfile_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("getCpuProfile", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2464,7 +2563,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing getCpuProfile");
+                  oprot.writeMessageBegin(new TMessage("getCpuProfile", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2472,7 +2582,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("aliveSince", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           aliveSince_args args = new aliveSince_args();
@@ -2484,7 +2594,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("aliveSince", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2497,7 +2607,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2515,15 +2625,15 @@ public class FacebookService {
                 aliveSince_result result = new aliveSince_result();
                 result.success = value;
                 result.setSuccessIsSet(true);
-          
+
                 try {
                   TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
                   TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-                   
+
                   oprot.writeMessageBegin(new TMessage("aliveSince", TMessageType.REPLY, seqid));
                   result.write(oprot);
                   oprot.writeMessageEnd();
-                   
+
                   return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
                 } catch (Exception e) {
                   return Future.exception(e);
@@ -2531,7 +2641,18 @@ public class FacebookService {
               }
             }).rescue(new Function<Throwable, Future<byte[]>>() {
               public Future<byte[]> apply(Throwable t) {
-                return Future.exception(t);
+                TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
+                TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
+                try {
+                  TApplicationException x = new TApplicationException(TApplicationException.INTERNAL_ERROR, "Internal error processing aliveSince");
+                  oprot.writeMessageBegin(new TMessage("aliveSince", TMessageType.EXCEPTION, seqid));
+                  x.write(oprot);
+                  oprot.writeMessageEnd();
+                  oprot.getTransport().flush();
+                  return Future.value(Arrays.copyOfRange(memoryBuffer.getArray(), 0, memoryBuffer.length()));
+                } catch (Exception e) {
+                  return Future.exception(e);
+                }
               }
             });
           } catch (Exception e) {
@@ -2539,7 +2660,7 @@ public class FacebookService {
           }
         }
       });
-      
+
       functionMap.put("reinitialize", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           reinitialize_args args = new reinitialize_args();
@@ -2551,7 +2672,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("reinitialize", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2564,7 +2685,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2583,7 +2704,7 @@ public class FacebookService {
           });
         }
       });
-      
+
       functionMap.put("shutdown", new Function2<TProtocol, Integer, Future<byte[]>>() {
         public Future<byte[]> apply(final TProtocol iprot, final Integer seqid) {
           shutdown_args args = new shutdown_args();
@@ -2595,7 +2716,7 @@ public class FacebookService {
               TApplicationException x = new TApplicationException(TApplicationException.PROTOCOL_ERROR, e.getMessage());
               TMemoryBuffer memoryBuffer = new TMemoryBuffer(512);
               TProtocol oprot = protocolFactory.getProtocol(memoryBuffer);
-          
+
               oprot.writeMessageBegin(new TMessage("shutdown", TMessageType.EXCEPTION, seqid));
               x.write(oprot);
               oprot.writeMessageEnd();
@@ -2608,7 +2729,7 @@ public class FacebookService {
           } catch (Exception e) {
             return Future.exception(e);
           }
-          
+
           try {
             iprot.readMessageEnd();
           } catch (Exception e) {
@@ -2627,20 +2748,20 @@ public class FacebookService {
           });
         }
       });
-      
+
     }
-    
+
     public Future<byte[]> apply(byte[] request) {
       TTransport inputTransport = new TMemoryInputTransport(request);
       TProtocol iprot = protocolFactory.getProtocol(inputTransport);
-    
+
       TMessage msg;
       try {
         msg = iprot.readMessageBegin();
       } catch (Exception e) {
         return Future.exception(e);
       }
-    
+
       Function2<TProtocol, Integer, Future<byte[]>> fn = functionMap.get(msg.name);
       if (fn == null) {
         try {
@@ -2658,7 +2779,7 @@ public class FacebookService {
           return Future.exception(e);
         }
       }
-    
+
       return fn.apply(iprot, msg.seqid);
     }
 
@@ -2812,7 +2933,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -2920,7 +3041,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getName_result.class, metaDataMap);
@@ -3074,14 +3195,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -3278,7 +3399,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -3386,7 +3507,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getVersion_result.class, metaDataMap);
@@ -3540,14 +3661,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -3744,7 +3865,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -3788,7 +3909,7 @@ public class FacebookService {
     private static final TField SUCCESS_FIELD_DESC = new TField("success", TType.I32, (short)0);
 
     /**
-     * 
+     *
      * @see fb_status
      */
     public fb_status success;
@@ -3796,7 +3917,7 @@ public class FacebookService {
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements TFieldIdEnum {
       /**
-       * 
+       *
        * @see fb_status
        */
       SUCCESS((short)0, "success");
@@ -3860,7 +3981,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new EnumMetaData(TType.ENUM, fb_status.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getStatus_result.class, metaDataMap);
@@ -3895,7 +4016,7 @@ public class FacebookService {
     }
 
     /**
-     * 
+     *
      * @see fb_status
      */
     public fb_status getSuccess() {
@@ -3903,7 +4024,7 @@ public class FacebookService {
     }
 
     /**
-     * 
+     *
      * @see fb_status
      */
     public getStatus_result setSuccess(fb_status success) {
@@ -4022,14 +4143,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.I32) {
               this.success = fb_status.findByValue(iprot.readI32());
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -4226,7 +4347,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -4334,7 +4455,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getStatusDetails_result.class, metaDataMap);
@@ -4488,14 +4609,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -4692,7 +4813,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -4800,9 +4921,9 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new MapMetaData(TType.MAP, 
-              new FieldValueMetaData(TType.STRING), 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
+          new MapMetaData(TType.MAP,
+              new FieldValueMetaData(TType.STRING),
               new FieldValueMetaData(TType.I64))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getCounters_result.class, metaDataMap);
@@ -4979,7 +5100,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -4998,7 +5119,7 @@ public class FacebookService {
                 }
                 iprot.readMapEnd();
               }
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -5125,7 +5246,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getCounter_args.class, metaDataMap);
@@ -5279,14 +5400,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 1: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -5408,7 +5529,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.I64)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getCounter_result.class, metaDataMap);
@@ -5563,7 +5684,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -5571,7 +5692,7 @@ public class FacebookService {
             if (field.type == TType.I64) {
               this.success = iprot.readI64();
               setSuccessIsSet(true);
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -5691,9 +5812,9 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
-      tmpMap.put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.VALUE, new FieldMetaData("value", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(setOption_args.class, metaDataMap);
@@ -5909,21 +6030,21 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 1: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
           case 2: // VALUE
             if (field.type == TType.STRING) {
               this.value = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -6134,7 +6255,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -6241,7 +6362,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.KEY, new FieldMetaData("key", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getOption_args.class, metaDataMap);
@@ -6395,14 +6516,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 1: // KEY
             if (field.type == TType.STRING) {
               this.key = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -6522,7 +6643,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getOption_result.class, metaDataMap);
@@ -6676,14 +6797,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -6880,7 +7001,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -6988,9 +7109,9 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
-          new MapMetaData(TType.MAP, 
-              new FieldValueMetaData(TType.STRING), 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
+          new MapMetaData(TType.MAP,
+              new FieldValueMetaData(TType.STRING),
               new FieldValueMetaData(TType.STRING))));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getOptions_result.class, metaDataMap);
@@ -7167,7 +7288,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -7186,7 +7307,7 @@ public class FacebookService {
                 }
                 iprot.readMapEnd();
               }
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -7315,7 +7436,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.PROFILE_DURATION_IN_SEC, new FieldMetaData("profileDurationInSec", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.PROFILE_DURATION_IN_SEC, new FieldMetaData("profileDurationInSec", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.I32)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getCpuProfile_args.class, metaDataMap);
@@ -7470,7 +7591,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -7478,7 +7599,7 @@ public class FacebookService {
             if (field.type == TType.I32) {
               this.profileDurationInSec = iprot.readI32();
               setProfileDurationInSecIsSet(true);
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -7592,7 +7713,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.STRING)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(getCpuProfile_result.class, metaDataMap);
@@ -7746,14 +7867,14 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
           case 0: // SUCCESS
             if (field.type == TType.STRING) {
               this.success = iprot.readString();
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -7950,7 +8071,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -8060,7 +8181,7 @@ public class FacebookService {
     public static final Map<_Fields, FieldMetaData> metaDataMap;
     static {
       Map<_Fields, FieldMetaData> tmpMap = new EnumMap<_Fields, FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.SUCCESS, new FieldMetaData("success", TFieldRequirementType.DEFAULT,
           new FieldValueMetaData(TType.I64)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       FieldMetaData.addStructMetaDataMap(aliveSince_result.class, metaDataMap);
@@ -8215,7 +8336,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -8223,7 +8344,7 @@ public class FacebookService {
             if (field.type == TType.I64) {
               this.success = iprot.readI64();
               setSuccessIsSet(true);
-            } else { 
+            } else {
               TProtocolUtil.skip(iprot, field.type);
             }
             break;
@@ -8416,7 +8537,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {
@@ -8602,7 +8723,7 @@ public class FacebookService {
       while (true)
       {
         field = iprot.readFieldBegin();
-        if (field.type == TType.STOP) { 
+        if (field.type == TType.STOP) {
           break;
         }
         switch (field.id) {

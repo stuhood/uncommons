@@ -1,6 +1,5 @@
 import sbt._
 import com.twitter.sbt._
-import Configurations._
 
 class Project(info: ProjectInfo)
   extends StandardParentProject(info)
@@ -51,6 +50,7 @@ class Project(info: ProjectInfo)
     "util-hashing", "util-hashing",
     new HashingProject(_), coreProject)
 
+
   class CoreProject(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
@@ -85,9 +85,6 @@ class Project(info: ProjectInfo)
     extends StandardProject(info)
     with ProjectDefaults
   {
-    val asm = "asm" % "asm" % "3.3.1"
-    val asmUtil = "asm" % "asm-util" % "3.3.1"
-    val asmCommons = "asm" % "asm-commons" % "3.3.1"
     val cglib = "cglib" % "cglib" % "2.2"
   }
 

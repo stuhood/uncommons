@@ -33,13 +33,12 @@ object InterpreterServiceSpec extends Specification {
     "set & get" in {
       val key   = "key"
       val value = "value"
-      val zero = "0"
       val result = for {
         _ <- client(Delete(key))
         _ <- client(Set(key, 0, Time.epoch, value))
         r <- client(Get(Seq(key)))
       } yield r
-      result(1.second) mustEqual Values(Seq(Value(key, value, None, Some(zero))))
+      result(1.second) mustEqual Values(Seq(Value(key, value)))
       client.isAvailable must beTrue
     }
 
