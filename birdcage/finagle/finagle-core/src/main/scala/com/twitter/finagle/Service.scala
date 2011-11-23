@@ -71,11 +71,6 @@ trait ClientConnection {
    * Close the underlying client connection.
    */
   def close()
-
-  /**
-   * closeFuture
-   */
-  def closeFuture: Future[Unit]
 }
 
 /**
