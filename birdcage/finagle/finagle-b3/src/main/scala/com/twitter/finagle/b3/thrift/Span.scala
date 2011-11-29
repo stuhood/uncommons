@@ -30,7 +30,7 @@ case class Span(
   _serviceName : Option[String],
   _name        : Option[String],
   annotations  : Seq[B3Annotation],
-  bAnnotations : Seq[B3BinaryAnnotation],
+  bAnnotations : Map[String, ByteBuffer],
   _endpoint    : Option[Endpoint])
 {
   val serviceName = _serviceName getOrElse "Unknown"
@@ -63,15 +63,12 @@ case class Span(
       span.addToAnnotations(a)
     }
 
-    bAnnotations map ( _.toThrift ) foreach { a =>
-      if (a.isSetHost) a.getHost().setService_name(serviceName)
-      span.addToBinary_annotations(a)
-    }
+    if (!bAnnotations.isEmpty) span.setBinary_annotations(bAnnotations)
     span
   }
 
 }
 
 object Span {
-  def apply(traceId: TraceId): Span = Span(traceId, None, None, Seq(), Seq(), None)
+  def apply(traceId: TraceId): Span = Span(traceId, None, None, Seq(), Map(), None)
 }

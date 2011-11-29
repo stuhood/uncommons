@@ -15,21 +15,12 @@ case class Endpoint(ipv4: Int, port: Short) {
    * @return If this endpoint's ip is 0.0.0.0 we get the local host and return that.
    */
   def boundEndpoint: Endpoint = if (ipv4 == 0) Endpoint(Endpoint.getLocalHost, port) else this
-
-  def toThrift: Option[thrift.Endpoint] = {
-    val e = new thrift.Endpoint
-    e.setIpv4(ipv4)
-    e.setPort(port)
-    Some(e)
-  }
 }
 
 object Endpoint {
   private[this] val log = Logger.getLogger(getClass.toString)
 
-  val Unknown = new Endpoint(0, 0) {
-    override def toThrift = None
-  }
+  val Unknown = Endpoint(0, 0)
 
   def toIpv4(inetAddress: InetAddress): Int =
     ByteBuffer.wrap(inetAddress.getAddress).getInt
