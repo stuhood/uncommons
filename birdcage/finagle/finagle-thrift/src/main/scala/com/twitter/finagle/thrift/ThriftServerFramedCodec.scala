@@ -76,10 +76,10 @@ private[thrift] object HandleUncaughtApplicationExceptions
           new TMessage(name, TMessageType.EXCEPTION, msg.seqid))
 
         // Note: The wire contents of the exception message differ from Apache's Thrift in that here,
-        // e.toString is appended to the error message.
+        // e.getMessage is appended to the error message.
         val x = new TApplicationException(
           TApplicationException.INTERNAL_ERROR,
-          "Internal error processing " + name + ": '" + e + "'")
+          "Internal error processing " + name + ": " + e.getMessage)
 
         x.write(buffer())
         buffer().writeMessageEnd()
