@@ -20,6 +20,8 @@ lib_managed/
 *.pyc
 .idea/
 .idea/*
+.native/
+.native/*
 .scala
 .scala/*
 .DS_Store
