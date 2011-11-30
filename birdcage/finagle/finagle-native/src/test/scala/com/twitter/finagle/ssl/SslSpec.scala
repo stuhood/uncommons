@@ -58,8 +58,6 @@ object SslSpec extends Specification {
             response.setHeader("X-Transport-Cipher", cipher)
           }
           response.setContent(makeContent(requestedBytes))
-          HttpHeaders.setContentLength(response, requestedBytes)
-
           response
         }
       }
