@@ -122,13 +122,12 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     }
   }
 
-  protected def channelConnected(ctx: ChannelHandlerContext, _onClose: Future[Unit]) {
+  protected def channelConnected(ctx: ChannelHandlerContext, onClose: Future[Unit]) {
     val channel = ctx.getChannel
     val clientConnection = new ClientConnection {
       def remoteAddress = channel.getRemoteAddress
       def localAddress = channel.getLocalAddress
       def close() { channel.disconnect() }
-      val onClose = _onClose
     }
     postponedService.setValue(serviceFactory(clientConnection))
   }
