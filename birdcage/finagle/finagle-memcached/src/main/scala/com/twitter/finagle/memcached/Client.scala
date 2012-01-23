@@ -15,9 +15,9 @@ import com.twitter.finagle.builder.{ClientBuilder, ClientConfig}
 import com.twitter.finagle.memcached.protocol.text.Memcached
 import com.twitter.finagle.memcached.protocol._
 import com.twitter.finagle.memcached.util.ChannelBufferUtils._
-import com.twitter.finagle.service.{FailureAccrualFactory, FailedService}
+import com.twitter.finagle.service.FailureAccrualFactory
 import com.twitter.finagle.stats.{StatsReceiver, NullStatsReceiver}
-import com.twitter.finagle.{Service, ShardNotAvailableException}
+import com.twitter.finagle.Service
 import com.twitter.hashing._
 import com.twitter.util.{Time, Future, Bijection, Duration}
 import com.twitter.concurrent.{Broker, Offer}
@@ -527,10 +527,6 @@ class KetamaFailureAccrualFactory[Req, Rep](
 
 object KetamaClient {
   val NumReps = 160
-  private val shardNotAvailableDistributor = {
-    val failedService = new FailedService[Command, Response](new ShardNotAvailableException)
-    new SingletonDistributor(Client(failedService))
-  }
 }
 
 class KetamaClient private[memcached](
@@ -547,7 +543,7 @@ class KetamaClient private[memcached](
   } toMap
 
   private[this] val pristineDistributor = buildDistributor(nodes.values toSeq)
-  @volatile private[this] var currentDistributor: Distributor[Client] = pristineDistributor
+  @volatile private[this] var currentDistributor = pristineDistributor
 
   private[this] val ejected = new ConcurrentHashMap[Client, KetamaClientKey]
   private[this] def liveNodes = (nodes -- ejected.values).values toSeq
@@ -555,7 +551,6 @@ class KetamaClient private[memcached](
   private[this] val liveNodeGauge = statsReceiver.addGauge("live_nodes") { nodes.size - ejected.size }
   private[this] val deadNodeGauge = statsReceiver.addGauge("dead_nodes") { ejected.size }
   private[this] val ejectionCount = statsReceiver.counter("ejections")
-  private[this] val revivalCount = statsReceiver.counter("revivals")
 
   private[this] def buildDistributor(nodes: Seq[KetamaNode[Client]]) =
     new KetamaDistributor(nodes, numReps)
@@ -564,9 +559,7 @@ class KetamaClient private[memcached](
     case NodeMarkedDead(key) =>
       ejectNode(key)
       ejectionCount.incr()
-    case NodeRevived(key) =>
-      reviveNode(key)
-      revivalCount.incr()
+    case NodeRevived(key) => reviveNode(key)
   }
 
   override def clientOf(key: String): Client = {
@@ -575,12 +568,7 @@ class KetamaClient private[memcached](
   }
 
   private[this] def rebuildDistributor(): Unit = synchronized {
-    val nodes = liveNodes
-    currentDistributor = if (nodes.isEmpty) {
-      KetamaClient.shardNotAvailableDistributor
-    } else {
-      buildDistributor(nodes)
-    }
+    currentDistributor = buildDistributor(liveNodes)
   }
 
   private[this] def ejectNode(key: KetamaClientKey) {
@@ -592,7 +580,7 @@ class KetamaClient private[memcached](
 
   private[this] def reviveNode(key: KetamaClientKey) {
     val node = nodes(key)
-    if (ejected.remove(node.handle) != null) {
+    if (ejected.remove(key) != null) {
       rebuildDistributor()
     }
   }
