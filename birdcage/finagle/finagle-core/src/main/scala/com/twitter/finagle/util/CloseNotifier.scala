@@ -1,6 +1,6 @@
 package com.twitter.finagle.util
 
-import com.twitter.util.{Closable, Future, Promise, Return}
+import com.twitter.util.Future
 
 /**
  * Allows resources to register their handlers to be invoked when service is closing.
@@ -33,13 +33,5 @@ object CloseNotifier {
     closing ensure { closeHandlers foreach { handler =>
       handler()
     }}
-  }
-
-  def makeLifoCloser(): CloseNotifier with Closable = new CloseNotifier with Closable {
-    private[this] val closing = new Promise[Unit]
-    private[this] val notifier = makeLifo(closing)
-
-    def close() = closing.updateIfEmpty(Return(()))
-    def onClose(h: => Unit) = notifier.onClose(h)
   }
 }

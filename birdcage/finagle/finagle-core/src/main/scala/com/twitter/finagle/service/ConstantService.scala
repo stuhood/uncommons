@@ -11,10 +11,8 @@ class ConstantService[Req, Rep](reply: Future[Rep]) extends Service[Req, Rep] {
   def apply(request: Req): Future[Rep] = reply
 }
 
-class FailedService(failure: Throwable)
-  extends ConstantService[Any, Nothing](Future.exception(failure))
+class FailedService[Req, Rep](failure: Throwable)
+  extends ConstantService[Req, Rep](Future.exception(failure))
 {
   override def isAvailable = false
 }
-
-object NilService extends FailedService(new Exception("dispatch to invalid service"))
