@@ -24,11 +24,10 @@ class SslShutdownHandler(o: Object) extends SimpleChannelUpstreamHandler {
   }
 
   override def exceptionCaught(ctx: ChannelHandlerContext, e: ExceptionEvent) {
-    e.getCause match {
-      case sslException: SSLException =>
-        ctx.getPipeline.remove("ssl")
-      case _ =>
-    }
+    // remove the ssl handler so that it doesn't trap the disconnect
+    if (e.getCause.isInstanceOf[SSLException])
+      ctx.getPipeline.remove("ssl")
+
     super.exceptionCaught(ctx, e)
   }
 
