@@ -163,9 +163,9 @@ final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionL
   private val _channelFactory            : Option[ReferenceCountedChannelFactory] = None,
   private val _tls                       : Option[(() => Engine, Option[String])] = None,
   private val _failureAccrual            : Option[ServiceFactoryWrapper]  = Some(FailureAccrualFactory.wrapper(5, 5.seconds)),
+  private val _maxOutstandingConnections: Option[Int]                = None,
   private val _tracerFactory             : Tracer.Factory                = NullTracer.factory,
-  private val _hostConfig                : ClientHostConfig              = new ClientHostConfig,
-  private val _expFailFast               : Boolean                       = false)
+  private val _hostConfig                : ClientHostConfig              = new ClientHostConfig)
 {
   import ClientConfig._
 
@@ -200,8 +200,8 @@ final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionL
   val channelFactory            = _channelFactory
   val tls                       = _tls
   val failureAccrual            = _failureAccrual
+  val maxOutstandingConnections = _maxOutstandingConnections
   val tracerFactory             = _tracerFactory
-  val expFailFast               = _expFailFast
 
   def toMap = Map(
     "cluster"                   -> _cluster,
@@ -229,8 +229,8 @@ final case class ClientConfig[Req, Rep, HasCluster, HasCodec, HasHostConnectionL
     "channelFactory"            -> _channelFactory,
     "tls"                       -> _tls,
     "failureAccrual"            -> _failureAccrual,
-    "tracerFactory"             -> Some(_tracerFactory),
-    "expFailFast"               -> expFailFast
+    "maxOutstandingConnections" -> _maxOutstandingConnections,
+    "tracerFactory"             -> Some(_tracerFactory)
   )
 
   override def toString = {
@@ -546,17 +546,16 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
   def failureAccrual(failureAccrual: ServiceFactoryWrapper): This = {
     withConfig(_.copy(_failureAccrual = Some(failureAccrual)))
   }
-  
+
+
   /**
-   * An experimental "fail-fast" mode that marks a host dead on
-   * connection failure. The host remains dead until we 
-   * succesfully connect.
-   *
-   * Intermediate connection attempts *are* respected, but host
-   * availability is turned off during the reconnection period.
+   * Toggle transmission policy to "Fast-Fail", then if an host become unavailable we will fail
+   * fast for every next request (no timeout), but each we try to reconnect with at most
+   * `maxOutstandingConnections` outstanding connections.
    */
-  def expFailFast(onOrOff: Boolean): This =
-   withConfig(_.copy(_expFailFast = onOrOff))
+  def maxOutstandingConnections(n: Int): This =
+    withConfig(_.copy(_maxOutstandingConnections = Some(n)))
+
 
   /* BUILDING */
   /* ======== */
@@ -690,15 +689,11 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     factory = new ChannelServiceFactory[Req, Rep](
       bs, prepareService(codec) _, hostStatsReceiver)
     factory = buildPool(factory, hostStatsReceiver)
-    factory = requestTimeoutFilter andThen factory
-    factory = failureAccrualFactory(factory)
 
-    if (config.expFailFast) {
-      // XXX: what to do if connectTimeout is larger
-      // than our backoff?  do we apply our own timeouts?
-      factory = new FailFastFactory(
-        factory, hostStatsReceiver.scope("failfast"), Timer.default)
-    }
+    factory = requestTimeoutFilter andThen factory
+
+    factory = failureAccrualFactory(factory)
+    factory = failFastFactory(factory)
 
     val statsFilter = new StatsFilter[Req, Rep](hostStatsReceiver)
     factory = statsFilter andThen factory
@@ -799,6 +794,11 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
 
   protected def failureAccrualFactory(factory: ServiceFactory[Req, Rep]) =
     config.failureAccrual map { _ andThen factory } getOrElse(factory)
+
+  protected def failFastFactory(factory: ServiceFactory[Req, Rep]) =
+    config.maxOutstandingConnections map { n =>
+      new FailFastFactory(factory, n)
+    } getOrElse(factory)
 
   protected def monitorFilter =
     config.monitor map { monitorFactory =>
