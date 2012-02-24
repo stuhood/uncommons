@@ -39,6 +39,6 @@ object FailFastFactorySpec extends Specification with Mockito {
 
 //      factoryRequest.setValue(underlyingService)
 //      factory.isAvailable must beTrue
-    }
+//    }
   }
 }
