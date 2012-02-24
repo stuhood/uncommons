@@ -694,6 +694,8 @@ class ClientBuilder[Req, Rep, HasCluster, HasCodec, HasHostConnectionLimit] priv
     factory = failureAccrualFactory(factory)
 
     if (config.expFailFast) {
+      // XXX: what to do if connectTimeout is larger
+      // than our backoff?  do we apply our own timeouts?
       factory = new FailFastFactory(
         factory, hostStatsReceiver.scope("failfast"), Timer.default)
     }
