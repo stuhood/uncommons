@@ -65,6 +65,13 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     new MemcachedProject(_), coreProject)
 
   /**
+   * finagle-memcached contains a memcached reducer
+   */
+  val memcachedHadoopProject = project(
+    "finagle-memcached-hadoop", "finagle-memcached-hadoop",
+    new MemcachedHadoopProject(_), coreProject, memcachedProject)
+
+  /**
    * finagle-kestrel contains the kestrel codec and Java and Scala
    * friendly clients.
    */
@@ -188,6 +195,18 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
     )
   }
 
+  class MemcachedHadoopProject(info: ProjectInfo) extends StandardProject(info)
+    with Defaults
+  {
+    override def compileOrder = CompileOrder.ScalaThenJava
+    val junit = "junit" % "junit" % "3.8.2" % "test"
+
+    val hadoop    = "org.apache.hadoop" % "hadoop-core" % "0.20.2"
+    val codec     = "commons-codec" % "commons-codec" % "1.5"
+    val pig       = "org.apache.pig" % "pig" % "0.9.2"
+    val mrunit    = "org.apache.mrunit" % "mrunit" % "0.8.0-incubating" % "test"
+  }
+
   class KestrelProject(info: ProjectInfo) extends StandardProject(info)
     with Defaults
   {
@@ -236,9 +255,16 @@ class Project(info: ProjectInfo) extends StandardParentProject(info)
   class ServersetsProject(info: ProjectInfo) extends StandardProject(info)
     with Defaults
   {
-    val commonClient    = "com.twitter.common.zookeeper" % "client"     % "0.0.6"
-    val commonGroup     = "com.twitter.common.zookeeper" % "group"      % "0.0.5"
-    val commonServerSet = "com.twitter.common.zookeeper" % "server-set" % "0.0.5"
+    override def ivyXML =
+      <dependencies>
+        <exclude module="jms"/>
+        <exclude module="jmxtools"/>
+        <exclude module="jmxri"/>
+        <exclude module="google-collections"/> // is subset of guava, which is also included
+        <override org="commons-codec" rev="1.5"/>
+      </dependencies>
+
+    val commonsZookeeper = "com.twitter.common" % "zookeeper" % "0.0.24"
   }
 
   class ExampleProject(info: ProjectInfo) extends StandardProject(info)
