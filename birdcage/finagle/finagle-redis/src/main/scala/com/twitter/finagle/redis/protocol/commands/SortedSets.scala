@@ -50,7 +50,7 @@ object ZCount {
 }
 
 
-case class ZIncrBy(key: String, amount: Double, member: Array[Byte])
+case class ZIncrBy(key: String, amount: Float, member: Array[Byte])
   extends StrictKeyCommand
   with StrictMemberCommand
 {
@@ -66,7 +66,7 @@ object ZIncrBy {
     val list = trimList(args, 3, "ZINCRBY")
     val key = BytesToString(list(0))
     val amount = RequireClientProtocol.safe {
-      NumberFormat.toDouble(BytesToString(list(1)))
+      NumberFormat.toFloat(BytesToString(list(1)))
     }
     new ZIncrBy(key, amount, list(2))
   }
@@ -283,14 +283,14 @@ case class ZInterval(value: String) {
   private val representation = value.toLowerCase match {
     case N_INF => N_INF
     case P_INF => P_INF
-    case double => double.head match {
+    case float => float.head match {
       case EXCLUSIVE => RequireClientProtocol.safe {
-        NumberFormat.toDouble(double.tail)
-        double
+        NumberFormat.toFloat(float.tail)
+        float
       }
       case f => RequireClientProtocol.safe {
-        NumberFormat.toDouble(value)
-        double
+        NumberFormat.toFloat(value)
+        float
       }
     }
   }
@@ -304,13 +304,13 @@ object ZInterval {
 
   val MAX = new ZInterval(P_INF)
   val MIN = new ZInterval(N_INF)
-  def apply(double: Double) = new ZInterval(double.toString)
+  def apply(float: Float) = new ZInterval(float.toString)
   def apply(v: Array[Byte]) = new ZInterval(BytesToString(v))
-  def exclusive(double: Double) = new ZInterval("%c%s".format(EXCLUSIVE, double.toString))
+  def exclusive(float: Float) = new ZInterval("%c%s".format(EXCLUSIVE, float.toString))
 }
 
 
-case class ZMember(score: Double, member: Array[Byte])
+case class ZMember(score: Float, member: Array[Byte])
   extends StrictScoreCommand
   with StrictMemberCommand
 {
@@ -320,7 +320,7 @@ case class ZMember(score: Double, member: Array[Byte])
 
 
 sealed trait ScoreCommand extends Command {
-  val score: Double
+  val score: Float
 }
 sealed trait StrictScoreCommand extends ScoreCommand {
 }
@@ -354,7 +354,7 @@ object ZMembers {
       case score :: member :: Nil =>
         ZMember(
           RequireClientProtocol.safe {
-            NumberFormat.toDouble(BytesToString(score))
+            NumberFormat.toFloat(BytesToString(score))
           },
           member)
       case _ =>

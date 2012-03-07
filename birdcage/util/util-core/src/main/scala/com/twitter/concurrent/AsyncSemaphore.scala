@@ -5,14 +5,10 @@ package com.twitter.concurrent
  * execution. Grabbing a permit returns a Future[Permit]
  */
 
-import java.util.concurrent.RejectedExecutionException
 import collection.mutable.Queue
 import com.twitter.util.{Promise, Future}
 
-class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
-  def this(initialPermits: Int = 0) = this(initialPermits, None)
-  def this(initialPermits: Int, maxWaiters: Int) = this(initialPermits, Some(maxWaiters))
-  require(maxWaiters.getOrElse(0) >= 0)
+class AsyncSemaphore(initialPermits: Int = 0) {
   private[this] var waiters = new Queue[() => Unit]
   private[this] var availablePermits = initialPermits
 
@@ -42,9 +38,7 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
    * Acquire a Permit, asynchronously. Be sure to permit.release() in a 'finally'
    * block of your onSuccess() callback.
    *
-   * @return a Future[Permit] when the Future is satisfied, computation can proceed,
-   * or a Future.Exception[RejectedExecutionException] if the configured maximum number of waiters
-   * would be exceeded.
+   * @return a Future[Permit] when the Future is satisfied, computation can proceed.
    */
   def acquire(): Future[Permit] = {
     val result = new Promise[Permit]
@@ -53,31 +47,17 @@ class AsyncSemaphore protected (initialPermits: Int, maxWaiters: Option[Int]) {
       result.setValue(new SemaphorePermit)
     }
 
-    val (isException, runNow) = synchronized {
+    val runNow = synchronized {
       if (availablePermits > 0) {
         availablePermits -= 1
-        (false, true)
+        true
       } else {
-        maxWaiters match {
-          case Some(max) if (waiters.size >= max) =>
-            (true, false)
-          case _ =>
-            waiters enqueue(setAcquired)
-            (false, false)
-        }
+        waiters enqueue(setAcquired)
+        false
       }
     }
 
-    if (isException) {
-      AsyncSemaphore.MaxWaitersExceededException
-    } else {
-      if (runNow) setAcquired()
-      result
-    }
+    if (runNow) setAcquired()
+    result
   }
-}
-
-object AsyncSemaphore {
-  private val MaxWaitersExceededException =
-    Future.exception(new RejectedExecutionException("Max waiters exceeded"))
 }

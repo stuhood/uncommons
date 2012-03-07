@@ -10,7 +10,7 @@ import com.twitter.concurrent.Channel
 import com.twitter.util.Future
 
 import com.twitter.finagle.{
-  Codec, CodecFactory, Service, ServiceProxy, ServiceFactory}
+  Codec, CodecFactory, Service, ServiceProxy}
 import com.twitter.finagle.ServiceNotAvailableException
 
 object Stream {
@@ -42,10 +42,11 @@ class Stream extends CodecFactory[HttpRequest, StreamResponse] {
           pipeline
         }
       }
-      override def prepareConnFactory(
-        underlying: ServiceFactory[HttpRequest, StreamResponse]
-      ): ServiceFactory[HttpRequest, StreamResponse] =
-        underlying map { service => new UseOnceService(service) }
+      override def prepareService(
+        underlying: Service[HttpRequest, StreamResponse]
+      ): Future[Service[HttpRequest, StreamResponse]] = {
+        Future.value(new UseOnceService(underlying))
+      }
     }
   }
 

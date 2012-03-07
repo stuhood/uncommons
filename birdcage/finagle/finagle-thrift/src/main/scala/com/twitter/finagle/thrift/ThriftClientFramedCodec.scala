@@ -66,27 +66,28 @@ class ThriftClientFramedCodec(
       }
     }
 
-  override def prepareConnFactory(underlying: ServiceFactory[ThriftClientRequest, Array[Byte]]) = underlying flatMap {  service =>
+  override def prepareService(underlying: Service[ThriftClientRequest, Array[Byte]]) = {
     // Attempt to upgrade the protocol the first time around by
     // sending a magic method invocation.
     val buffer = new OutputBuffer()
-    buffer().writeMessageBegin(new TMessage(ThriftTracing.CanTraceMethodName, TMessageType.CALL, 0))
+    buffer().writeMessageBegin(
+      new TMessage(ThriftTracing.CanTraceMethodName, TMessageType.CALL, 0))
 
     val options = new thrift.ConnectionOptions
     options.write(buffer())
 
     buffer().writeMessageEnd()
 
-    service(new ThriftClientRequest(buffer.toArray, false)) map { bytes =>
+    underlying(new ThriftClientRequest(buffer.toArray, false)) map { bytes =>
       val memoryTransport = new TMemoryInputTransport(bytes)
-      val iprot = protocolFactory.getProtocol(memoryTransport)
-      val reply = iprot.readMessageBegin()
-      val filter = new ThriftClientTracingFilter(
+      val iprot           = protocolFactory.getProtocol(memoryTransport)
+      val reply           = iprot.readMessageBegin()
+
+      (new ThriftClientTracingFilter(
         config.serviceName,
         reply.`type` != TMessageType.EXCEPTION,
-        clientId)
-
-      filter andThen service
+        clientId
+      )) andThen underlying
     }
   }
 }

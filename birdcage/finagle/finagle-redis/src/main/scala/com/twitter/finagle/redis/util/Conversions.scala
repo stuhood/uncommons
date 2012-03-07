@@ -39,18 +39,11 @@ object StringToChannelBuffer {
 }
 object NumberFormat {
   import com.twitter.naggati.ProtocolError
-  def toDouble(arg: String): Double = {
+  def toLong(arg: String): Long = {
     try {
-      arg.toDouble
+      arg.toLong
     } catch {
-      case e: Throwable => throw new ProtocolError("Unable to convert %s to Double".format(arg))
-    }
-  }
-  def toFloat(arg: String): Float = {
-    try {
-      arg.toFloat
-    } catch {
-      case e: Throwable => throw new ProtocolError("Unable to convert %s to Float".format(arg))
+      case e: Throwable => throw new ProtocolError("Unable to convert %s to Long".format(arg))
     }
   }
   def toInt(arg: String): Int = {
@@ -60,11 +53,11 @@ object NumberFormat {
       case e: Throwable => throw new ProtocolError("Unable to convert %s to Int".format(arg))
     }
   }
-  def toLong(arg: String): Long = {
+  def toFloat(arg: String): Float = {
     try {
-      arg.toLong
+      arg.toFloat
     } catch {
-      case e: Throwable => throw new ProtocolError("Unable to convert %s to Long".format(arg))
+      case e: Throwable => throw new ProtocolError("Unable to convert %s to Float".format(arg))
     }
   }
 }

@@ -44,8 +44,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     serviceFactory: ServiceFactory[Req, Rep],
     statsReceiver: StatsReceiver,
     log: Logger,
-    parentMonitor: Monitor,
-    cancelOnHangup: Boolean)
+    parentMonitor: Monitor)
   extends ChannelClosingHandler with ConnectionLifecycleHandler
 {
   import ServiceToChannelHandler._
@@ -83,8 +82,7 @@ private[finagle] class ServiceToChannelHandler[Req, Rep](
     state.getAndSet(Shutdown) match {
       case Shutdown => // Already shut down.
       case previous =>
-        if (cancelOnHangup)
-          currentResponse foreach { _.cancel() }
+        currentResponse foreach { _.cancel() }
         currentResponse = None
         close() onSuccessOrFailure { onShutdownPromise() = Return(()) }
         service.release()

@@ -112,8 +112,7 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
   private val _writeCompletionTimeout:          Option[Duration]                         = None,
   private val _tracerFactory:                   Tracer.Factory                           = NullTracer.factory,
   private val _openConnectionsThresholds:       Option[OpenConnectionsThresholds]        = None,
-  private val _serverBootstrap:                 Option[ServerBootstrap]                  = None,
-  private val _cancelOnHangup:                  Boolean                                  = true)
+  private val _serverBootstrap:                 Option[ServerBootstrap]                  = None)
 {
   import ServerConfig._
 
@@ -143,7 +142,6 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
   val tracerFactory                   = _tracerFactory
   val openConnectionsThresholds       = _openConnectionsThresholds
   val serverBootstrap                 = _serverBootstrap
-  val cancelOnHangup                  = _cancelOnHangup
 
   def toMap = Map(
     "codecFactory"                    -> _codecFactory,
@@ -165,8 +163,7 @@ final case class ServerConfig[Req, Rep, HasCodec, HasBindTo, HasName](
     "writeCompletionTimeout"          -> _timeoutConfig.writeCompletionTimeout,
     "tracerFactory"                   -> Some(_tracerFactory),
     "openConnectionsThresholds"       -> Some(_openConnectionsThresholds),
-    "serverBootstrap"                 -> _serverBootstrap,
-    "cancelOnHangup"                  -> Some(_cancelOnHangup)
+    "serverBootstrap"                 -> _serverBootstrap
   )
 
   override def toString = {
@@ -324,13 +321,6 @@ class ServerBuilder[Req, Rep, HasCodec, HasBindTo, HasName] private[builder](
     withConfig(_.copy(_tracerFactory = factory))
 
   /**
-   * Cancel pending futures whenever the the connection is shut down.
-   * This defaults to true.
-   */
-  def cancelOnHangup(yesOrNo: Boolean): This =
-    withConfig(_.copy(_cancelOnHangup = yesOrNo))
-
-  /**
    * Used for testing.
    */
   private[builder] def serverBootstrap(bs: ServerBootstrap): This =
@@ -461,23 +451,27 @@ private[builder] class MkServer[Req, Rep](
     new ChannelSemaphoreHandler(semaphore)
   }
 
-  val activeHandlers = new HashSet[ServiceToChannelHandler[Any, Any]]
-    with SynchronizedSet[ServiceToChannelHandler[Any, Any]]
+  val activeHandlers = new HashSet[ServiceToChannelHandler[Req, Rep]]
+    with SynchronizedSet[ServiceToChannelHandler[Req, Rep]]
 
   // We share some filters & handlers for cumulative stats.
   val channelStatsHandler = statsReceiverOpt map { new ChannelStatsHandler(_) }
   val channelRequestStatsHandler = statsReceiverOpt map { new ChannelRequestStatsHandler(_) }
 
-  val filter = {  // per connection filter stack
+  val filter = {
     val statsFilter = statsReceiverOpt map(new StatsFilter[Req, Rep](_)) getOrElse Filter.identity[Req, Rep]
     val timeoutFilter = config.requestTimeout map { duration =>
       val e = new IndividualRequestTimeoutException(duration)
       new TimeoutFilter[Req, Rep](duration, e)
     } getOrElse Filter.identity[Req, Rep]
-    statsFilter andThen timeoutFilter
+
+    val tracer = config.tracerFactory(closeNotifier)
+    val tracingFilter = new TracingFilter[Req, Rep](tracer)
+
+    tracingFilter andThen statsFilter andThen timeoutFilter
   }
 
-  val serviceFactory: ServiceFactory[Req, Rep] = {
+  val serviceFactory = {
     var factory = inputServiceFactory
 
     config.openConnectionsThresholds foreach { threshold =>
@@ -485,7 +479,15 @@ private[builder] class MkServer[Req, Rep](
         factory, threshold, statsReceiver.scope("idle"))
     }
 
-    filter andThen factory
+    factory map { service =>
+      val prepared: Service[Req, Rep] = {
+        val prepared = codec.prepareService(service)
+        if (prepared.isDefined && prepared.isReturn) prepared.get
+        else new ProxyService(prepared)
+      }
+
+      filter andThen prepared
+    }
   }
 
   def mkPipeline() = {
@@ -568,13 +570,6 @@ private[builder] class MkServer[Req, Rep](
       )
     }
 
-
-  // Due to tracing semantics, we need to place these at the
-  // very bottom of the service stack. We should reconsider
-  // the tracing interface.
-  val tracer = config.tracerFactory(closeNotifier)
-  val tracingFilter = new TracingFilter[Any, Any](tracer)
-
   bootstrap.setPipelineFactory(new ChannelPipelineFactory {
     def getPipeline() = {
       val pipeline = mkPipeline()
@@ -614,15 +609,13 @@ private[builder] class MkServer[Req, Rep](
         }
       }
 
-      val connServiceFactory = tracingFilter andThen codec.rawPrepareServerConnFactory(thisServiceFactory)
-
       // This has to go last (ie. first in the stack) so that
       // protocol-specific trace support can override our generic
       // one here.
       val channelHandler = new ServiceToChannelHandler(
-        connServiceFactory, statsReceiver,
+        thisServiceFactory, statsReceiver,
         Logger.getLogger(classOf[ServiceToChannelHandler[Req, Rep]].getName),
-        monitor, config.cancelOnHangup)
+        monitor)
 
       activeHandlers += channelHandler
       channelHandler.onShutdown ensure {
