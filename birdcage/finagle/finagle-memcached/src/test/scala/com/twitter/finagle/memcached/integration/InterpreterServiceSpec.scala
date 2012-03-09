@@ -1,15 +1,14 @@
 package com.twitter.finagle.memcached.integration
 
-import com.twitter.finagle.Service
-import com.twitter.finagle.builder.ClientBuilder
+import org.specs.Specification
 import com.twitter.finagle.memcached.Server
+import com.twitter.finagle.builder.ClientBuilder
 import com.twitter.finagle.memcached.protocol._
 import com.twitter.finagle.memcached.protocol.text.Memcached
-import com.twitter.finagle.memcached.util.ChannelBufferUtils._
 import com.twitter.util.TimeConversions._
-import com.twitter.util.Time
-import java.net.InetSocketAddress
-import org.specs.Specification
+import com.twitter.finagle.Service
+import com.twitter.finagle.memcached.util.ChannelBufferUtils._
+import com.twitter.util.{Time, RandomSocket}
 
 object InterpreterServiceSpec extends Specification {
   "InterpreterService" should {
@@ -17,10 +16,11 @@ object InterpreterServiceSpec extends Specification {
     var client: Service[Command, Response] = null
 
     doBefore {
-      server = new Server(new InetSocketAddress(0))
-      val address = server.start().localAddress
+      val address = RandomSocket()
+      server = new Server(address)
+      server.start()
       client = ClientBuilder()
-        .hosts(address)
+        .hosts("localhost:" + address.getPort)
         .codec(new Memcached)
         .hostConnectionLimit(1)
         .build()

@@ -1,21 +1,19 @@
 package com.twitter.finagle.zookeeper
 
-import com.twitter.common.io.FileUtils.createTempDir
-import com.twitter.common.quantity._
-import com.twitter.common.zookeeper.{ServerSetImpl, ZooKeeperClient}
-import com.twitter.conversions.time._
-import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
-import com.twitter.finagle.{Codec, CodecFactory, Service}
-import com.twitter.util.{Future, RandomSocket}
-import java.net.InetSocketAddress
-import org.apache.zookeeper.server.persistence.FileTxnSnapLog
+import org.specs.Specification
 import org.apache.zookeeper.server.{NIOServerCnxn, ZooKeeperServer}
-import org.jboss.netty.channel._
-import org.jboss.netty.handler.codec.frame.{
-  Delimiters, DelimiterBasedFrameDecoder}
+import com.twitter.common.quantity._
+import com.twitter.common.io.FileUtils.createTempDir
+import org.apache.zookeeper.server.persistence.FileTxnSnapLog
+import com.twitter.common.zookeeper.{ServerSetImpl, ZooKeeperClient}
+import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
 import org.jboss.netty.handler.codec.string.{StringEncoder, StringDecoder}
 import org.jboss.netty.util.CharsetUtil
-import org.specs.Specification
+import org.jboss.netty.handler.codec.frame.{Delimiters, DelimiterBasedFrameDecoder}
+import com.twitter.util.{Future, RandomSocket}
+import com.twitter.conversions.time._
+import org.jboss.netty.channel._
+import com.twitter.finagle.{Codec, CodecFactory, Service}
 
 object StringCodec extends CodecFactory[String, String] {
   def server = Function.const {
@@ -39,6 +37,7 @@ object StringCodec extends CodecFactory[String, String] {
 object ZookeeperServerSetClusterSpec extends Specification {
   "ZookeeperServerSetCluster" should {
     val zookeeperAddress = RandomSocket.nextAddress
+    val serviceAddress = RandomSocket.nextAddress
     var connectionFactory: NIOServerCnxn.Factory = null
     var zookeeperServer: ZooKeeperServer = null
     var zookeeperClient: ZooKeeperClient = null
@@ -68,11 +67,11 @@ object ZookeeperServerSetClusterSpec extends Specification {
       }
       val server = ServerBuilder()
         .codec(StringCodec)
-        .bindTo(new InetSocketAddress(0))
+        .bindTo(serviceAddress)
         .name("ZKTestServer")
         .build(sillyService)
 
-      cluster.join(server.localAddress)
+      cluster.join(serviceAddress)
 
       val client = ClientBuilder()
         .cluster(cluster)

@@ -96,14 +96,14 @@ object ThriftCodecSpec extends Specification {
         channel.upstreamEvents must haveSize(0)
         channel.downstreamEvents must haveSize(0)
 
-        val remainder = buffer.copy(buffer.readerIndex+numBytes, buffer.readableBytes-numBytes)
         // receive remainder of call
-        Channels.fireMessageReceived(channel, remainder)
+        truncatedBuffer.writeBytes(buffer, buffer.readerIndex + numBytes,
+                                   buffer.readableBytes - numBytes)
+        Channels.fireMessageReceived(channel, truncatedBuffer)
 
         // call should be received
         channel.upstreamEvents must haveSize(1)
         channel.downstreamEvents must haveSize(0)
-
         val message = channel.upstreamEvents(0).asInstanceOf[MessageEvent].getMessage()
         val thriftCall = message.asInstanceOf[ThriftCall[Silly.bleep_args, Silly.bleep_result]]
         thriftCall mustNot beNull
@@ -166,9 +166,10 @@ object ThriftCodecSpec extends Specification {
         channel.upstreamEvents must haveSize(0)
         channel.downstreamEvents must haveSize(0)
 
-        val remainder = buffer.copy(buffer.readerIndex+numBytes, buffer.readableBytes-numBytes)
         // receive remainder of call
-        Channels.fireMessageReceived(channel, remainder)
+        truncatedBuffer.writeBytes(buffer, buffer.readerIndex + numBytes,
+                                   buffer.readableBytes - numBytes)
+        Channels.fireMessageReceived(channel, truncatedBuffer)
 
         // call should be received
         channel.upstreamEvents must haveSize(1)

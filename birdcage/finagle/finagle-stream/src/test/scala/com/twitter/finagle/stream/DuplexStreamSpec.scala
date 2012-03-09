@@ -1,18 +1,17 @@
 package com.twitter.finagle.stream
 
-import com.twitter.concurrent._
-import com.twitter.concurrent._
-import com.twitter.conversions.time._
-import com.twitter.conversions.time._
-import com.twitter.finagle.Service
-import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
-import com.twitter.util.{Future, CountDownLatch, Promise, Return}
-import java.net.InetSocketAddress
-import java.nio.charset.Charset
-import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
-import org.jboss.netty.handler.codec.http.{
-  DefaultHttpRequest, HttpRequest, HttpMethod, HttpVersion}
 import org.specs.Specification
+import com.twitter.finagle.Service
+import com.twitter.concurrent._
+import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
+import org.jboss.netty.handler.codec.http.{HttpMethod, HttpVersion, DefaultHttpRequest, HttpRequest}
+import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
+import com.twitter.util.{Future, RandomSocket, CountDownLatch, Promise, Return}
+import com.twitter.conversions.time._
+import com.twitter.concurrent._
+import com.twitter.conversions.time._
+import java.nio.charset.Charset
+
 
 object DuplexStreamSpec extends Specification {
   class SimpleService extends Service[DuplexStreamHandle, Offer[ChannelBuffer]] {
@@ -37,14 +36,14 @@ object DuplexStreamSpec extends Specification {
 
   "SimpleService" should {
     "work" in {
+      val address = RandomSocket()
       val service = new SimpleService
 
       val server = ServerBuilder()
         .codec(DuplexStreamServerCodec())
-        .bindTo(new InetSocketAddress(0))
+        .bindTo(address)
         .name("SimpleService")
         .build(service)
-      val address = server.localAddress
 
       val factory = ClientBuilder()
         .codec(DuplexStreamClientCodec())
