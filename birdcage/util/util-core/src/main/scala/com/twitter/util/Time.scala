@@ -16,7 +16,6 @@
 
 package com.twitter.util
 
-import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
@@ -191,7 +190,7 @@ trait TimeLike[+This <: TimeLike[This]] {
   def floor(x: Duration) = build((inNanoseconds / x.inNanoseconds) * x.inNanoseconds)
 }
 
-class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] with Serializable {
+class Time private[util] (protected val nanos: Long) extends TimeLike[Time] with Ordered[Time] {
   protected override def build(nanos: Long) = new Time(nanos)
 
   def inNanoseconds = nanos
@@ -315,7 +314,7 @@ object Duration {
   }
 }
 
-class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] with Serializable {
+class Duration private[util] (protected val nanos: Long) extends TimeLike[Duration] with Ordered[Duration] {
   import Duration._
 
   def inNanoseconds = nanos
