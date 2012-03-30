@@ -48,3 +48,6 @@ GSYMS
 GTAGS
 .ivy2
 TAGS
+*.ipr
+*.iws
+git.properties
