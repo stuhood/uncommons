@@ -6,7 +6,7 @@ object TempDirectory {
   /**
    * Create a new temporary directory, which will be deleted upon the exit of the VM.
    *
-   * @return File representing the directory
+   * @returns File representing the directory
    */
   def create(deleteAtExit: Boolean = true): File = {
     var file = File.createTempFile("temp", "dir")

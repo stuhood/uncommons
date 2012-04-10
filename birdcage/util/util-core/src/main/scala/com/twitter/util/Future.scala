@@ -2,7 +2,7 @@ package com.twitter.util
 
 import com.twitter.concurrent.{Offer, IVar, Tx}
 import com.twitter.conversions.time._
-import java.util.concurrent.atomic.{AtomicInteger, AtomicReference, AtomicReferenceArray}
+import java.util.concurrent.atomic.{AtomicInteger, AtomicReferenceArray}
 import java.util.concurrent.{
   CancellationException, Future => JavaFuture, TimeUnit}
 import scala.annotation.tailrec
@@ -12,6 +12,7 @@ import scala.collection.mutable
 object Future {
   val DEFAULT_TIMEOUT = Duration.MaxValue
   val Unit = apply(())
+  val Void = apply[Void](null)
   val Done = Unit
 
   /**
@@ -104,6 +105,7 @@ object Future {
     def poll: Option[Try[Nothing]] = None
   }
 
+  @deprecated("Prefer static Future.Void.")
   def void(): Future[Void] = value[Void](null)
 
   /**
@@ -129,27 +131,18 @@ object Future {
    * onSuccess g; f0 }` will cancel f0 so that f0 never hangs.
    */
   def monitored[A](f: => Future[A]): Future[A] = {
-    val promise = new Promise[A]
-    val promiseRef = new AtomicReference(promise)
+    val p = new Promise[A]
     val monitor = Monitor.mk { case exc =>
-      promiseRef.getAndSet(null) match {
-        case null => false
-        case p =>
-          p.setException(exc)
-          p.cancel()
-          true
+      if (!p.updateIfEmpty(Throw(exc))) false else {
+        p.cancel()
+        true
       }
     }
     monitor {
-      val res = f respond { r=> 
-        promiseRef.getAndSet(null) match {
-          case null => ()
-          case p => p() = r
-        }
-      }
-      promise.linkTo(res)
+      val res = f respond { p.updateIfEmpty(_) }
+      p.linkTo(res)
     }
-    promise
+    p
   }
 
   /**
@@ -615,6 +608,11 @@ abstract class Future[+A] extends TryLike[A, Future] with Cancellable {
    * Convert this Future[A] to a Future[Unit] by discarding the result.
    */
   def unit: Future[Unit] = map(_ => ())
+
+  /**
+   * Convert this Future[A] to a Future[Void] by discarding the result.
+   */
+  def void: Future[Void] = map(_ => null.asInstanceOf[Void])
 
   /**
    * Send updates from this Future to the other.

@@ -15,7 +15,7 @@ import com.twitter.io.{Files, TempDirectory, StreamIO}
  *
  * @param certificatePath the path to the PEM-encoded certificate
  * @param keyPath the path to the PEM-encoded private key
- * @return Array[KeyManager]
+ * @returns Array[KeyManager]
  */
 object PEMEncodedKeyManager {
   class ExternalExecutableFailed(message: String) extends Exception(message)
