@@ -29,6 +29,7 @@ lib_managed/
 .bundle
 .ivyjars
 .run_classpath
+.classpath.txt
 .cache
 .classpath
 .project
