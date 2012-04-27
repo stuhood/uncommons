@@ -20,6 +20,7 @@ import java.net.{DatagramPacket, DatagramSocket, InetSocketAddress}
 import java.util.{logging => javalog}
 import com.twitter.conversions.string._
 import org.specs.SpecificationWithJUnit
+import config._
 
 class SyslogHandlerSpec extends SpecificationWithJUnit {
   val record1 = new javalog.LogRecord(Level.FATAL, "fatal message!")
@@ -35,13 +36,13 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       val serverSocket = new DatagramSocket
       val serverPort = serverSocket.getLocalPort
 
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          timezone = Some("UTC"),
+      var syslog = new SyslogHandlerConfig {
+        port = serverPort
+        formatter = new SyslogFormatterConfig {
+          timezone = "UTC"
           hostname = "raccoon.local"
-        )
-      ).apply()
+        }
+      }.apply()
       syslog.publish(record1)
       syslog.publish(record2)
 
@@ -58,14 +59,14 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       val serverSocket = new DatagramSocket
       val serverPort = serverSocket.getLocalPort
 
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          serverName = Some("pingd"),
-          timezone = Some("UTC"),
+      var syslog = new SyslogHandlerConfig {
+        port = serverPort
+        formatter = new SyslogFormatterConfig {
+          serverName = "pingd"
+          timezone = "UTC"
           hostname = "raccoon.local"
-        )
-      ).apply()
+        }
+      }.apply()
       syslog.publish(record1)
 
       SyslogFuture.sync
@@ -79,14 +80,14 @@ class SyslogHandlerSpec extends SpecificationWithJUnit {
       val serverSocket = new DatagramSocket
       val serverPort = serverSocket.getLocalPort
 
-      var syslog = SyslogHandler(
-        port = serverPort,
-        formatter = new SyslogFormatter(
-          useIsoDateFormat = false,
-          timezone = Some("UTC"),
+      var syslog = new SyslogHandlerConfig {
+        port = serverPort
+        formatter = new SyslogFormatterConfig {
+          useIsoDateFormat = false
+          timezone = "UTC"
           hostname = "raccoon.local"
-        )
-      ).apply()
+        }
+      }.apply()
       syslog.publish(record1)
 
       SyslogFuture.sync

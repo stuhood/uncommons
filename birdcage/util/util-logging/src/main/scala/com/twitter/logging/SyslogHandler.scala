@@ -82,7 +82,8 @@ object SyslogHandler {
     port: Int = SyslogHandler.DEFAULT_PORT,
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ) = () => new SyslogHandler(server, port, formatter, level)
+  ): HandlerFactory =
+    () => new SyslogHandler(server, port, formatter, level)
 }
 
 class SyslogHandler(

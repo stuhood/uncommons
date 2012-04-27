@@ -32,7 +32,8 @@ object QueueingHandler {
   def apply(
     handler: HandlerFactory,
     maxQueueSize: Int = Int.MaxValue
-  ) = () => new QueueingHandler(handler(), maxQueueSize)
+  ): HandlerFactory =
+    () => new QueueingHandler(handler(), maxQueueSize)
 }
 
 /**

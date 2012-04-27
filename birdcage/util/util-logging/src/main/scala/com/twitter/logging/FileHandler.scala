@@ -57,7 +57,8 @@ object FileHandler {
     rotateCount: Int = -1,
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
-  ) = () => new FileHandler(filename, rollPolicy, append, rotateCount, formatter, level)
+  ): HandlerFactory =
+    () => new FileHandler(filename, rollPolicy, append, rotateCount, formatter, level)
 }
 
 /**
