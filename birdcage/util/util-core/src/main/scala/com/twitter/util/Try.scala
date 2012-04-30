@@ -21,7 +21,7 @@ object Try {
  * specializations are Try (a computation that has succeeded or failed) and Future
  * (a computation that will succeed or fail).
  */
-sealed abstract class Try[+R] {
+trait TryLike[+R, This[+R] <: TryLike[R, This]] {
   /**
    * Returns true if the Try is a Throw, false otherwise.
    */
@@ -59,17 +59,17 @@ sealed abstract class Try[+R] {
    * ''Note'' The gnarly type parameterization is there for Java compatibility, since Java
    * does not support higher-kinded types.
    */
-  def flatMap[R2](f: R => Try[R2]): Try[R2]
+  def flatMap[R2, AlsoThis[R2] >: This[R2] <: This[R2]](f: R => AlsoThis[R2]): AlsoThis[R2]
 
   /**
    * Maps the given function to the value from this Return or returns this if this is a Throw
    */
-  def map[X](f: R => X): Try[X]
+  def map[X](f: R => X): This[X]
 
   /**
    * Converts this to a Throw if the predicate does not obtain.
    */
-  def filter(p: R => Boolean): Try[R]
+  def filter(p: R => Boolean): This[R]
 
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like flatMap for the exception.
@@ -77,24 +77,24 @@ sealed abstract class Try[+R] {
    * ''Note'' The gnarly type parameterization is there for Java compatibility, since Java
    * does not support higher-kinded types.
    */
-  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]): Try[R2]
+  def rescue[R2 >: R, AlsoThis[R] >: This[R] <: This[R]](rescueException: PartialFunction[Throwable, AlsoThis[R2]]): AlsoThis[R2]
 
   /**
    * Calls the exceptionHandler with the exception if this is a Throw. This is like map for the exception.
    */
-  def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]): Try[R2]
+  def handle[R2 >: R](rescueException: PartialFunction[Throwable, R2]): This[R2]
 
   /**
    * Invoked only if the computation was successful.  Returns a
    * chained `this` as in `respond`.
    */
-  def onSuccess(f: R => Unit): Try[R]
+  def onSuccess(f: R => Unit): This[R]
 
   /**
    * Invoked only if the computation was successful.  Returns a
    * chained `this` as in `respond`.
    */
-  def onFailure(rescueException: Throwable => Unit): Try[R]
+  def onFailure(rescueException: Throwable => Unit): This[R]
 
   /**
    * Invoked regardless of whether the computation completed
@@ -102,7 +102,7 @@ sealed abstract class Try[+R] {
    * `respond` so that subclasses control evaluation order.  Returns a
    * chained `this` as in `respond`.
    */
-  def ensure(f: => Unit): Try[R] =
+  def ensure(f: => Unit): This[R] =
     respond { _ => f }
 
   /**
@@ -114,8 +114,10 @@ sealed abstract class Try[+R] {
    * Invokes the given closure when the value is available.  Returns
    * another 'This[R]' that is guaranteed to be available only *after*
    * 'k' has run.  This enables the enforcement of invocation ordering.
+   *
+   * This is overridden by subclasses.
    */
-  def respond(k: Try[R] => Unit): Try[R] = { k(this); this }
+  def respond(k: Try[R] => Unit): This[R]
 
   /**
    * Invokes the given transformation when the value is available,
@@ -123,14 +125,22 @@ sealed abstract class Try[+R] {
    * of flatMap and rescue. This method is typically used for more
    * imperative control-flow than flatMap/rescue which often exploits
    * the Null Object Pattern.
+   *
+   * This is overridden by subclasses.
    */
-  def transform[R2](f: Try[R] => Try[R2]): Try[R2] = f(this)
+  def transform[R2, AlsoThis[R2] >: This[R2] <: This[R2]](f: Try[R] => AlsoThis[R2]): AlsoThis[R2]
 
   /**
    * Returns the given function applied to the value from this Return or returns this if this is a Throw.
    * Alias for flatMap
    */
-  def andThen[R2](f: R => Try[R2]) = flatMap(f)
+  def andThen[R2](f: R => This[R2]) = flatMap(f)
+}
+
+sealed abstract class Try[+R] extends TryLike[R, Try] {
+  def respond(k: Try[R] => Unit) = { k(this); this }
+
+  def transform[R2, That[R2] >: Try[R2] <: Try[R2]](f: (Try[R]) => That[R2]) = f(this)
 
   def flatten[T](implicit ev: R <:< Try[T]): Try[T]
 }
@@ -138,7 +148,7 @@ sealed abstract class Try[+R] {
 final case class Throw[+R](e: Throwable) extends Try[R] {
   def isThrow = true
   def isReturn = false
-  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = {
+  def rescue[R2 >: R, AlsoTry[R2] >: Try[R2] <: Try[R2]](rescueException: PartialFunction[Throwable, AlsoTry[R2]]) = {
     try {
       if (rescueException.isDefinedAt(e)) rescueException(e) else this
     } catch {
@@ -146,7 +156,7 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
     }
   }
   def apply(): R = throw e
-  def flatMap[R2](f: R => Try[R2]) = Throw[R2](e)
+  def flatMap[R2, That[R2] >: Try[R2] <: Try[R2]](f: R => That[R2]) = Throw[R2](e)
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = Throw[T](e)
   def map[X](f: R => X) = Throw(e)
   def filter(p: R => Boolean) = this
@@ -163,9 +173,9 @@ final case class Throw[+R](e: Throwable) extends Try[R] {
 final case class Return[+R](r: R) extends Try[R] {
   def isThrow = false
   def isReturn = true
-  def rescue[R2 >: R](rescueException: PartialFunction[Throwable, Try[R2]]) = Return(r)
+  def rescue[R2 >: R, AlsoTry[R2] >: Try[R2] <: Try[R2]](rescueException: PartialFunction[Throwable, AlsoTry[R2]]) = Return(r)
   def apply() = r
-  def flatMap[R2](f: R => Try[R2]) = try f(r) catch { case e => Throw(e) }
+  def flatMap[R2, That[R2] >: Try[R2] <: Try[R2]](f: R => That[R2]) = try f(r) catch { case e => Throw(e) }
   def flatten[T](implicit ev: R <:< Try[T]): Try[T] = r
   def map[X](f: R => X) = Try[X](f(r))
   def filter(p: R => Boolean) = if (p(apply())) this else Throw(new Try.PredicateDoesNotObtain)
