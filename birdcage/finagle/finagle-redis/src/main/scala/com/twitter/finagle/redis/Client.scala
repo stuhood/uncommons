@@ -135,14 +135,6 @@ class Client(service: Service[Command, Reply]) {
       case StatusReply(message) => Future.value(message)
     }
 
-  /**
-   * Closes connection to Redis instance
-   */
-  def quit(): Future[Unit] =
-    doRequest(Quit()) {
-      case StatusReply(message) => Future.Unit
-    }
-
   /** Hashset Commands */
 
   /**

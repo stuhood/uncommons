@@ -65,7 +65,6 @@ object Commands {
   val FLUSHDB           = "FLUSHDB"
   val SELECT            = "SELECT"
   val AUTH              = "AUTH"
-  val QUIT              = "QUIT"
 
   // Hash Sets
   val HDEL              = "HDEL"
@@ -130,7 +129,6 @@ object Commands {
     FLUSHDB           -> {_ => FlushDB()},
     SELECT            -> {Select(_)},
     AUTH              -> {Auth(_)},
-    QUIT              -> {_ => Quit()},
 
     // hash sets
     HDEL              -> {HDel(_)},
