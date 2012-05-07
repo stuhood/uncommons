@@ -1,6 +1,6 @@
 package com.twitter.finagle.transport
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.mockito.{Matchers, ArgumentCaptor}
 import org.specs.mock.Mockito
 import org.jboss.netty.channel._
@@ -8,7 +8,7 @@ import com.twitter.util.{Return, Throw}
 import com.twitter.finagle.{WriteException, ChannelException}
 import java.net.SocketAddress
 
-class ChannelTransportSpec extends SpecificationWithJUnit with Mockito {
+object ChannelTransportSpec extends Specification with Mockito {
   "ChannelTransport" should {
     val ch = mock[Channel]
     val closeFuture = mock[ChannelFuture]

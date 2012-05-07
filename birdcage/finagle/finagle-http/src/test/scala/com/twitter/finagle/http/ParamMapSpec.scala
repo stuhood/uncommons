@@ -1,9 +1,9 @@
 package com.twitter.finagle.http
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class ParamsMapSpec extends SpecificationWithJUnit {
+object ParamsMapSpec extends Specification {
   "ParamsMap" should {
     "no params" in {
       val request = Request("/search.json")

@@ -6,9 +6,9 @@ import com.twitter.finagle.redis.util.{RedisCluster, BytesToString}
 import com.twitter.finagle.Service
 import com.twitter.finagle.stats.SummarizingStatsReceiver
 import com.twitter.util.{Future, RandomSocket}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class ClientSpec extends SpecificationWithJUnit {
+object ClientSpec extends Specification {
 
   "A BaseClient" should {
     /**

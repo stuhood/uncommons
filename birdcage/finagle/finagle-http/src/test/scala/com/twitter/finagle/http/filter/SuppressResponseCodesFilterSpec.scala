@@ -4,9 +4,9 @@ import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.finagle.http.service.NullService
 import com.twitter.util.Future
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class SuppressResponseCodesFilterSpec extends SpecificationWithJUnit {
+object SuppressResponseCodesFilterSpec extends Specification {
 
   val dummyService = new Service[Request, Response] {
     def apply(request: Request): Future[Response] = {

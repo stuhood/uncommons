@@ -1,13 +1,13 @@
 package com.twitter.finagle.http.service
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.finagle.http.path._
 import com.twitter.finagle.http.path.{Path => FPath}
 
 
-class RoutingServiceSpec extends SpecificationWithJUnit {
+object RoutingServiceSpec extends Specification {
 
   "RoutingServiceSpec" should {
     "RoutingService.byPath" in {

@@ -2,11 +2,11 @@ package com.twitter.finagle.http.netty
 
 import java.nio.charset.Charset
 import org.jboss.netty.buffer._
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
 // Test assumptions of how Netty works
-class NettySpec extends SpecificationWithJUnit {
+object NettySpec extends Specification {
   "netty" should {
     "compose buffers" in {
       val bufferA  = ChannelBuffers.wrappedBuffer("A".getBytes)

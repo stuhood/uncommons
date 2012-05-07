@@ -12,7 +12,7 @@ import org.specs.SpecificationWithJUnit
 import org.specs.mock.Mockito
 import scala.collection.JavaConversions._
 
-class ChannelServiceSpec extends SpecificationWithJUnit with Mockito {
+object ChannelServiceSpec extends SpecificationWithJUnit with Mockito {
   // TODO: we should really mock/drive the dispatcher here. his is
   // Tcurrently more of an integration test.
   def mkDispatcher[Req, Rep]: ClientDispatcherFactory[Req, Rep] =

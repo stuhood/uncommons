@@ -1,9 +1,9 @@
 package com.twitter.finagle.http
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class HeaderMapSpec extends SpecificationWithJUnit {
+object HeaderMapSpec extends Specification {
   "HeaderMap" should {
     "get" in {
       val request = Request()

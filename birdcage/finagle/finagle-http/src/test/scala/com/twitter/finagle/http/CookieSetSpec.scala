@@ -1,10 +1,10 @@
 package com.twitter.finagle.http
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.jboss.netty.handler.codec.http.DefaultCookie
 
 
-class CookieSetSpec extends SpecificationWithJUnit {
+object CookieSetSpec extends Specification {
 
   "CookieSet" should {
     "no cookies" in {

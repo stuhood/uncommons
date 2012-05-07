@@ -1,11 +1,11 @@
 package com.twitter.finagle.b3.thrift
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.specs.mock.Mockito
 import com.twitter.finagle.tracing.{SpanId, TraceId}
 import com.twitter.util.Time
 
-class SpanSpec extends SpecificationWithJUnit with Mockito {
+class SpanSpec extends Specification with Mockito {
 
   "Span" should {
     "serialize properly" in {

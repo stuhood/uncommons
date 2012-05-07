@@ -1,6 +1,6 @@
 package com.twitter.finagle.exception
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.specs.mock.Mockito
 import org.mockito.ArgumentCaptor
 import com.twitter.util.Future
@@ -9,7 +9,7 @@ import org.mockito.Matchers._
 import com.twitter.util._
 import java.net.{InetAddress, InetSocketAddress}
 
-class ReporterSpec extends SpecificationWithJUnit with Mockito {
+object ReporterSpec extends Specification with Mockito {
   "A default chickadee reporter" should {
     setSequential()
 

@@ -15,7 +15,7 @@ import org.jboss.netty.handler.codec.frame.{
   Delimiters, DelimiterBasedFrameDecoder}
 import org.jboss.netty.handler.codec.string.{StringEncoder, StringDecoder}
 import org.jboss.netty.util.CharsetUtil
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 object StringCodec extends CodecFactory[String, String] {
   def server = Function.const {
@@ -36,7 +36,7 @@ object StringCodec extends CodecFactory[String, String] {
   }
 }
 
-class ZookeeperServerSetClusterSpec extends SpecificationWithJUnit {
+object ZookeeperServerSetClusterSpec extends Specification {
   "ZookeeperServerSetCluster" should {
     val zookeeperAddress = RandomSocket.nextAddress
     var connectionFactory: NIOServerCnxn.Factory = null

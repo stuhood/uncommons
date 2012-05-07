@@ -1,8 +1,8 @@
 package com.twitter.finagle.http
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class ProxyCredentialsSpec extends SpecificationWithJUnit {
+object ProxyCredentialsSpec extends Specification {
   "BasicProxyCredentials" should {
     "add Proxy-Authorization header" in {
       val creds = ProxyCredentials("foo", "bar")

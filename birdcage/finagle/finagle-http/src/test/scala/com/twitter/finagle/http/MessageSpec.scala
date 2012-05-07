@@ -2,11 +2,11 @@ package com.twitter.finagle.http
 
 import com.twitter.conversions.time._
 import org.jboss.netty.buffer.ChannelBuffers
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.specs.util.DataTables
 
 
-class MessageSpec extends SpecificationWithJUnit with DataTables {
+object MessageSpec extends Specification with DataTables {
   "Message" should {
     "empty message" in {
       val response = Response()

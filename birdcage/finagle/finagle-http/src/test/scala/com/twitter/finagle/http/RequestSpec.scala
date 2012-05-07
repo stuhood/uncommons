@@ -2,11 +2,11 @@ package com.twitter.finagle.http
 
 import java.net.InetSocketAddress
 import org.jboss.netty.handler.codec.http.{DefaultHttpRequest, HttpMethod, HttpVersion}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.specs.util.DataTables
 
 
-class RequestSpec extends SpecificationWithJUnit with DataTables {
+object RequestSpec extends Specification with DataTables {
   "Request" should {
     "constructors" in {
       val nettyRequest = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/")

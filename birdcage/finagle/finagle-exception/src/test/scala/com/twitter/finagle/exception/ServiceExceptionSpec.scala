@@ -1,6 +1,6 @@
 package com.twitter.finagle.exception
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import com.twitter.streamyj.Streamy
 import com.twitter.util.{GZIPStringEncoder, Time}
 import java.lang.{Throwable, StackTraceElement => javaSTE}
@@ -107,7 +107,7 @@ private[exception] class TestServiceException(
   }
 }
 
-class ServiceExceptionSpec extends SpecificationWithJUnit {
+object ServiceExceptionSpec extends Specification {
   "A ServiceException with no endpoint reporting" should {
     "serialize to JSON in the proper format" in {
       val tse = new TestServiceException("service16", "my cool message", Some(Time.now), Some(124564L))

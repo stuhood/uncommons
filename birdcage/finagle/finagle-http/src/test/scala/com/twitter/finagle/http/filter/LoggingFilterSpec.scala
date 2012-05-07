@@ -4,10 +4,10 @@ import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Method, Request, Response, Version}
 import com.twitter.logging.{BareFormatter, Level, Logger, StringHandler}
 import com.twitter.util.{Future, Time}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class LoggingFilterSpec extends SpecificationWithJUnit {
+object LoggingFilterSpec extends Specification {
 
   "LoggingFilter" should {
     "log" in {

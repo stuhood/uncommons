@@ -3,9 +3,9 @@ package com.twitter.finagle.thrift
 import com.twitter.finagle.{Service, Filter}
 import com.twitter.util.{Future, Local, Return, Throw}
 import org.specs.mock.Mockito
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class ClientIdRequiredFilterSpec extends SpecificationWithJUnit with Mockito {
+object ClientIdRequiredFilterSpec extends Specification with Mockito {
   "ClientIdRequiredFilter" should {
     val underlying = mock[Service[String, String]]
 

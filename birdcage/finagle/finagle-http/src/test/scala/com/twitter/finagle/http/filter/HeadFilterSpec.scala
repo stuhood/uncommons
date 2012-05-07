@@ -3,9 +3,9 @@ package com.twitter.finagle.http.filter
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Method, Request, Response, Status}
 import com.twitter.util.Future
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class HeadFilterSpec extends SpecificationWithJUnit {
+object HeadFilterSpec extends Specification {
   val Body = "hello world"
 
   val dummyService = new Service[Request, Response] {

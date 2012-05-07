@@ -12,9 +12,9 @@ import java.nio.charset.Charset
 import org.jboss.netty.buffer.{ChannelBuffers, ChannelBuffer}
 import org.jboss.netty.handler.codec.http.{
   DefaultHttpRequest, HttpRequest, HttpMethod, HttpVersion}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class DuplexStreamSpec extends SpecificationWithJUnit {
+object DuplexStreamSpec extends Specification {
   class SimpleService extends Service[DuplexStreamHandle, Offer[ChannelBuffer]] {
     var handle: Promise[DuplexStreamHandle] = new Promise[DuplexStreamHandle]
     var input: Promise[Offer[ChannelBuffer]] = new Promise[Offer[ChannelBuffer]]

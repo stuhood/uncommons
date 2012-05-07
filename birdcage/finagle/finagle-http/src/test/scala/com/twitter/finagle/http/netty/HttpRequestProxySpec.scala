@@ -1,10 +1,10 @@
 package com.twitter.finagle.http.netty
 
 import org.jboss.netty.handler.codec.http.{DefaultHttpRequest, HttpMethod, HttpVersion}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class HttpRequestProxySpec extends SpecificationWithJUnit {
+object HttpRequestProxySpec extends Specification {
   "HttpRequestProxy" should {
     "basics" in {
       val message = new DefaultHttpRequest(HttpVersion.HTTP_1_1, HttpMethod.GET, "/")

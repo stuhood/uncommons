@@ -2,9 +2,9 @@ package com.twitter.finagle.http.filter
 
 import com.twitter.finagle.http.{Request, Status}
 import com.twitter.finagle.http.service.NullService
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
-class ValidateRequestFilterSpec extends SpecificationWithJUnit {
+object ValidateRequestFilterSpec extends Specification {
 
   "ValidateRequestFilter" should {
     "ignore ok path and params" in {

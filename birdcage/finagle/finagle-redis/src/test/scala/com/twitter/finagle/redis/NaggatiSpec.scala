@@ -3,14 +3,14 @@ package protocol
 
 import util._
 
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 import org.jboss.netty.buffer.{ChannelBuffer, ChannelBuffers}
 import com.twitter.conversions.time._
 import com.twitter.naggati.test._
 import com.twitter.util.{Future, Time}
 import org.jboss.netty.channel.Channel
 
-class NaggatiSpec extends SpecificationWithJUnit {
+class NaggatiSpec extends Specification {
   import com.twitter.logging.Logger
   Logger.reset()
   val log = Logger()

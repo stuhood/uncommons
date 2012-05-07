@@ -3,10 +3,10 @@ package com.twitter.finagle.http.filter
 import com.twitter.finagle.{CancelledRequestException, Service}
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.util.{Future, Promise}
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class ExceptionFilterSpec extends SpecificationWithJUnit {
+object ExceptionFilterSpec extends Specification {
 
   val service = new Service[Request, Response] {
     def apply(request: Request): Future[Response] = {

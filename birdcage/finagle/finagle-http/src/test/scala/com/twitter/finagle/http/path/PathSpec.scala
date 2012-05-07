@@ -2,10 +2,10 @@ package com.twitter.finagle.http.path
 
 import com.twitter.finagle.http.{Method, ParamMap}
 import com.twitter.finagle.http.path.{Path => FPath} // conflicts with spec's Path
-import org.specs.SpecificationWithJUnit
+import org.specs.Specification
 
 
-class PathSpec extends SpecificationWithJUnit {
+object PathSpec extends Specification {
 
   "Path" should {
     "/foo/bar" in {
