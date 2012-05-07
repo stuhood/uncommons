@@ -18,7 +18,7 @@ package com.twitter.logging
 
 import java.util.{logging => javalog}
 
-class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef) extends LogRecord(level, "") {
+class LazyLogRecord(level: javalog.Level, messageGenerator: => AnyRef) extends javalog.LogRecord(level, "") {
   // for each logged line, generate this string only once, regardless of how many handlers there are:
   var cached: Option[AnyRef] = None
 
