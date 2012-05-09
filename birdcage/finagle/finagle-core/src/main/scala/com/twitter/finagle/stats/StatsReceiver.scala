@@ -80,7 +80,7 @@ trait StatsReceiver {
   /**
    * Get a Counter with the description. This method is a convenience for Java program.
    */
-  def counter0(name: String): Counter = counter(name)
+  def counter(name: String): Counter = counter(name :: Nil : _*)
 
   /**
    * Get a Gauge with the description
@@ -90,7 +90,7 @@ trait StatsReceiver {
   /**
    * Get a Gauge with the description. This method is a convenience for Java programs.
    */
-  def stat0(name: String): Stat = stat(name)
+  def stat(name: String): Stat = stat(name :: Nil : _*)
 
   /**
    * Register a function to be periodically measured. This measurement

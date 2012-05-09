@@ -11,17 +11,16 @@ trait Connector {
   val name = "zk.connector"
   protected[this] lazy val log = Logger.get(name)
 
-  private[this] val listeners = new AtomicReference[List[PartialFunction[StateEvent, Unit]]](Nil)
+  private[this] val listeners = new AtomicReference[List[PartialFunction[WatchedEvent, Unit]]](Nil)
 
   protected[this] val sessionBroker = new EventBroker
 
   // a broker may only be used for 1:1 communication, so we fan-out event notifications
   sessionBroker.recv foreach { event =>
-    val stateEvent = StateEvent(event)
     listeners.get().foreach { listener =>
-      if (listener.isDefinedAt(stateEvent)) {
+      if (listener.isDefinedAt(event)) {
         try {
-          listener(stateEvent)
+          listener(event)
         } catch {
           case e: Throwable => log.error(e, "Exception in connection event listener")
         }
@@ -30,7 +29,7 @@ trait Connector {
   }
 
   @tailrec
-  final def onSessionEvent(f: PartialFunction[StateEvent, Unit]) {
+  final def onSessionEvent(f: PartialFunction[WatchedEvent, Unit]) {
     val list = listeners.get()
     if (!listeners.compareAndSet(list, f :: list)) onSessionEvent(f)
   }
