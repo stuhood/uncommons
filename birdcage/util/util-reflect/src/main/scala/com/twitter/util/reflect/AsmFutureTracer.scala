@@ -58,7 +58,7 @@ class AsmFutureTracer(maxDepth: Int) extends Future.Tracer {
     // You need to check whether your class is already enhanced via Enhancer.isEnhanced() method.
     //
     // If it is, your 2nd enhancement should be applied to original class, not the already enhanced version
-    var proxyableClass: Class[_] = throwable.getClass
+    var proxyableClass = throwable.getClass
     while(Enhancer.isEnhanced(proxyableClass)) {
       proxyableClass = proxyableClass.getSuperclass
     }
