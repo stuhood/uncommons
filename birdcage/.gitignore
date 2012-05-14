@@ -52,3 +52,4 @@ TAGS
 *.ipr
 *.iws
 git.properties
+sbt-launch.jar
