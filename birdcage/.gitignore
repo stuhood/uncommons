@@ -33,6 +33,7 @@ lib_managed/
 .cache
 .classpath
 .project
+.settings**
 Gemfile.lock
 /.py/
 #*
