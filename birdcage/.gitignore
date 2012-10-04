@@ -58,5 +58,6 @@ project/boot/
 project/plugins/project/
 project/plugins/src_managed/
 sbt-launch.jar
+sbt-launch-0.7.4.jar
 target/
 .reviewboardrc
