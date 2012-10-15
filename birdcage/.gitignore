@@ -37,6 +37,7 @@
 .scala
 .scala/*
 .settings**
+.worksheet**
 /.py/
 /bin/allocation.jar
 /bin/sbt-launch-0.7.5.jar
