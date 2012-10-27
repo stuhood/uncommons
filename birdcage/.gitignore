@@ -2,6 +2,8 @@
 !gizmoduck/src/main/scala/com/twitter/gizmoduck/config
 !gluebird/config
 !gluebird/src/main/scala/com/twitter/gluebird/flock/config
+syndication/http-server/src/main/resources/components/syndication-templates/lib/css
+syndication/http-server/src/main/resources/components/syndication-templates/lib/images
 #*
 *#
 **/project/boot/
