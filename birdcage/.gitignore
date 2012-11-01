@@ -64,3 +64,4 @@ sbt-launch.jar
 sbt-launch-0.7.4.jar
 target/
 .reviewboardrc
+deploy_profile
