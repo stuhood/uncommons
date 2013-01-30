@@ -1,6 +1,6 @@
-name := "ostrich"
+name := "scala-json"
 
-version := "9.0.6"
+version := "3.0.1"
 
 organization := "com.twitter"
 
@@ -15,25 +15,12 @@ parallelExecution in Test := false
 resolvers += "twitter repo" at "http://maven.twttr.com"
 
 libraryDependencies ++= Seq(
-  "com.twitter" %% "util-core" % "6.0.6",
-  "com.twitter" %% "util-eval" % "6.0.6",
-  "com.twitter" %% "util-logging" % "6.0.6",
-  "com.twitter" %% "util-jvm" % "6.0.6",
-  "com.twitter" %% "scala-json" % "3.0.1"
-)
-
-libraryDependencies ++= Seq(
   "org.scala-tools.testing" %% "specs" % "1.6.9" % "test" cross CrossVersion.binaryMapped {
     case "2.9.2" => "2.9.1"
     case "2.10.0" => "2.10"
     case x => x
   },
-  "junit" % "junit" % "4.8.1" % "test",
-  "cglib" % "cglib" % "2.1_3" % "test",
-  "asm" % "asm" % "1.5.3" % "test",
-  "org.objenesis" % "objenesis" % "1.1" % "test",
-  "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
-  "org.jmock" % "jmock" % "2.4.0" % "test"
+  "junit" % "junit" % "4.8.1" % "test"
 )
 
 publishMavenStyle := true
@@ -51,7 +38,7 @@ publishArtifact in Test := false
 pomIncludeRepository := { x => false }
 
 pomExtra := (
-  <url>https://github.com/twitter/ostrich</url>
+  <url>https://github.com/twitter/scala-json</url>
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -61,8 +48,8 @@ pomExtra := (
     </license>
   </licenses>
   <scm>
-    <url>git@github.com:twitter/ostrich.git</url>
-    <connection>scm:git:git@github.com:twitter/ostrich.git</connection>
+    <url>git@github.com:twitter/scala-json.git</url>
+    <connection>scm:git:git@github.com:twitter/scala-json.git</connection>
   </scm>
   <developers>
     <developer>
