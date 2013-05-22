@@ -2,8 +2,6 @@
 !gizmoduck/src/main/scala/com/twitter/gizmoduck/config
 !gluebird/config
 !gluebird/src/main/scala/com/twitter/gluebird/flock/config
-syndication/http-server/src/main/resources/components/syndication-templates/lib/css
-syndication/http-server/src/main/resources/components/syndication-templates/lib/images
 #*
 *#
 **/project/boot/
@@ -13,6 +11,7 @@ syndication/http-server/src/main/resources/components/syndication-templates/lib/
 *.ipr
 *.iws
 *.log
+*.pex
 *.pyc
 *.tmproj
 *~
@@ -34,7 +33,6 @@ syndication/http-server/src/main/resources/components/syndication-templates/lib/
 .native/*
 .project
 .reviewboardrc
-.reviewboardrc
 .run_classpath
 .scala
 .scala/*
@@ -49,10 +47,10 @@ GSYMS
 GTAGS
 Gemfile.lock
 TAGS
+deploy_profile
 dist/
 ensime_port
 git.properties
-iago/scripts**
 iago/scripts**
 lib_managed/
 macaw/macaw
@@ -60,9 +58,9 @@ macaw/run
 project/boot/
 project/plugins/project/
 project/plugins/src_managed/
-sbt-launch.jar
-sbt-launch-0.7.4.jar
-target/
-.reviewboardrc
-deploy_profile
 rufous/server/deploy-cache/
+sbt-launch-0.7.4.jar
+sbt-launch.jar
+syndication/http-server/src/main/resources/components/syndication-templates/lib/css
+syndication/http-server/src/main/resources/components/syndication-templates/lib/images
+target/
