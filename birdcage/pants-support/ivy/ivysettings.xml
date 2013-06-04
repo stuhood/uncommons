@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<ivysettings>
+  <property name="ivy.cache.dir" value="${user.home}/.ivy2/limiter/cache" override="false"/>
+
+  <settings defaultResolver="chain-repos"/>
+
+  <resolvers>
+    <chain name="chain-repos" returnFirst="true">
+      <ibiblio name="twitter-internal-artifactory"
+               m2compatible="true"
+               root="http://artifactory.local.twitter.com/repo/"/>
+
+      <!-- Fall back to local repositories-->
+      <!-- sbt standard -->
+      <ibiblio name="local.sbt"
+               m2compatible="true"
+               usepoms="true"
+               root="file://${user.home}/.ivy2/local"/>
+
+      <!-- mvn standard -->
+      <ibiblio name="local.m2"
+               m2compatible="true"
+               usepoms="true"
+               root="file://${user.home}/.m2/repository"/>
+    </chain>
+  </resolvers>
+
+  <!-- don't use the default shared cache with other projects because it gets polluted,
+       but do share it for this project so that deploys that re-clone each time share it -->
+  <caches default="default" lockStrategy="no-lock" useOrigin="true">
+    <cache name="default" basedir="${ivy.cache.dir}" useOrigin="true" defaultTTL="8h">
+      <ttl revision="latest.integration" duration="0ms" />
+    </cache>
+  </caches>
+</ivysettings>
