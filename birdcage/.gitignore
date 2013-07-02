@@ -65,3 +65,7 @@ sbt-launch.jar
 syndication/http-server/src/main/resources/components/syndication-templates/lib/css
 syndication/http-server/src/main/resources/components/syndication-templates/lib/images
 target/
+.reviewboardrc
+deploy_profile
+rufous/server/deploy-cache/
+spoonbill/server/deploy-cache/
