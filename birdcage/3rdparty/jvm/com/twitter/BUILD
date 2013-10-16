@@ -15,4 +15,21 @@ jar_library(name='beaks-data',
   ]
 )
 
+jar_library(name='expandodo-cards-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.2')
+  ]
+)
+
+jar_library(name='expandodo-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.0.2')
+  ]
+)
+
+jar_library(name='expandodo-internal-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.3')
+  ]
+)
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
