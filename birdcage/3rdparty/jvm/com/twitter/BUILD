@@ -1,7 +1,10 @@
 def make_lib(name, rev, alias=None):
   if not alias:
     alias = name
-  return jar_library(name=alias, dependencies=[jar(org='com.twitter', name=name, rev=rev).with_sources()])
+  jar_library(name=alias, dependencies=[jar(org='com.twitter', name=name, rev=rev).with_sources()])
+
+def make_thrift_lib(org, name, rev):
+  jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 jar_library(name='limiter-thrift-only',
   dependencies=[
@@ -32,4 +35,31 @@ jar_library(name='expandodo-internal-thrift',
     thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.3')
   ]
 )
+
+jar_library(name='storehaus_internal-memcache_2.9.2',
+  dependencies=[
+    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3')
+      .exclude(org='com.twitter', name='finagle-memcached_2.9.2')
+  ]
+)
+
+jar_library(name='wtf_recent_impressions',
+  dependencies=[
+    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.2')
+      .exclude(org='com.twitter.manhattan', name='manhattan-thriftfinagle')
+  ]
+)
+
+jar_library(name='wtf',
+  dependencies=[
+    jar(org='com.twitter', name='wtf', rev='0.2.14', classifier='thrift-class')
+  ]
+)
+
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
+make_lib('summingbird-client_2.9.2', '0.0.7')
+
+
+make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.96')
+make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
+make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.123')
