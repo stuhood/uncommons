@@ -20,19 +20,19 @@ jar_library(name='beaks-data',
 
 jar_library(name='expandodo-cards-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.2')
+    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.3')
   ]
 )
 
 jar_library(name='expandodo-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.0.2')
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.0.3')
   ]
 )
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.3')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.4')
   ]
 )
 
