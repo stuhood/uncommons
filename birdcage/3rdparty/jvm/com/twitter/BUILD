@@ -36,6 +36,18 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
+jar_library(name='image-proxy-thrift-service',
+  dependencies=[
+    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.1')
+  ]
+)
+
+jar_library(name='image-proxy-thrift-types',
+  dependencies=[
+    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.1')
+  ]
+)
+
 jar_library(name='storehaus_internal-memcache_2.9.2',
   dependencies=[
     jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3')
