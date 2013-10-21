@@ -63,3 +63,9 @@ make_lib('summingbird-client_2.9.2', '0.0.7')
 make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.96')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
 make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.123')
+
+jar_library(name='geoduck-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.1')
+  ]
+)
