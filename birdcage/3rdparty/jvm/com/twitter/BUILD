@@ -6,9 +6,16 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
+
 jar_library(name='limiter-thrift-only',
   dependencies=[
     thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.32')
+  ]
+)
+
+jar_library(name='app-proxy-thrift',
+  dependencies=[
+    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.0')
   ]
 )
 
