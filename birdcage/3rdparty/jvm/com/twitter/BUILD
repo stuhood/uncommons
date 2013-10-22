@@ -39,7 +39,7 @@ jar_library(name='expandodo-thrift',
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.4')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.0.5')
   ]
 )
 
