@@ -89,6 +89,7 @@ jar_library(name='wtf',
 
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('summingbird-client_2.9.2', '0.0.7')
+make_lib('ml', '0.1.6')
 
 
 make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.96')
