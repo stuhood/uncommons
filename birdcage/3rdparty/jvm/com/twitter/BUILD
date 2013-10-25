@@ -7,9 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 
-jar_library(name='limiter-thrift-only',
+jar_library(name='algebird-thrift',
   dependencies=[
-    thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.32')
+    thrift_jar(org='com.twitter', name='algebird_internal-thriftjava-only', rev='0.0.1')
   ]
 )
 
@@ -43,6 +43,12 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
+jar_library(name='geoduck-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.1')
+  ]
+)
+
 jar_library(name='image-proxy-thrift-service',
   dependencies=[
     thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.4')
@@ -55,6 +61,12 @@ jar_library(name='image-proxy-thrift-types',
   ]
 )
 
+jar_library(name='limiter-thrift-only',
+  dependencies=[
+    thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.32')
+  ]
+)
+
 jar_library(name='pink-floyd-thrift-derivatives',
   dependencies=[
     thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.1')
@@ -64,6 +76,18 @@ jar_library(name='pink-floyd-thrift-derivatives',
 jar_library(name='pink-floyd-thrift',
   dependencies=[
     thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.15')
+  ]
+)
+
+jar_library(name='manhattan-thrift-v1',
+  dependencies=[
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.6.0')
+  ]
+)
+
+jar_library(name='manhattan-thrift-v2',
+  dependencies=[
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.6.0')
   ]
 )
 
@@ -95,9 +119,3 @@ make_lib('ml', '0.1.6')
 make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.96')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
 make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.123')
-
-jar_library(name='geoduck-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.1')
-  ]
-)
