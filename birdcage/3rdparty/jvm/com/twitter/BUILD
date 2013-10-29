@@ -33,13 +33,13 @@ jar_library(name='expandodo-cards-thrift',
 
 jar_library(name='expandodo-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.3')
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.4')
   ]
 )
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.3')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.4')
   ]
 )
 
