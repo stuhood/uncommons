@@ -69,13 +69,13 @@ jar_library(name='limiter-thrift-only',
 
 jar_library(name='pink-floyd-thrift-derivatives',
   dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.1')
+    thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.3')
   ]
 )
 
 jar_library(name='pink-floyd-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.15')
+    thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.18')
   ]
 )
 
