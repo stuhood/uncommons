@@ -116,9 +116,9 @@ make_lib('summingbird-client_2.9.2', '0.0.7')
 make_lib('ml', '0.1.6')
 
 
-make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.96')
+make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.103')
+make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.145')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
-make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.123')
 
 make_lib('algebird-core_2.9.3', '0.2.0')
 make_lib('algebird_internal-bijection', '0.0.4')
