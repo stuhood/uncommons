@@ -35,3 +35,12 @@ make_lib('stats', '0.0.83')
 # 4/12/2013
 make_lib('application-action', '0.0.46')
 make_lib('zookeeper-testing', '0.0.38')
+
+
+make_lib('base', '0.0.64')
+make_lib('logging', '0.0.44')
+make_lib('logging-buffered', '0.0.4')
+make_lib('logging-scribe', '0.0.18')
+make_lib('stats-util', '0.0.29')
+make_lib('thrift', '0.0.57')
+make_lib('util', '0.0.72')
