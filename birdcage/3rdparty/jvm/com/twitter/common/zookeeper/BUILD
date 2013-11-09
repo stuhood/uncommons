@@ -1,7 +1,9 @@
 def zk_lib(name, rev):
   return jar_library(name=name,
     dependencies=[
-      jar(org='com.twitter.common.zookeeper', name=name, rev=rev).with_sources()
+      jar(org='com.twitter.common.zookeeper', name=name, rev=rev)
+        .exclude(org='org.jboss.netty', name='netty')
+        .with_sources()
     ]
   )
 

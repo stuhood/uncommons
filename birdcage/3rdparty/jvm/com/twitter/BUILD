@@ -6,6 +6,11 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
+jar_library(name='algebird-core_2.9.3',
+  dependencies=[
+    thrift_jar(org='com.twitter', name='algebird-core_2.9.3', rev='0.3.0')
+  ]
+)
 
 jar_library(name='algebird-thrift',
   dependencies=[
@@ -22,6 +27,12 @@ jar_library(name='app-proxy-thrift',
 jar_library(name='beaks-data',
   dependencies=[
     jar(org='com.twitter', name='beaks-data', rev='0.0.3')
+  ]
+)
+
+jar_library(name='chill_2.9.3',
+  dependencies=[
+    jar(org='com.twitter', name='chill_2.9.3', rev='0.3.4')
   ]
 )
 
@@ -64,6 +75,12 @@ jar_library(name='image-proxy-thrift-types',
 jar_library(name='limiter-thrift-only',
   dependencies=[
     thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.32')
+  ]
+)
+
+jar_library(name='parquet-scrooge',
+  dependencies=[
+    jar(org='com.twitter', name='parquet-scrooge', rev='1.2.0')
   ]
 )
 
@@ -112,21 +129,37 @@ jar_library(name='wtf',
 )
 
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
-make_lib('summingbird-client_2.9.2', '0.0.7')
 make_lib('ml', '0.1.6')
 
+make_lib('talon-backend-logging-protobuf', '0.0.2')
+make_lib('url-canonicalizer-core', '0.0.10')
+make_lib('twadoop-protobuf-tables', '0.0.2')
+
+def scalding_lib(name, version='0.9.0rc4'):
+  return make_lib('scalding-%s_2.9.3' % name, version)
+scalding_lib('args')
+scalding_lib('commons')
+scalding_lib('core')
+scalding_lib('date')
+
+make_lib('summingbird-client_2.9.2', '0.0.7')
+
+
+def summingbird_lib(name, version='0.2.2'):
+  return make_lib('summingbird-%s_2.9.3' % name, version)
+summingbird_lib('batch')
+summingbird_lib('core')
+summingbird_lib('scalding')
+summingbird_lib('storm')
 
 make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.103')
 make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.145')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
 
-make_lib('algebird-core_2.9.3', '0.2.0')
 make_lib('algebird_internal-bijection', '0.0.4')
 make_lib('algebird_internal-thriftscala', '0.0.4')
 make_lib('bijection-json_2.9.3', '0.5.3')
 make_lib('ouroboros-common', '0.0.18')
 make_lib('ouroboros-thriftscala', '0.0.21')
-make_lib('storehaus-core_2.9.3', '0.5.1')
-make_lib('storehaus-memcache_2.9.3', '0.5.1')
-make_lib('summingbird-batch_2.9.3', '0.2.0')
-make_lib('summingbird-client_2.9.3', '0.2.0')
+make_lib('storehaus-core_2.9.3', '0.6.0')
+make_lib('storehaus-memcache_2.9.3', '0.6.0')
