@@ -115,6 +115,12 @@ jar_library(name='storehaus_internal-memcache_2.9.2',
   ]
 )
 
+jar_library(name='tdc-service-thrift-only',
+  dependencies=[
+    thrift_jar(org='com.twitter', name='tdc-service-thrift-only', rev='0.0.2')
+  ]
+)
+
 jar_library(name='wtf_recent_impressions',
   dependencies=[
     jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.2')
