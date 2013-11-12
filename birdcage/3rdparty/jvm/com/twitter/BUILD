@@ -98,13 +98,13 @@ jar_library(name='pink-floyd-thrift',
 
 jar_library(name='manhattan-thrift-v1',
   dependencies=[
-    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.6.0')
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.0')
   ]
 )
 
 jar_library(name='manhattan-thrift-v2',
   dependencies=[
-    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.6.0')
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.7.0')
   ]
 )
 
