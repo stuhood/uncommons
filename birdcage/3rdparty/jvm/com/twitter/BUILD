@@ -110,7 +110,7 @@ jar_library(name='manhattan-thrift-v2',
 
 jar_library(name='storehaus_internal-memcache_2.9.2',
   dependencies=[
-    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3')
+    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.10')
       .exclude(org='com.twitter', name='finagle-memcached_2.9.2')
   ]
 )
@@ -123,7 +123,7 @@ jar_library(name='tdc-service-thrift-only',
 
 jar_library(name='wtf_recent_impressions',
   dependencies=[
-    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.2')
+    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.3')
       .exclude(org='com.twitter.manhattan', name='manhattan-thriftfinagle')
   ]
 )
@@ -170,7 +170,7 @@ scalding_lib('commons')
 scalding_lib('core')
 scalding_lib('date')
 
-make_lib('summingbird-client_2.9.2', '0.0.7')
+make_lib('summingbird-client_2.9.3', '0.2.5')
 
 
 def summingbird_lib(name, version='0.2.2'):
