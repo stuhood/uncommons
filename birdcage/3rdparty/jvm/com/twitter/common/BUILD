@@ -36,6 +36,8 @@ make_lib('stats', '0.0.83')
 make_lib('application-action', '0.0.46')
 make_lib('zookeeper-testing', '0.0.38')
 
+make_lib('hosebird-client', '0.0.2')
+make_lib('memcached', '0.0.2')
 
 make_lib('base', '0.0.64')
 make_lib('logging', '0.0.44')
