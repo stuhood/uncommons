@@ -376,3 +376,15 @@ summingbird_lib('storm')
 
 make_lib('storehaus-core_2.9.3', '0.6.0')
 make_lib('storehaus-memcache_2.9.3', '0.6.0')
+
+jar_library(name='ibis-thrift-logging',
+  dependencies=[
+    thrift_jar('com.twitter', 'ibis-thrift-logging-only', '4.0.3')
+  ]
+)
+
+jar_library(name='ibis-thrift-service',
+  dependencies=[
+    thrift_jar('com.twitter', 'ibis-thrift-service-only', '4.0.3')
+  ]
+)
