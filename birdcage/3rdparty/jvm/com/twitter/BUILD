@@ -108,6 +108,15 @@ jar_library(name='manhattan-thrift-v2',
   ]
 )
 
+jar_library(name='jubjub-service-thrift',
+  dependencies=[
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.19'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.14'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.15'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.21'),
+  ]
+)
+
 jar_library(name='storehaus_internal-memcache_2.9.2',
   dependencies=[
     jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.10')
