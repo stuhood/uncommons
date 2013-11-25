@@ -15,12 +15,14 @@
       <ibiblio name="local.sbt"
                m2compatible="true"
                usepoms="true"
+               checkmodified="true"
                root="file://${user.home}/.ivy2/local"/>
 
       <!-- mvn standard -->
       <ibiblio name="local.m2"
                m2compatible="true"
                usepoms="true"
+               checkmodified="true"
                root="file://${user.home}/.m2/repository"/>
     </chain>
   </resolvers>
