@@ -20,7 +20,7 @@ jar_library(name='algebird-thrift',
 
 jar_library(name='app-proxy-thrift',
   dependencies=[
-    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.0')
+    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1')
   ]
 )
 
@@ -38,19 +38,19 @@ jar_library(name='chill_2.9.3',
 
 jar_library(name='expandodo-cards-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.3')
+    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.5')
   ]
 )
 
 jar_library(name='expandodo-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.4')
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.5')
   ]
 )
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.4')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.5')
   ]
 )
 
@@ -62,13 +62,13 @@ jar_library(name='geoduck-thrift',
 
 jar_library(name='image-proxy-thrift-service',
   dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.4')
+    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5')
   ]
 )
 
 jar_library(name='image-proxy-thrift-types',
   dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.4')
+    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.5')
   ]
 )
 
@@ -86,13 +86,13 @@ jar_library(name='parquet-scrooge',
 
 jar_library(name='pink-floyd-thrift-derivatives',
   dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.3')
+    thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.4')
   ]
 )
 
 jar_library(name='pink-floyd-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.18')
+    thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.19')
   ]
 )
 
