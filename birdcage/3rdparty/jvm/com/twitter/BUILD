@@ -181,7 +181,6 @@ scalding_lib('date')
 
 make_lib('summingbird-client_2.9.3', '0.2.5')
 
-
 def summingbird_lib(name, version='0.2.2'):
   return make_lib('summingbird-%s_2.9.3' % name, version)
 summingbird_lib('batch')
