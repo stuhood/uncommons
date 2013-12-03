@@ -40,7 +40,14 @@ make_lib('zookeeper-testing', '0.0.38')
 make_lib('base', '0.0.64')
 make_lib('logging', '0.0.44')
 make_lib('logging-buffered', '0.0.4')
-make_lib('logging-scribe', '0.0.18')
 make_lib('stats-util', '0.0.29')
 make_lib('thrift', '0.0.57')
 make_lib('util', '0.0.72')
+
+jar_library(name='logging-scribe',
+   dependencies=[
+      jar(org='com.twitter.common', name='logging-scribe', rev='0.0.18')
+         .exclude(org='org.apache.scribe', name='scribe-client'),
+      pants('3rdparty/jvm/org/apache/scribe:scribe_client'),
+   ]
+)
