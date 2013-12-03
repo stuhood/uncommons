@@ -205,15 +205,3 @@ jar_library(name='rainbird-thrift',
     thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
   ]
 )
-
-jar_library(name='ibis-thrift-logging',
-  dependencies=[
-    thrift_jar('com.twitter', 'ibis-thrift-logging-only', '4.0.4')
-  ]
-)
-
-jar_library(name='ibis-thrift-service',
-  dependencies=[
-    thrift_jar('com.twitter', 'ibis-thrift-service-only', '4.0.4')
-  ]
-)
