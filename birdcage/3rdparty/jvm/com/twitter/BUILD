@@ -143,6 +143,8 @@ jar_library(name='wtf',
   ]
 )
 
+make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.9')
+
 jar_library(name='flockdb-thrift',
   dependencies=[
     jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
@@ -188,8 +190,8 @@ summingbird_lib('core')
 summingbird_lib('scalding')
 summingbird_lib('storm')
 
-make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.103')
-make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.145')
+make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.114')
+make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.156')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
 
 make_lib('algebird_internal-bijection', '0.0.4')
@@ -205,3 +207,5 @@ jar_library(name='rainbird-thrift',
     thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
   ]
 )
+
+make_thrift_lib('com.twitter', 'trends-service-thrift-only', '1.0.60')
