@@ -96,6 +96,62 @@ jar_library(name='pink-floyd-thrift',
   ]
 )
 
+
+make_lib('json_2.8.1', '2.1.6')
+
+RAINBIRD_REV = '1.2'
+
+jar_library(name='rainbird-server',
+  dependencies=[
+    jar(org='com.twitter', name='rainbird-server', rev=RAINBIRD_REV).intransitive().with_sources(),
+    pants('3rdparty/jvm/com/twitter/common:objectsize'),
+    pants(':json_2.8.1'),
+    pants(':rainbird-thrift'),
+    pants(':scala-zookeeper-client'),
+    pants('cassie/cassie-core'),
+    pants('cassie/cassie-serversets'),
+    pants('finagle/finagle-core'),
+    pants('finagle/finagle-http'),
+    pants('finagle/finagle-ostrich4'),
+    pants('finagle/finagle-serversets'),
+    pants('ostrich'),
+    pants('util/util-core'),
+    pants('util/util-logging'),
+    pants('util/util-thrift')
+  ]
+)
+
+
+#jar_library(name='rainbird-thrift',
+#  dependencies=[
+#    thrift_jar(org='com.twitter', name='rainbird-thrift', rev=RAINBIRD_REV).intransitive().with_sources(),
+#    pants('finagle/finagle-core'),
+#    pants('finagle/finagle-ostrich4'),
+#    pants('finagle/finagle-thrift')
+#  ]
+#)
+
+jar_library(name='scala-zookeeper-client',
+  dependencies=[
+    jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
+    pants('3rdparty:zookeeper'),
+    pants('ostrich')
+  ]
+)
+
+jar_library(name='scribe-thrift',
+  dependencies=[
+    jar(org='com.twitter', name='scribe-thrift', rev='2.0.9').intransitive().with_sources(),
+    pants('3rdparty:slf4j-api'),
+    pants('finagle/finagle-core'),
+    pants('finagle/finagle-ostrich4'),
+    pants('finagle/finagle-thrift'),
+    pants('scrooge/scrooge-runtime'),
+    pants('util/util-logging'),
+    pants('util/util-thrift')
+  ]
+)
+
 jar_library(name='manhattan-thrift-v1',
   dependencies=[
     thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.0')
@@ -181,6 +237,7 @@ scalding_lib('commons')
 scalding_lib('core')
 scalding_lib('date')
 
+make_lib('summingbird-client_2.9.2', '0.0.7')
 make_lib('summingbird-client_2.9.3', '0.2.5')
 
 def summingbird_lib(name, version='0.2.2'):
