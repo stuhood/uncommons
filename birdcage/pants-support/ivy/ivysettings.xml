@@ -4,6 +4,11 @@
 
   <settings defaultResolver="chain-repos"/>
 
+  <credentials host="artifactory.local.twitter.com"
+               realm="Artifactory Realm"
+               username="${login}"
+               passwd="${password}"/>
+
   <resolvers>
     <chain name="chain-repos" returnFirst="true">
       <ibiblio name="twitter-internal-artifactory"
@@ -25,6 +30,9 @@
                checkmodified="true"
                root="file://${user.home}/.m2/repository"/>
     </chain>
+    <url name="artifactory.local.twitter.com" m2compatible="true">
+      <artifact pattern="http://artifactory.local.twitter.com/libs-releases-local/[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" />
+    </url>
   </resolvers>
 
   <!-- don't use the default shared cache with other projects because it gets polluted,
