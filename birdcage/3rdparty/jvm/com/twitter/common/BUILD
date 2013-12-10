@@ -38,6 +38,7 @@ make_lib('zookeeper-testing', '0.0.38')
 
 
 make_lib('base', '0.0.64')
+make_lib('collections', '0.0.16')
 make_lib('logging', '0.0.44')
 make_lib('logging-buffered', '0.0.4')
 make_lib('stats-util', '0.0.29')
