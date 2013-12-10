@@ -54,12 +54,6 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
-jar_library(name='geoduck-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.9')
-  ]
-)
-
 jar_library(name='image-proxy-thrift-service',
   dependencies=[
     thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5')
