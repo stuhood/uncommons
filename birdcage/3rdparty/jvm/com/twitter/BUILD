@@ -222,6 +222,19 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
+
+jar_library(name='ads_entities_db_predicate',
+  dependencies=[
+    jar(org='com.twitter', name='ads_entities_db_predicate', rev='0.0.10'),
+  ]
+)
+
+jar_library(name='ads_extended_revenue_dataservice',
+  dependencies=[
+    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.22')
+  ]
+)
+
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('thriftstore-thrift', '0.0.3')
 make_lib('ml', '0.1.6')
@@ -250,6 +263,7 @@ summingbird_lib('storm')
 make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.114')
 make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.156')
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
+make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
 
 make_lib('algebird_internal-bijection', '0.0.4')
 make_lib('algebird_internal-thriftscala', '0.0.4')
