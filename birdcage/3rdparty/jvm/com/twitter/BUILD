@@ -6,42 +6,9 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
-make_lib('ads_entities', '0.0.40')
-make_lib('ads_shared_types', '0.0.57')
-
-ADSERVER_RPC_REV = '1.0.114'
-make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
-
-jar_library(name='adserver_rpc',
-  dependencies=[
-    jar(org='com.twitter', name='adserver_rpc', rev=ADSERVER_RPC_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:ads_entities'),
-    pants('3rdparty/jvm/com/twitter:adserver_common'),
-    pants('3rdparty/jvm/com/twitter:adserver_log'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-commons-stats'),
-    pants('finagle/finagle-ostrich4'),
-    pants('finagle/finagle-thrift'),
-    pants('scrooge/scrooge-runtime')
-  ]
-)
-
-ADSERVER_COMMON_REV = '1.0.156'
-make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
-make_lib('adserver_common', ADSERVER_COMMON_REV)
-make_lib('adserver_log', '1.0.98')
-make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
-
-ALGEBIRD_INTERNAL_REV='0.0.4'
-
-make_lib('algebird_internal-bijection', ALGEBIRD_INTERNAL_REV)
-make_lib('algebird_internal-thriftscala', ALGEBIRD_INTERNAL_REV)
-
-ALGEBIRD_REV='0.3.0'
-
 jar_library(name='algebird-core_2.9.3',
   dependencies=[
-    thrift_jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
+    thrift_jar(org='com.twitter', name='algebird-core_2.9.3', rev='0.3.0')
   ]
 )
 
@@ -51,48 +18,9 @@ jar_library(name='algebird-thrift',
   ]
 )
 
-make_lib('algebird-bijection_2.9.3', ALGEBIRD_REV)
-
-jar_library(name='algebird-util_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='algebird-util_2.9.3', rev=ALGEBIRD_REV).with_sources().intransitive(),
-    pants(':algebird-core_2.9.3'),
-    pants('util/util-core')
-  ]
-)
-
 jar_library(name='app-proxy-thrift',
   dependencies=[
     thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1')
-  ]
-)
-
-BIJECTION_REV='0.5.4'
-
-make_lib('bijection-json_2.9.3', BIJECTION_REV)
-make_lib('bijection-netty_2.9.2', '0.4.0-SNAPSHOT', 'bijection-netty')
-
-jar_library(name='bijection-util',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-scrooge_2.9.2', rev='0.4.0-SNAPSHOT').with_sources().intransitive(),
-    pants('3rdparty:bijection-core'),
-    pants('util/util-core')
-  ]
-)
-
-jar_library(name='bijection-netty_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-netty_2.9.3', rev=BIJECTION_REV).with_sources().intransitive(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:netty')
-  ]
-)
-
-jar_library(name='bijection-util_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-util_2.9.3', rev=BIJECTION_REV).with_sources().intransitive(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('util/util-core')
   ]
 )
 
@@ -102,34 +30,11 @@ jar_library(name='beaks-data',
   ]
 )
 
-jar_library(name='cassovary',
-  dependencies=[
-    jar(org='com.twitter', name='cassovary_2.8.1', rev='2.0.3').intransitive(),
-    
-    # old version of util used by cassovary
-    jar(org='com.twitter', name='util', rev='4.0.1').intransitive(),
-
-    pants('3rdparty:configgy'),
-    pants('3rdparty:fastutil'),
-    pants('3rdparty:guava'),
-    pants('ostrich')
-  ]
-)
-
-make_lib('cassowary_v2_protobuf', '0.0.4', 'cassowary')
-
 jar_library(name='chill_2.9.3',
   dependencies=[
     jar(org='com.twitter', name='chill_2.9.3', rev='0.3.4')
   ]
 )
-
-CHILL_REV='0.3.4'
-
-make_lib('chill-bijection_2.9.3', CHILL_REV)
-make_lib('chill-hadoop', CHILL_REV)
-make_lib('chill-java', CHILL_REV)
-make_lib('chill-storm', CHILL_REV)
 
 jar_library(name='expandodo-cards-thrift',
   dependencies=[
@@ -149,11 +54,6 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
-HBC_REV='1.4.0'
-make_lib('hbc-core', HBC_REV)
-make_lib('hbc-internal', HBC_REV)
-make_lib('hbc-twitter4j-v3', HBC_REV)
-
 jar_library(name='image-proxy-thrift-service',
   dependencies=[
     thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5')
@@ -171,29 +71,6 @@ jar_library(name='limiter-thrift-only',
     thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.32')
   ]
 )
-
-jar_library(name='metastore-data',
-  dependencies=[
-    jar(org='com.twitter', name='metastore-data', rev='0.0.19').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common:base'),
-    pants('3rdparty:guava'),
-    pants(':metastore-thrift')
-  ]
-)
-
-jar_library(name='metastore-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='metastore-thrift', rev='0.0.42').with_sources().intransitive(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
 
 jar_library(name='parquet-scrooge',
   dependencies=[
@@ -213,8 +90,8 @@ jar_library(name='pink-floyd-thrift',
   ]
 )
 
+
 make_lib('json_2.8.1', '2.1.6')
-make_lib('kafka_2.9.2', '0.7.0', 'kafka')
 
 RAINBIRD_REV = '1.2'
 
@@ -237,6 +114,16 @@ jar_library(name='rainbird-server',
     pants('util/util-thrift')
   ]
 )
+
+
+#jar_library(name='rainbird-thrift',
+#  dependencies=[
+#    thrift_jar(org='com.twitter', name='rainbird-thrift', rev=RAINBIRD_REV).intransitive().with_sources(),
+#    pants('finagle/finagle-core'),
+#    pants('finagle/finagle-ostrich4'),
+#    pants('finagle/finagle-thrift')
+#  ]
+#)
 
 jar_library(name='scala-zookeeper-client',
   dependencies=[
@@ -271,7 +158,21 @@ jar_library(name='manhattan-thrift-v2',
   ]
 )
 
-make_lib('sarus_v2', '0.0.5')
+jar_library(name='jubjub-service-thrift',
+  dependencies=[
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.19'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.14'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.15'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.21'),
+  ]
+)
+
+jar_library(name='storehaus_internal-memcache_2.9.2',
+  dependencies=[
+    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.10')
+      .exclude(org='com.twitter', name='finagle-memcached_2.9.2')
+  ]
+)
 
 jar_library(name='tdc-service-thrift-only',
   dependencies=[
@@ -281,47 +182,8 @@ jar_library(name='tdc-service-thrift-only',
 
 jar_library(name='wtf_recent_impressions',
   dependencies=[
-    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:manhattan'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:job_2.9.2'),
-    pants(':wtf_summingbird_thrift'),
-  ]
-)
-
-jar_library(name='jubjub-service-thrift',
-  dependencies=[
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.19'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.14'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.15'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.21')
-  ]
-)
-
-jar_library(name='wtf_summingbird_thrift',
-  dependencies=[
-    jar(org='com.twitter', name='wtf_summingbird_thrift', rev='0.0.3').with_sources().intransitive(),
-    pants('scrooge/scrooge-runtime')
-  ]
-)
-
-jar_library(name='spiderduck-fetcher-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='spiderduck-fetcher-thrift', rev='0.0.81').with_sources().intransitive(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-jar_library(name='spiderduck-url-store-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='spiderduck-url-store-thrift', rev='0.0.102').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:spiderduck-fetcher-thrift'),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
+    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.3')
+      .exclude(org='com.twitter.manhattan', name='manhattan-thriftfinagle')
   ]
 )
 
@@ -375,207 +237,40 @@ make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
 make_lib('twadoop-protobuf-tables', '0.0.2')
 
-SCALDING_REV='0.9.0rc4'
-
-def scalding_lib(name):
-  return make_lib('scalding-%s_2.9.3' % name, SCALDING_REV)
+def scalding_lib(name, version='0.9.0rc4'):
+  return make_lib('scalding-%s_2.9.3' % name, version)
 scalding_lib('args')
-
-jar_library(name='scalding-commons_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'scalding-commons_2.9.3', SCALDING_REV).intransitive().with_sources(),
-    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-cascading2'),
-    pants('3rdparty:algebird-core'),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:dfs-datastores'),
-    pants('3rdparty:dfs-datastores-cascading'),
-    pants('3rdparty:hadoop-lzo'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:protobuf-java'),
-    pants('3rdparty:slf4j-api'),
-    pants(':chill_2.9.3'),
-    pants(':scalding-args_2.9.3'),
-    pants(':scalding-core_2.9.3'),
-    pants(':scalding-date_2.9.3')
-  ]
-)
-
+scalding_lib('commons')
 scalding_lib('core')
 scalding_lib('date')
 
-jar_library(name='science-flock-client',
-  dependencies=[
-    jar(org='com.twitter', name='science-flock-client', rev='0.0.8').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common:base'),
-    pants('3rdparty/jvm/com/twitter/common:collections'),
-    pants('3rdparty/jvm/com/twitter/common:quantity'),
-    pants('3rdparty/jvm/com/twitter/common:thrift'),
-    pants('3rdparty:guava'),
-    pants('3rdparty:javax.inject'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:slf4j-api'),
-    pants(':flockdb-thrift'),
-    pants(':science-flock-util')
-  ]
-)
-
-make_lib('science-flock-util', '0.0.4')
 make_lib('summingbird-client_2.9.2', '0.0.7')
-make_lib('summingbird-core_2.9.2', '0.0.7')
-make_lib('summingbird-thrift', '0.0.6')
+make_lib('summingbird-client_2.9.3', '0.2.5')
 
 def summingbird_lib(name, version='0.2.2'):
   return make_lib('summingbird-%s_2.9.3' % name, version)
 summingbird_lib('batch')
-
-SUMMINGBIRD_REV='0.2.2'
-
-jar_library(name='summingbird-builder_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-builder_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:log4j'),
-    pants(':summingbird-core_2.9.3'),
-    pants(':summingbird-scalding_2.9.3'),
-    pants(':summingbird-storm_2.9.3')
-  ]
-)
-
-jar_library(name='summingbird-client_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-client_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:log4j'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':storehaus-algebra_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3')
-  ]
-)
-
 summingbird_lib('core')
+summingbird_lib('scalding')
+summingbird_lib('storm')
 
-jar_library(name='summingbird-scalding_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-scalding_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:dfs-datastores'),
-    pants('3rdparty:dfs-datastores-cascading'),
-    pants('3rdparty:log4j'),
-    pants(':algebird-bijection_2.9.3'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':bijection-json_2.9.3'),
-    pants(':chill-bijection_2.9.3'),
-    pants(':chill-hadoop'),
-    pants(':chill_2.9.3'),
-    pants(':scalding-commons_2.9.3'),
-    pants(':scalding-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3'),
-    pants(':summingbird-core_2.9.3'),
-  ]
-)
+make_thrift_lib('com.twitter', 'adserver_rpc-only', '1.0.114')
+make_thrift_lib('com.twitter', 'adserver_common-only', '1.0.156')
+make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.39')
+make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
 
-jar_library(name='summingbird-storm_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-storm_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:log4j'),
-    pants('3rdparty:storm'),
-    pants(':algebird-core_2.9.3'),
-    pants(':chill-bijection_2.9.3'),
-    pants(':chill-storm'),
-    pants(':chill_2.9.3'),
-    pants(':storehaus-algebra_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3'),
-    pants(':summingbird-core_2.9.3'),
-    pants(':tormenta-core_2.9.3'),
-    pants('util/util-core')
-  ]
-)
-
-jar_library(name='storehaus_internal-memcache_2.9.2',
-  dependencies=[
-    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common_internal:zookeeper-utils'),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants(':bijection-netty_2.9.3'),
-    pants(':storehaus-memcache_2.9.3')
-  ]
-)
-
-jar_library(name='storehaus_internal-util',
-  dependencies=[
-    jar('com.twitter', 'storehaus_internal-util_2.9.2', '0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common/zookeeper:client'),
-    pants('3rdparty/jvm/com/twitter/common/zookeeper:server-set'),
-    pants('finagle/finagle-serversets'),
-    pants('finagle/finagle-thrift')
-  ]
-)
-
-STOREHAUS_REV='0.6.0'
-
-jar_library(name='storehaus-algebra_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'storehaus-algebra_2.9.3', STOREHAUS_REV).with_sources().intransitive(),
-    pants(':algebird-bijection_2.9.3'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':storehaus-testing_2.9.3')
-  ]
-)
-
-TRENDS_SERVICE_THRIFT_REV = '1.0.60'
-
-jar_library(name='trends-service-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='trends-service-thrift', rev=TRENDS_SERVICE_THRIFT_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/search:assistance-thrift'),
-    pants('3rdparty/jvm/com/twitter/search:earlybird-thrift'),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'trends-service-thrift-only', TRENDS_SERVICE_THRIFT_REV)
-
-jar_library(name='tweetypie-tweet-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.0.5').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:expandodo-cards-thrift'),
-    pants('finagle/finagle-thrift'),
-    pants('scrooge/scrooge-core')
-  ]
-)
-
-jar_library(name='tweetypie-tweet-thrift-java',
-  dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.0.5').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:expandodo-cards-thrift'),
-    pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api')
-  ]
-)
-
+make_lib('algebird_internal-bijection', '0.0.4')
+make_lib('algebird_internal-thriftscala', '0.0.4')
+make_lib('bijection-json_2.9.3', '0.5.3')
 make_lib('ouroboros-common', '0.0.18')
 make_lib('ouroboros-thriftscala', '0.0.21')
-make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
 make_lib('storehaus-core_2.9.3', '0.6.0')
-make_lib('storehaus-testing_2.9.3', STOREHAUS_REV)
 make_lib('storehaus-memcache_2.9.3', '0.6.0')
 
-make_lib('tormenta-core_2.9.3', '0.5.3')
-
-make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.1')
-make_thrift_lib('com.twitter', 'feature-store-thrift', '0.0.2')
 jar_library(name='rainbird-thrift',
   dependencies=[
     thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
   ]
 )
+
+make_thrift_lib('com.twitter', 'trends-service-thrift-only', '1.0.60')
