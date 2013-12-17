@@ -193,7 +193,7 @@ jar_library(name='wtf',
   ]
 )
 
-make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.9')
+make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.16')
 
 jar_library(name='flockdb-thrift',
   dependencies=[
