@@ -231,6 +231,8 @@ jar_library(name='ads_extended_revenue_dataservice',
   ]
 )
 
+make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
+
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('thriftstore-thrift', '0.0.3')
 make_lib('ml', '0.1.6')
