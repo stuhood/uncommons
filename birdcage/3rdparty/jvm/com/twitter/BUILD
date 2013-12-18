@@ -167,6 +167,8 @@ jar_library(name='jubjub-service-thrift',
   ]
 )
 
+make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', '0.0.84')
+
 jar_library(name='storehaus_internal-memcache_2.9.2',
   dependencies=[
     jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.10')
