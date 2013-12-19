@@ -278,3 +278,5 @@ jar_library(name='rainbird-thrift',
 )
 
 make_thrift_lib('com.twitter', 'trends-service-thrift-only', '1.0.60')
+
+make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
