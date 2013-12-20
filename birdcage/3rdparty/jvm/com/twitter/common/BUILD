@@ -16,7 +16,9 @@ make_lib('objectsize', '0.0.7')
 
 # 7/8/2013
 make_lib('metrics', '0.0.9')
-make_lib('net-pool', '0.0.12')
+
+# 10/16/2013
+make_lib('net-pool', '0.0.54')
 
 # 10/2/2013
 make_lib('args', '0.1.72')
