@@ -18,10 +18,10 @@ jar_library(name='algebird-thrift',
   ]
 )
 
-jar_library(name='app-proxy-thrift',
-  dependencies=[
-    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1')
-  ]
+idl_jar_thrift_library(name='app-proxy-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1'),
+  language='scala',
+  rpc_style='finagle',
 )
 
 jar_library(name='beaks-data',
@@ -52,6 +52,18 @@ jar_library(name='expandodo-internal-thrift',
   dependencies=[
     thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.7')
   ]
+)
+
+idl_jar_thrift_library(name='image-proxy-service-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5'),
+  language='scala',
+  rpc_style='finagle',
+)
+
+idl_jar_thrift_library(name='image-proxy-types-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.5'),
+  language='scala',
+  rpc_style='finagle',
 )
 
 jar_library(name='image-proxy-thrift-service',
@@ -156,6 +168,20 @@ jar_library(name='manhattan-thrift-v2',
   dependencies=[
     thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.7.1')
   ]
+)
+
+idl_jar_thrift_library(name='manhattanv1-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.1'),
+  language='scala',
+  rpc_style='finagle',
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.1'),
+)
+
+idl_jar_thrift_library(name='manhattanv2-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.7.1'),
+  language='scala',
+  rpc_style='finagle',
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.7.1'),
 )
 
 jar_library(name='jubjub-service-thrift',
