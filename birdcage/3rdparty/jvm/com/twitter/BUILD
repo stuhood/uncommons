@@ -160,10 +160,10 @@ jar_library(name='manhattan-thrift-v2',
 
 jar_library(name='jubjub-service-thrift',
   dependencies=[
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.19'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.14'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.15'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.21'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.28'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.16'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.20'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.30'),
   ]
 )
 
