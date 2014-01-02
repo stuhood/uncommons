@@ -38,19 +38,19 @@ jar_library(name='chill_2.9.3',
 
 jar_library(name='expandodo-cards-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.5')
+    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.8')
   ]
 )
 
 jar_library(name='expandodo-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.5')
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.7')
   ]
 )
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.7')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.8')
   ]
 )
 
