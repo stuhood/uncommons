@@ -615,8 +615,8 @@ make_lib('storehaus-memcache_2.9.3', '0.6.0')
 
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
-make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.1')
-make_thrift_lib('com.twitter', 'feature-store-thrift', '0.0.2')
+make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
+make_thrift_lib('com.twitter', 'feature-store-thrift-only', '0.0.3')
 jar_library(name='rainbird-thrift',
   dependencies=[
     thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
