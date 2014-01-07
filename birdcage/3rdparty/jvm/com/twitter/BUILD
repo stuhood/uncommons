@@ -78,14 +78,6 @@ BIJECTION_REV='0.5.4'
 make_lib('bijection-json_2.9.3', BIJECTION_REV)
 make_lib('bijection-netty_2.9.2', '0.4.0-SNAPSHOT', 'bijection-netty')
 
-jar_library(name='bijection-util',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-scrooge_2.9.2', rev='0.4.0-SNAPSHOT').with_sources().intransitive(),
-    pants('3rdparty:bijection-core'),
-    pants('util/util-core')
-  ]
-)
-
 jar_library(name='bijection-netty_2.9.3',
   dependencies=[
     jar(org='com.twitter', name='bijection-netty_2.9.3', rev=BIJECTION_REV).with_sources().intransitive(),
