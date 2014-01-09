@@ -73,6 +73,7 @@ idl_jar_thrift_library(name='app-proxy-thrift-scala',
   rpc_style='finagle',
 )
 
+# NB: synchronize with 3rdparty:bijection*
 BIJECTION_REV='0.5.4'
 
 make_lib('bijection-json_2.9.3', BIJECTION_REV)
