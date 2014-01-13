@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.40')
 make_lib('ads_shared_types', '0.0.57')
 
-ADSERVER_RPC_REV = '1.0.121'
+ADSERVER_RPC_REV = '1.0.123'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -564,7 +564,7 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-TRENDS_SERVICE_THRIFT_REV = '1.0.69'
+TRENDS_SERVICE_THRIFT_REV = '1.0.71'
 
 jar_library(name='trends-service-thrift',
   dependencies=[
