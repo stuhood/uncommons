@@ -148,6 +148,12 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
+jar_library(name='geoduck-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.9')
+  ]
+)
+
 HBC_REV='1.4.0'
 make_lib('hbc-core', HBC_REV)
 make_lib('hbc-internal', HBC_REV)
@@ -249,6 +255,12 @@ jar_library(name='rainbird-server',
   ]
 )
 
+jar_library(name='rainbird-thrift-only',
+  dependencies=[
+    thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='1.2')
+  ]
+)
+
 jar_library(name='scala-zookeeper-client',
   dependencies=[
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
@@ -322,7 +334,6 @@ jar_library(name='jubjub-service-thrift',
   ]
 )
 
-
 jar_library(name='wtf_summingbird_thrift',
   dependencies=[
     jar(org='com.twitter', name='wtf_summingbird_thrift', rev='0.0.3').with_sources().intransitive(),
@@ -379,6 +390,8 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
+make_lib('user_text_profile', '0.0.13')
+
 jar_library(name='gizzard-thrift',
   dependencies=[
     jar('com.twitter', 'gizzard-thrift', '0.0.4').intransitive(),
@@ -404,6 +417,7 @@ jar_library(name='ads_extended_revenue_dataservice',
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
 
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
+make_lib('platform-analytics-test-data', '0.1.6')
 make_lib('thriftstore-thrift', '0.0.3')
 make_lib('ml', '0.1.6')
 
