@@ -615,10 +615,17 @@ jar_library(name='tweetypie-tweet-thrift-java',
 
 make_lib('ouroboros-common', '0.0.18')
 make_lib('ouroboros-thriftscala', '0.0.21')
+
 make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
-make_lib('storehaus-core_2.9.3', '0.6.0')
+jar_library(name='storehaus-core_2.9.3',
+  dependencies=[
+    jar(org='com.twitter', name='storehaus-core_2.9.3', rev=STOREHAUS_REV)
+      .exclude('com.twitter', 'util-core_2.9.2'),
+    pants('util/util-core'),
+  ]
+)
 make_lib('storehaus-testing_2.9.3', STOREHAUS_REV)
-make_lib('storehaus-memcache_2.9.3', '0.6.0')
+make_lib('storehaus-memcache_2.9.3', STOREHAUS_REV)
 
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
