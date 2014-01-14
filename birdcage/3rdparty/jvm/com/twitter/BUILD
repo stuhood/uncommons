@@ -282,6 +282,12 @@ jar_library(name='scribe-thrift',
   ]
 )
 
+jar_library(name='payment-thrift-only',
+  dependencies=[
+    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.3')
+  ]
+)
+
 jar_library(name='manhattan-thrift-v1',
   dependencies=[
     thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.1')
