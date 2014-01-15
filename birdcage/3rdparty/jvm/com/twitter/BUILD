@@ -218,16 +218,16 @@ jar_library(name='parquet-scrooge',
   ]
 )
 
-jar_library(name='pink-floyd-thrift-derivatives',
-  dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.4')
-  ]
+idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.4'),
+  language='scala',
+  rpc_style='finagle',
 )
 
-jar_library(name='pink-floyd-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.19')
-  ]
+idl_jar_thrift_library(name='pink-floyd-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.19'),
+  language='scala',
+  rpc_style='finagle',
 )
 
 make_lib('json_2.8.1', '2.1.6')
