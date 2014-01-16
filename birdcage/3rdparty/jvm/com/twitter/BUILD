@@ -136,6 +136,12 @@ jar_library(name='expandodo-cards-thrift',
   ]
 )
 
+idl_jar_thrift_library(name='expandodo-cards-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.8'),
+  language='scala',
+  rpc_style='finagle',
+)
+
 jar_library(name='expandodo-thrift',
   dependencies=[
     thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.7')
@@ -421,6 +427,12 @@ jar_library(name='ads_extended_revenue_dataservice',
 )
 
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
+
+idl_jar_thrift_library(name='talon-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'talon-thrift-only', '0.0.13'),
+  language='scala',
+  rpc_style='finagle',
+)
 
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('platform-analytics-test-data', '0.1.6')
