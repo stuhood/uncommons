@@ -7,9 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.40')
-make_lib('ads_shared_types', '0.0.57')
+make_lib('ads_shared_types', '0.0.74')
 
-ADSERVER_RPC_REV = '1.0.123'
+ADSERVER_RPC_REV = '1.0.125'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -26,10 +26,10 @@ jar_library(name='adserver_rpc',
   ]
 )
 
-ADSERVER_COMMON_REV = '1.0.174'
+ADSERVER_COMMON_REV = '1.0.177'
 make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
 make_lib('adserver_common', ADSERVER_COMMON_REV)
-make_lib('adserver_log', '1.0.117')
+make_lib('adserver_log', '1.0.120')
 make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
 
 ALGEBIRD_INTERNAL_REV='0.0.4'
@@ -420,7 +420,7 @@ jar_library(name='wtf',
   ]
 )
 
-make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.20')
+make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.23')
 
 jar_library(name='flockdb-thrift',
   dependencies=[
@@ -434,7 +434,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.13')
+make_lib('user_text_profile', '0.0.24')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
@@ -628,7 +628,7 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-TRENDS_SERVICE_THRIFT_REV = '1.0.71'
+TRENDS_SERVICE_THRIFT_REV = '1.0.72'
 
 jar_library(name='trends-service-thrift',
   dependencies=[
