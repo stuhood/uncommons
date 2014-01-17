@@ -688,3 +688,15 @@ jar_library(name='rainbird-thrift',
 )
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
+
+jar_library(name='servo-exception-thrift',
+  dependencies=[
+    thrift_jar('com.twitter', 'servo-exception-thrift-only', '2.7.0')
+  ]
+)
+
+idl_jar_thrift_library(name='servo-exception-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'servo-exception-thrift-only', '2.7.0'),
+  language='scala',
+  rpc_style='finagle',
+)
