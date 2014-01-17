@@ -218,9 +218,23 @@ jar_library(name='metastore-thrift',
 
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.61')
 
+compiled_idl(
+  name='metastore-thrift-scala',
+  idl_deps=[pants(':metastore-thrift-only')],
+  compiler='scrooge',
+  language='scala',
+  rpc_style='finagle',
+)
+
 jar_library(name='parquet-scrooge',
   dependencies=[
+    pants('util/util-core'),
+    pants('finagle/finagle-core'),
+    pants('finagle/finagle-thrift'),
     jar(org='com.twitter', name='parquet-scrooge', rev='1.2.0')
+      .exclude(org='com.twitter', name='util-core_2.9.2')
+      .exclude(org='com.twitter', name='finagle-core_2.9.2')
+      .exclude(org='com.twitter', name='finagle-thrift_2.9.2')
   ]
 )
 
