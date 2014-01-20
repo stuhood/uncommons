@@ -150,25 +150,25 @@ make_lib('chill-storm', CHILL_REV)
 
 jar_library(name='expandodo-cards-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.8')
+    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.1.12')
   ]
 )
 
 idl_jar_thrift_library(name='expandodo-cards-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.0.8'),
+  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.1.12'),
   language='scala',
   rpc_style='finagle',
 )
 
 jar_library(name='expandodo-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.7')
+    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.12')
   ]
 )
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.8')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.12')
   ]
 )
 
@@ -263,7 +263,7 @@ idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.19'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.22'),
   language='scala',
   rpc_style='finagle',
 )
