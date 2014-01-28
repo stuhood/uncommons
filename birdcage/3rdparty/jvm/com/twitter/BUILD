@@ -448,7 +448,7 @@ jar_library(name='gizzard-thrift',
 
 jar_library(name='ads_entities_db_predicate',
   dependencies=[
-    jar(org='com.twitter', name='ads_entities_db_predicate', rev='0.0.10'),
+    jar(org='com.twitter', name='ads_entities_db_predicate', rev='0.0.18'),
   ]
 )
 
