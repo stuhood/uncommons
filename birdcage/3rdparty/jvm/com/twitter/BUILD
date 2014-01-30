@@ -700,3 +700,4 @@ idl_jar_thrift_library(name='servo-exception-thrift-scala',
   language='scala',
   rpc_style='finagle',
 )
+
