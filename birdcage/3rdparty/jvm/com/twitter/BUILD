@@ -183,27 +183,30 @@ make_lib('hbc-core', HBC_REV)
 make_lib('hbc-internal', HBC_REV)
 make_lib('hbc-twitter4j-v3', HBC_REV)
 
+IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV = '0.0.6'
+IMAGE_PROXY_THRIFT_TYPES_ONLY_REV = '0.0.7'
+
 idl_jar_thrift_library(name='image-proxy-service-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5'),
+  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-service-only', IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='image-proxy-types-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.5'),
+  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-types-only', IMAGE_PROXY_THRIFT_TYPES_ONLY_REV),
   language='scala',
   rpc_style='finagle',
 )
 
 jar_library(name='image-proxy-thrift-service',
   dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', '0.0.5')
+    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV)
   ]
 )
 
 jar_library(name='image-proxy-thrift-types',
   dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', '0.0.5')
+    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', IMAGE_PROXY_THRIFT_TYPES_ONLY_REV)
   ]
 )
 
