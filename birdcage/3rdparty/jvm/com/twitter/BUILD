@@ -631,7 +631,7 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-TRENDS_SERVICE_THRIFT_REV = '1.0.75'
+TRENDS_SERVICE_THRIFT_REV = '1.0.77'
 
 jar_library(name='trends-service-thrift',
   dependencies=[
