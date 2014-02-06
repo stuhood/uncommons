@@ -683,7 +683,15 @@ make_lib('storehaus-memcache_2.9.3', STOREHAUS_REV)
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
 make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
-make_thrift_lib('com.twitter', 'feature-store-thrift-only', '0.0.3')
+make_thrift_lib('com.twitter', 'feature-store-thrift-only', '0.0.8')
+
+idl_jar_thrift_library(name='feature-store-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter', name='feature-store-thrift-only', rev='0.0.8'),
+  language='scala',
+  rpc_style='finagle',
+)
+
+
 jar_library(name='rainbird-thrift',
   dependencies=[
     thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
