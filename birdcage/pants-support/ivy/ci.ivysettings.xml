@@ -1,7 +1,7 @@
 <ivysettings>
   <!-- For CI environment, ivy cache is set to workspace name under user home -->
   <properties environment="env"/>
-  <property name="ivy.cache.dir" value="${env.PANTS_IVY_SETTINGS_XML}" override="false"/>
+  <property name="ivy.cache.dir" value="${env.LOCAL_CACHE_DIR}" override="false"/>
 
   <settings defaultResolver="chain-repos"/>
 
