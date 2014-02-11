@@ -7,9 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.48')
-make_lib('ads_shared_types', '0.0.75')
+make_lib('ads_shared_types', '0.0.76')
 
-ADSERVER_RPC_REV = '1.0.128'
+ADSERVER_RPC_REV = '1.0.130'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -26,10 +26,10 @@ jar_library(name='adserver_rpc',
   ]
 )
 
-ADSERVER_COMMON_REV = '1.0.181'
+ADSERVER_COMMON_REV = '1.0.186'
 make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
 make_lib('adserver_common', ADSERVER_COMMON_REV)
-make_lib('adserver_log', '1.0.124')
+make_lib('adserver_log', '1.0.126')
 make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
 
 ALGEBIRD_INTERNAL_REV='0.0.4'
@@ -266,7 +266,7 @@ idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.22'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.23'),
   language='scala',
   rpc_style='finagle',
 )
@@ -388,7 +388,7 @@ jar_library(name='wtf_summingbird_thrift',
   ]
 )
 
-SPIDERDUCK_FETCHER_REV = '0.0.86'
+SPIDERDUCK_FETCHER_REV = '0.0.87'
 
 make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV)
 
@@ -402,7 +402,7 @@ jar_library(name='spiderduck-fetcher-thrift',
   ]
 )
 
-SPIDERDUCK_URL_STORE_REV = '0.0.105'
+SPIDERDUCK_URL_STORE_REV = '0.0.106'
 
 jar_library(name='spiderduck-url-store-thrift',
   dependencies=[
@@ -423,7 +423,7 @@ jar_library(name='wtf',
   ]
 )
 
-make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.26')
+make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.27')
 
 jar_library(name='flockdb-thrift',
   dependencies=[
@@ -631,7 +631,7 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-TRENDS_SERVICE_THRIFT_REV = '1.0.77'
+TRENDS_SERVICE_THRIFT_REV = '1.0.78'
 
 jar_library(name='trends-service-thrift',
   dependencies=[
