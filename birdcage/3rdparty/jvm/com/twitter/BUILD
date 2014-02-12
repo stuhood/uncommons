@@ -712,3 +712,12 @@ idl_jar_thrift_library(name='servo-exception-thrift-scala',
   rpc_style='finagle',
 )
 
+BOTMAKER_REV='0.3.0'
+
+make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
+
+idl_jar_thrift_library(name='botmaker-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV),
+  language='scala',
+  rpc_style='finagle',
+)
