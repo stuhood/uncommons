@@ -4,3 +4,8 @@ import os
 repo(name='internal',
      url='http://artifactory.local.twitter.com/libs-releases-local',
      push_db=os.path.join(os.path.dirname(__file__), 'pushdb', 'publish.properties'))
+
+# Twitter internal gem repo
+repo(name = 'gem-internal',
+     url = 'http://gems.local.twitter.com',
+     push_db = os.path.join(os.path.dirname(__file__), 'pushdb', 'gem-publish.properties'))
