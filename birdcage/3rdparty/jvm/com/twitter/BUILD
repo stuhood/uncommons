@@ -168,7 +168,13 @@ jar_library(name='expandodo-thrift',
 
 jar_library(name='expandodo-internal-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.12')
+    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.14')
+  ]
+)
+
+jar_library(name='expandodo-cde-core',
+  dependencies=[
+    thrift_jar('com.twitter', 'expandodo-thrift-cde-core-only', '0.0.1')
   ]
 )
 
