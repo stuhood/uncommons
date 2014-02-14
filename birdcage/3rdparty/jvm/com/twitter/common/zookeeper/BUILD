@@ -8,7 +8,7 @@ def zk_lib(name, rev):
   )
 
 # 11/11/2013
-zk_lib('client', '0.0.47')
+zk_lib('client', '0.0.48')
 
 zk_lib('candidate', '0.0.57')
 zk_lib('lock', '0.0.30')
