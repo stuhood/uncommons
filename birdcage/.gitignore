@@ -69,3 +69,5 @@ target/
 deploy_profile
 rufous/server/deploy-cache/
 spoonbill/server/deploy-cache/
+*.sublime-workspace
+*.sublime-project
