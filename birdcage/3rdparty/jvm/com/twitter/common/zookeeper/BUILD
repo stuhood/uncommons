@@ -18,5 +18,5 @@ zk_lib('partitioner', '0.0.40')
 zk_lib('singleton-service', '0.0.77')
 
 # 10/30/2013
-zk_lib('group', '0.0.60')
-zk_lib('server-set', '1.0.65')
+zk_lib('group', '0.0.61')
+zk_lib('server-set', '1.0.66')
