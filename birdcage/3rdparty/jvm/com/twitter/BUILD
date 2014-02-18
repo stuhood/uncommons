@@ -355,15 +355,6 @@ jar_library(name='tdc-service-thrift-only',
   ]
 )
 
-jar_library(name='wtf_recent_impressions',
-  dependencies=[
-    jar(org='com.twitter', name='wtf_recent_impressions', rev='0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:manhattan'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:job_2.9.2'),
-    pants(':wtf_summingbird_thrift'),
-  ]
-)
-
 idl_jar_thrift_library(name='manhattanv1-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.1'),
   language='scala',
