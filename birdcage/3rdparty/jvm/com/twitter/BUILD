@@ -172,10 +172,16 @@ jar_library(name='expandodo-internal-thrift',
   ]
 )
 
-jar_library(name='expandodo-cde-core',
+jar_library(name='expandodo-cde-core-thrift',
   dependencies=[
     thrift_jar('com.twitter', 'expandodo-thrift-cde-core-only', '0.0.1')
   ]
+)
+
+idl_jar_thrift_library(name='expandodo-cde-core-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cde-core-only', '0.0.1'),
+  language='scala',
+  rpc_style='finagle',
 )
 
 jar_library(name='geoduck-thrift',
