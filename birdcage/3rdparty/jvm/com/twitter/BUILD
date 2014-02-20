@@ -148,42 +148,6 @@ make_lib('chill-hadoop', CHILL_REV)
 make_lib('chill-java', CHILL_REV)
 make_lib('chill-storm', CHILL_REV)
 
-jar_library(name='expandodo-cards-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.1.12')
-  ]
-)
-
-idl_jar_thrift_library(name='expandodo-cards-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cards-only', '8.1.12'),
-  language='scala',
-  rpc_style='finagle',
-)
-
-jar_library(name='expandodo-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-only', '8.1.12')
-  ]
-)
-
-jar_library(name='expandodo-internal-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-internal-only', '8.1.14')
-  ]
-)
-
-jar_library(name='expandodo-cde-core-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'expandodo-thrift-cde-core-only', '0.0.1')
-  ]
-)
-
-idl_jar_thrift_library(name='expandodo-cde-core-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'expandodo-thrift-cde-core-only', '0.0.1'),
-  language='scala',
-  rpc_style='finagle',
-)
-
 jar_library(name='geoduck-thrift',
   dependencies=[
     thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.9')
@@ -653,7 +617,7 @@ make_thrift_lib('com.twitter', 'trends-service-thrift-only', TRENDS_SERVICE_THRI
 jar_library(name='tweetypie-tweet-thrift',
   dependencies=[
     jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.0.5').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:expandodo-cards-thrift'),
+    pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('finagle/finagle-thrift'),
     pants('scrooge/scrooge-core')
   ]
@@ -662,7 +626,7 @@ jar_library(name='tweetypie-tweet-thrift',
 jar_library(name='tweetypie-tweet-thrift-java',
   dependencies=[
     jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.0.5').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:expandodo-cards-thrift'),
+    pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
     pants('3rdparty:commons-lang'),
     pants('3rdparty:slf4j-api')
