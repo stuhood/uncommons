@@ -317,6 +317,12 @@ SPIDERDUCK_FETCHER_REV = '0.0.87'
 
 make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV)
 
+idl_jar_thrift_library(name='spiderduck-fetcher-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV),
+  language='scala',
+  rpc_style='finagle',
+)
+
 jar_library(name='spiderduck-fetcher-thrift',
   dependencies=[
     jar(org='com.twitter', name='spiderduck-fetcher-thrift', rev=SPIDERDUCK_FETCHER_REV).with_sources().intransitive(),
