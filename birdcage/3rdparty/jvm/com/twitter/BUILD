@@ -67,12 +67,6 @@ jar_library(name='app-proxy-thrift',
   ]
 )
 
-idl_jar_thrift_library(name='malware-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='malware-thrift-only', rev='0.0.2'),
-  language='scala',
-  rpc_style='finagle',
-)
-
 idl_jar_thrift_library(name='tiered-actions-result-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter', name='tiered-actions-result-thrift-only', rev='0.0.6'),
   language='scala',
@@ -159,33 +153,6 @@ make_lib('hbc-core', HBC_REV)
 make_lib('hbc-internal', HBC_REV)
 make_lib('hbc-twitter4j-v3', HBC_REV)
 
-IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV = '0.0.6'
-IMAGE_PROXY_THRIFT_TYPES_ONLY_REV = '0.0.7'
-
-idl_jar_thrift_library(name='image-proxy-service-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-service-only', IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
-idl_jar_thrift_library(name='image-proxy-types-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'image-proxy-thrift-types-only', IMAGE_PROXY_THRIFT_TYPES_ONLY_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
-jar_library(name='image-proxy-thrift-service',
-  dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-service-only', IMAGE_PROXY_THRIFT_SERVICE_ONLY_REV)
-  ]
-)
-
-jar_library(name='image-proxy-thrift-types',
-  dependencies=[
-    thrift_jar('com.twitter', 'image-proxy-thrift-types-only', IMAGE_PROXY_THRIFT_TYPES_ONLY_REV)
-  ]
-)
-
 jar_library(name='limiter-thrift-only',
   dependencies=[
     thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.34')
@@ -213,15 +180,6 @@ jar_library(name='metastore-thrift',
   ]
 )
 
-make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.61')
-
-compiled_idl(
-  name='metastore-thrift-scala',
-  idl_deps=[pants(':metastore-thrift-only')],
-  compiler='scrooge',
-  language='scala',
-  rpc_style='finagle',
-)
 
 jar_library(name='parquet-scrooge',
   dependencies=[
