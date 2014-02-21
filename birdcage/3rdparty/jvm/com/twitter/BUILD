@@ -7,9 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.48')
-make_lib('ads_shared_types', '0.0.77')
+make_lib('ads_shared_types', '0.0.82')
 
-ADSERVER_RPC_REV = '1.0.131'
+ADSERVER_RPC_REV = '1.0.133'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -26,10 +26,10 @@ jar_library(name='adserver_rpc',
   ]
 )
 
-ADSERVER_COMMON_REV = '1.0.190'
+ADSERVER_COMMON_REV = '1.0.192'
 make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
 make_lib('adserver_common', ADSERVER_COMMON_REV)
-make_lib('adserver_log', '1.0.128')
+make_lib('adserver_log', '1.0.129')
 make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
 
 ALGEBIRD_INTERNAL_REV='0.0.4'
@@ -170,7 +170,7 @@ jar_library(name='metastore-data',
 
 jar_library(name='metastore-thrift',
   dependencies=[
-    jar(org='com.twitter', name='metastore-thrift', rev='0.0.42').with_sources().intransitive(),
+    jar(org='com.twitter', name='metastore-thrift', rev='0.0.73').with_sources().intransitive(),
     pants('3rdparty:commons-lang'),
     pants('3rdparty:libthrift-0.5.0'),
     pants('3rdparty:slf4j-api'),
@@ -180,6 +180,15 @@ jar_library(name='metastore-thrift',
   ]
 )
 
+make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.73')
+
+compiled_idl(
+  name='metastore-thrift-scala',
+  idl_deps=[pants(':metastore-thrift-only')],
+  compiler='scrooge',
+  language='scala',
+  rpc_style='finagle',
+)
 
 jar_library(name='parquet-scrooge',
   dependencies=[
@@ -306,10 +315,10 @@ idl_jar_thrift_library(name='manhattanv2-thrift-scala',
 
 jar_library(name='jubjub-service-thrift',
   dependencies=[
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.29'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.33'),
     thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.17'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.21'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.31'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.24'),
+    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.35'),
   ]
 )
 
@@ -320,7 +329,7 @@ jar_library(name='wtf_summingbird_thrift',
   ]
 )
 
-SPIDERDUCK_FETCHER_REV = '0.0.87'
+SPIDERDUCK_FETCHER_REV = '0.0.94'
 
 make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV)
 
@@ -340,7 +349,7 @@ jar_library(name='spiderduck-fetcher-thrift',
   ]
 )
 
-SPIDERDUCK_URL_STORE_REV = '0.0.106'
+SPIDERDUCK_URL_STORE_REV = '0.0.110'
 
 jar_library(name='spiderduck-url-store-thrift',
   dependencies=[
@@ -361,7 +370,7 @@ jar_library(name='wtf',
   ]
 )
 
-make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.27')
+make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.33')
 
 jar_library(name='flockdb-thrift',
   dependencies=[
@@ -375,7 +384,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.24')
+make_lib('user_text_profile', '0.0.30')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
@@ -569,7 +578,7 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-TRENDS_SERVICE_THRIFT_REV = '1.0.78'
+TRENDS_SERVICE_THRIFT_REV = '1.0.81'
 
 jar_library(name='trends-service-thrift',
   dependencies=[
@@ -621,10 +630,12 @@ make_lib('storehaus-memcache_2.9.3', STOREHAUS_REV)
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
 make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
-make_thrift_lib('com.twitter', 'feature-store-thrift-only', '0.0.8')
+
+FEATURE_STORE_REV = '0.0.12'
+make_thrift_lib('com.twitter', 'feature-store-thrift-only', FEATURE_STORE_REV)
 
 idl_jar_thrift_library(name='feature-store-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='feature-store-thrift-only', rev='0.0.8'),
+  thrift_jar=thrift_jar(org='com.twitter', name='feature-store-thrift-only', rev=FEATURE_STORE_REV),
   language='scala',
   rpc_style='finagle',
 )
@@ -638,14 +649,16 @@ jar_library(name='rainbird-thrift',
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
 
+SERVO_EXCEPTION_REV = '2.7.11'
+
 jar_library(name='servo-exception-thrift',
   dependencies=[
-    thrift_jar('com.twitter', 'servo-exception-thrift-only', '2.7.0')
+    thrift_jar('com.twitter', 'servo-exception-thrift-only', SERVO_EXCEPTION_REV)
   ]
 )
 
 idl_jar_thrift_library(name='servo-exception-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'servo-exception-thrift-only', '2.7.0'),
+  thrift_jar=thrift_jar('com.twitter', 'servo-exception-thrift-only', SERVO_EXCEPTION_REV),
   language='scala',
   rpc_style='finagle',
 )
