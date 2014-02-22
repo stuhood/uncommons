@@ -322,13 +322,6 @@ jar_library(name='jubjub-service-thrift',
   ]
 )
 
-jar_library(name='wtf_summingbird_thrift',
-  dependencies=[
-    jar(org='com.twitter', name='wtf_summingbird_thrift', rev='0.0.3').with_sources().intransitive(),
-    pants('scrooge/scrooge-runtime')
-  ]
-)
-
 SPIDERDUCK_FETCHER_REV = '0.0.94'
 
 make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV)
@@ -363,14 +356,6 @@ jar_library(name='spiderduck-url-store-thrift',
 )
 
 make_thrift_lib('com.twitter', 'spiderduck-url-store-thrift-only', SPIDERDUCK_URL_STORE_REV)
-
-jar_library(name='wtf',
-  dependencies=[
-    jar(org='com.twitter', name='wtf', rev='0.2.14', classifier='thrift-class')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'wtf-thrift-only', '1.0.33')
 
 jar_library(name='flockdb-thrift',
   dependencies=[
@@ -577,22 +562,6 @@ jar_library(name='storehaus-algebra_2.9.3',
     pants(':storehaus-testing_2.9.3')
   ]
 )
-
-TRENDS_SERVICE_THRIFT_REV = '1.0.81'
-
-jar_library(name='trends-service-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='trends-service-thrift', rev=TRENDS_SERVICE_THRIFT_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/search:assistance-thrift'),
-    pants('3rdparty/jvm/com/twitter/search:earlybird-thrift'),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'trends-service-thrift-only', TRENDS_SERVICE_THRIFT_REV)
 
 jar_library(name='tweetypie-tweet-thrift',
   dependencies=[
