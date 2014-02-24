@@ -216,14 +216,6 @@ idl_jar_thrift_library(name='pink-floyd-thrift-scala',
 
 make_lib('json_2.8.1', '2.1.6')
 
-# Deprecated target. Please use rosetta-kafka.
-jar_library(name='kafka',
-  dependencies=[
-    jar(org='com.twitter', name='kafka_2.9.2', rev='0.7.0').with_sources(),
-    pants('3rdparty:scala-library')
-  ]
-)
-
 RAINBIRD_REV = '1.2'
 
 jar_library(name='rainbird-server',
