@@ -214,6 +214,12 @@ idl_jar_thrift_library(name='pink-floyd-thrift-scala',
   rpc_style='finagle',
 )
 
+idl_jar_thrift_library(name='pink-floyd-thrift-java',
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.23'),
+  language='java',
+  rpc_style='finagle',
+)
+
 make_lib('json_2.8.1', '2.1.6')
 
 RAINBIRD_REV = '1.2'
@@ -632,4 +638,10 @@ idl_jar_thrift_library(name='botmaker-thrift-scala',
   thrift_jar=thrift_jar('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV),
   language='scala',
   rpc_style='finagle',
+)
+
+jar_library(name='spiderduck-metadata-extractor',
+  dependencies=[
+    jar(org='com.twitter', name='spiderduck-metadata-extractor', rev='0.0.11')
+  ]
 )
