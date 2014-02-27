@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.48')
 make_lib('ads_shared_types', '0.0.82')
 
-ADSERVER_RPC_REV = '1.0.135'
+ADSERVER_RPC_REV = '1.0.136'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -26,7 +26,7 @@ jar_library(name='adserver_rpc',
   ]
 )
 
-ADSERVER_COMMON_REV = '1.0.194'
+ADSERVER_COMMON_REV = '1.0.195'
 make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
 make_lib('adserver_common', ADSERVER_COMMON_REV)
 make_lib('adserver_log', '1.0.129')
