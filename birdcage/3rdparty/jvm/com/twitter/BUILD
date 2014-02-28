@@ -67,14 +67,8 @@ jar_library(name='app-proxy-thrift',
   ]
 )
 
-idl_jar_thrift_library(name='tiered-actions-result-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='tiered-actions-result-thrift-only', rev='0.0.6'),
-  language='scala',
-  rpc_style='finagle',
-)
-
 idl_jar_thrift_library(name='tiered-actions-user-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='tiered-actions-user-thrift-only', rev='0.0.6'),
+  thrift_jar=thrift_jar(org='com.twitter', name='tiered-actions-user-thrift-only', rev='0.0.11'),
   language='scala',
   rpc_style='finagle',
 )
