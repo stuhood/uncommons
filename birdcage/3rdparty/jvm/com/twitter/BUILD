@@ -616,20 +616,6 @@ jar_library(name='rainbird-thrift',
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
 
-SERVO_EXCEPTION_REV = '2.7.11'
-
-jar_library(name='servo-exception-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'servo-exception-thrift-only', SERVO_EXCEPTION_REV)
-  ]
-)
-
-idl_jar_thrift_library(name='servo-exception-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'servo-exception-thrift-only', SERVO_EXCEPTION_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
 BOTMAKER_REV='0.0.3'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
