@@ -8,15 +8,15 @@ def zk_lib(name, rev):
   )
 
 # 11/11/2013
-zk_lib('client', '0.0.49')
+zk_lib('client', '0.0.50')
 
-zk_lib('candidate', '0.0.58')
+zk_lib('candidate', '0.0.59')
 zk_lib('lock', '0.0.30')
 zk_lib('map', '0.0.40')
 zk_lib('node', '0.0.40')
 zk_lib('partitioner', '0.0.40')
-zk_lib('singleton-service', '0.0.77')
+zk_lib('singleton-service', '0.0.79')
 
 # 10/30/2013
-zk_lib('group', '0.0.62')
-zk_lib('server-set', '1.0.67')
+zk_lib('group', '0.0.63')
+zk_lib('server-set', '1.0.68')
