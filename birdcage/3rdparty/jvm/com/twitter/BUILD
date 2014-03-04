@@ -620,6 +620,8 @@ BOTMAKER_REV='0.0.3'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
 
+make_thrift_lib('com.twitter', 'recos-scala-only', '0.0.2')
+
 idl_jar_thrift_library(name='botmaker-thrift-scala',
   thrift_jar=thrift_jar('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV),
   language='scala',
