@@ -391,6 +391,20 @@ jar_library(name='ads_extended_revenue_dataservice',
   ]
 )
 
+ADS_TV_REV='0.0.8'
+
+idl_jar_thrift_library(name='ads-tv-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
+  language='scala',
+  rpc_style='finagle',
+)
+
+idl_jar_thrift_library(name='ads-tv-thrift-java',
+  thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
+  language='java',
+  rpc_style='finagle',
+)
+
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
 
 idl_jar_thrift_library(name='talon-thrift-scala',
