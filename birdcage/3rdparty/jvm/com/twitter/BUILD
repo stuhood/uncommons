@@ -291,12 +291,6 @@ jar_library(name='manhattan-thrift-v2',
 
 make_lib('sarus_v2', '0.0.5')
 
-jar_library(name='tdc-service-thrift-only',
-  dependencies=[
-    thrift_jar(org='com.twitter', name='tdc-service-thrift-only', rev='0.0.2')
-  ]
-)
-
 idl_jar_thrift_library(name='manhattanv1-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.7.1'),
   language='scala',
