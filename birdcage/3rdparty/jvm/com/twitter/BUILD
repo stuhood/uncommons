@@ -644,7 +644,7 @@ jar_library(name='spiderduck-metadata-extractor',
 
 jar_library(name='frigate-summingbird-client',
   dependencies=[
-    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.1')
+    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.3')
       .exclude('com.twitter', 'frigate-summingbird-client-thrift')
       .exclude('com.twitter', 'storehaus_internal-memcache_2.9.2')
       .exclude('com.twitter.summingbird_internal', 'job_2.9.2')
