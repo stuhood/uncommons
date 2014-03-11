@@ -176,10 +176,8 @@ jar_library(name='metastore-thrift',
 
 make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.73')
 
-compiled_idl(
-  name='metastore-thrift-scala',
-  idl_deps=[pants(':metastore-thrift-only')],
-  compiler='scrooge',
+idl_jar_thrift_library(name='metastore-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'metastore-thrift-only', '0.0.73'),
   language='scala',
   rpc_style='finagle',
 )
@@ -313,41 +311,6 @@ jar_library(name='jubjub-service-thrift',
     thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.35'),
   ]
 )
-
-SPIDERDUCK_FETCHER_REV = '0.0.94'
-
-make_thrift_lib('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV)
-
-idl_jar_thrift_library(name='spiderduck-fetcher-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'spiderduck-fetcher-thrift-only', SPIDERDUCK_FETCHER_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
-jar_library(name='spiderduck-fetcher-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='spiderduck-fetcher-thrift', rev=SPIDERDUCK_FETCHER_REV).with_sources().intransitive(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-SPIDERDUCK_URL_STORE_REV = '0.0.110'
-
-jar_library(name='spiderduck-url-store-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='spiderduck-url-store-thrift', rev=SPIDERDUCK_URL_STORE_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:spiderduck-fetcher-thrift'),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'spiderduck-url-store-thrift-only', SPIDERDUCK_URL_STORE_REV)
 
 jar_library(name='flockdb-thrift',
   dependencies=[
@@ -634,12 +597,6 @@ idl_jar_thrift_library(name='botmaker-thrift-scala',
   thrift_jar=thrift_jar('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV),
   language='scala',
   rpc_style='finagle',
-)
-
-jar_library(name='spiderduck-metadata-extractor',
-  dependencies=[
-    jar(org='com.twitter', name='spiderduck-metadata-extractor', rev='0.0.11')
-  ]
 )
 
 jar_library(name='frigate-summingbird-client',
