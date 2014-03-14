@@ -153,6 +153,24 @@ jar_library(name='limiter-thrift-only',
   ]
 )
 
+MEDIASCIENCE_DASHBOARDS_REV='0.0.1'
+
+idl_jar_thrift_library(name='mediascience_dashboards-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter',
+                        name='mediascience_dashboards-only',
+                        rev=MEDIASCIENCE_DASHBOARDS_REV),
+  language='scala',
+  rpc_style='finagle',
+)
+
+idl_jar_thrift_library(name='mediascience_dashboards-thrift-java',
+  thrift_jar=thrift_jar(org='com.twitter',
+                        name='mediascience_dashboards-only',
+                        rev=MEDIASCIENCE_DASHBOARDS_REV),
+  language='java',
+  rpc_style='finagle',
+)
+
 jar_library(name='metastore-data',
   dependencies=[
     jar(org='com.twitter', name='metastore-data', rev='0.0.19').with_sources().intransitive(),
