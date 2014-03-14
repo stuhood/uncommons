@@ -214,34 +214,6 @@ idl_jar_thrift_library(name='pink-floyd-thrift-java',
 
 make_lib('json_2.8.1', '2.1.6')
 
-RAINBIRD_REV = '1.2'
-
-jar_library(name='rainbird-server',
-  dependencies=[
-    jar(org='com.twitter', name='rainbird-server', rev=RAINBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty/jvm/com/twitter/common:objectsize'),
-    pants(':json_2.8.1'),
-    pants(':rainbird-thrift'),
-    pants(':scala-zookeeper-client'),
-    pants('cassie/cassie-core'),
-    pants('cassie/cassie-serversets'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-http'),
-    pants('finagle/finagle-ostrich4'),
-    pants('finagle/finagle-serversets'),
-    pants('ostrich'),
-    pants('util/util-core'),
-    pants('util/util-logging'),
-    pants('util/util-thrift')
-  ]
-)
-
-jar_library(name='rainbird-thrift-only',
-  dependencies=[
-    thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='1.2')
-  ]
-)
-
 jar_library(name='scala-zookeeper-client',
   dependencies=[
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
@@ -359,14 +331,6 @@ idl_jar_thrift_library(name='ads-tv-thrift-scala',
 idl_jar_thrift_library(name='ads-tv-thrift-java',
   thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
   language='java',
-  rpc_style='finagle',
-)
-
-make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
-
-idl_jar_thrift_library(name='talon-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'talon-thrift-only', '0.0.13'),
-  language='scala',
   rpc_style='finagle',
 )
 
@@ -576,13 +540,6 @@ idl_jar_thrift_library(name='feature-store-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter', name='feature-store-thrift-only', rev=FEATURE_STORE_REV),
   language='scala',
   rpc_style='finagle',
-)
-
-
-jar_library(name='rainbird-thrift',
-  dependencies=[
-    thrift_jar(org='com.twitter', name='rainbird-thrift-only', rev='0.0.3')
-  ]
 )
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
