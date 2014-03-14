@@ -334,6 +334,20 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
   rpc_style='finagle',
 )
 
+make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
+
+idl_jar_thrift_library(name='talon-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'talon-thrift-only', '0.0.13'),
+  language='scala',
+  rpc_style='finagle',
+)
+
+idl_jar_thrift_library(name='talon-thrift-java',
+  thrift_jar=thrift_jar('com.twitter', 'talon-thrift-only', '0.0.13'),
+  language='java',
+  rpc_style='finagle',
+)
+
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('platform-analytics-test-data', '0.1.6')
 make_lib('thriftstore-thrift', '0.0.3')
