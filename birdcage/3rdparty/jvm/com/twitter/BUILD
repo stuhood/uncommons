@@ -142,10 +142,20 @@ jar_library(name='geoduck-thrift',
   ]
 )
 
-HBC_REV='1.4.0'
+HBC_REV='1.4.2'
+
 make_lib('hbc-core', HBC_REV)
+jar_library(name='hbc-twitter4j-v3',
+  dependencies=[
+    pants('3rdparty:twitter4j-core'),
+    pants('3rdparty:twitter4j-stream'), 
+    jar(org='com.twitter', name='hbc-twitter4j-v3', rev=HBC_REV)
+      .with_sources()
+      .exclude(org='org.twitter4j', name='twitter4j-core')
+      .exclude(org='org.twitter4j', name='twitter4j-stream')
+  ]
+)
 make_lib('hbc-internal', HBC_REV)
-make_lib('hbc-twitter4j-v3', HBC_REV)
 
 jar_library(name='limiter-thrift-only',
   dependencies=[
