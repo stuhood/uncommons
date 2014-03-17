@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.48')
 make_lib('ads_shared_types', '0.0.83')
 
-ADSERVER_RPC_REV = '1.0.140'
+ADSERVER_RPC_REV = '1.0.142'
 make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
 
 jar_library(name='adserver_rpc',
@@ -26,7 +26,7 @@ jar_library(name='adserver_rpc',
   ]
 )
 
-ADSERVER_COMMON_REV = '1.0.201'
+ADSERVER_COMMON_REV = '1.0.203'
 make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
 make_lib('adserver_common', ADSERVER_COMMON_REV)
 make_lib('adserver_log', '1.0.136')
@@ -562,7 +562,7 @@ idl_jar_thrift_library(name='feature-store-thrift-scala',
   rpc_style='finagle',
 )
 
-make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.1')
+make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
 BOTMAKER_REV='0.0.3'
 
