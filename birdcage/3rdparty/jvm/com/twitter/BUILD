@@ -295,30 +295,30 @@ jar_library(name='tpay_signature',
 
 jar_library(name='manhattan-thrift-v1',
   dependencies=[
-    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.9.3')
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.11.1')
   ]
 )
 
 jar_library(name='manhattan-thrift-v2',
   dependencies=[
-    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.9.3')
+    thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.11.1')
   ]
 )
 
 make_lib('sarus_v2', '0.0.5')
 
 idl_jar_thrift_library(name='manhattanv1-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.9.3'),
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.11.1'),
   language='scala',
   rpc_style='finagle',
-  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.9.3'),
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v1', rev='2.11.1'),
 )
 
 idl_jar_thrift_library(name='manhattanv2-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.9.3'),
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.11.1'),
   language='scala',
   rpc_style='finagle',
-  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.9.3'),
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.11.1'),
 )
 
 jar_library(name='jubjub-service-thrift',
