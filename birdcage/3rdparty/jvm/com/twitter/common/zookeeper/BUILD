@@ -15,8 +15,8 @@ zk_lib('lock', '0.0.30')
 zk_lib('map', '0.0.40')
 zk_lib('node', '0.0.40')
 zk_lib('partitioner', '0.0.40')
-zk_lib('singleton-service', '0.0.79')
+zk_lib('singleton-service', '0.0.81')
 
 # 10/30/2013
 zk_lib('group', '0.0.63')
-zk_lib('server-set', '1.0.68')
+zk_lib('server-set', '1.0.70')
