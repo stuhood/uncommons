@@ -201,7 +201,7 @@ idl_jar_thrift_library(name='mediascience_video-thrift-java',
 
 jar_library(name='metastore-data',
   dependencies=[
-    jar(org='com.twitter', name='metastore-data', rev='0.0.19').with_sources().intransitive(),
+    jar(org='com.twitter', name='metastore-data', rev='0.0.24').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/common:base'),
     pants('3rdparty:guava'),
     pants(':metastore-thrift')
