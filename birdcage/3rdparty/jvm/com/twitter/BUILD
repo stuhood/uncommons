@@ -7,30 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.48')
-make_lib('ads_shared_types', '0.0.83')
+make_lib('ads_shared_types', '0.0.87')
 
-ADSERVER_RPC_REV = '1.0.142'
-make_thrift_lib('com.twitter', 'adserver_rpc-only', ADSERVER_RPC_REV)
-
-jar_library(name='adserver_rpc',
-  dependencies=[
-    jar(org='com.twitter', name='adserver_rpc', rev=ADSERVER_RPC_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter:ads_entities'),
-    pants('3rdparty/jvm/com/twitter:adserver_common'),
-    pants('3rdparty/jvm/com/twitter:adserver_log'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-commons-stats'),
-    pants('finagle/finagle-ostrich4'),
-    pants('finagle/finagle-thrift'),
-    pants('scrooge/scrooge-runtime')
-  ]
-)
-
-ADSERVER_COMMON_REV = '1.0.203'
-make_thrift_lib('com.twitter', 'adserver_common-only', ADSERVER_COMMON_REV)
-make_lib('adserver_common', ADSERVER_COMMON_REV)
-make_lib('adserver_log', '1.0.136')
-make_thrift_lib('com.twitter', 'ads_cards_thrift-only', '0.0.1')
+make_lib('adserver_log', '1.0.142')
 
 ALGEBIRD_INTERNAL_REV='0.0.4'
 
@@ -63,7 +42,7 @@ jar_library(name='algebird-util_2.9.3',
 
 jar_library(name='app-proxy-thrift',
   dependencies=[
-    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1')
+    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2')
   ]
 )
 
@@ -74,7 +53,7 @@ idl_jar_thrift_library(name='tiered-actions-user-thrift-scala',
 )
 
 idl_jar_thrift_library(name='app-proxy-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.1'),
+  thrift_jar=thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2'),
   language='scala',
   rpc_style='finagle',
 )
@@ -201,7 +180,7 @@ jar_library(name='metastore-data',
 
 jar_library(name='metastore-thrift',
   dependencies=[
-    jar(org='com.twitter', name='metastore-thrift', rev='0.0.73').with_sources().intransitive(),
+    jar(org='com.twitter', name='metastore-thrift', rev='0.0.86').with_sources().intransitive(),
     pants('3rdparty:commons-lang'),
     pants('3rdparty:libthrift-0.5.0'),
     pants('3rdparty:slf4j-api'),
@@ -312,15 +291,6 @@ idl_jar_thrift_library(name='manhattanv2-thrift-scala',
   provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.11.1'),
 )
 
-jar_library(name='jubjub-service-thrift',
-  dependencies=[
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-conf-only', '0.0.33'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-data-only', '0.0.17'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-model-only', '0.0.24'),
-    thrift_jar('com.twitter.jubjub.v2', 'jubjub-thrift-service-only', '0.0.35'),
-  ]
-)
-
 jar_library(name='flockdb-thrift',
   dependencies=[
     jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
@@ -333,7 +303,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.30')
+make_lib('user_text_profile', '0.0.36')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
@@ -353,7 +323,7 @@ jar_library(name='ads_entities_db_predicate',
 
 jar_library(name='ads_extended_revenue_dataservice',
   dependencies=[
-    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.22')
+    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.46')
   ]
 )
 
@@ -572,7 +542,7 @@ make_lib('tormenta-core_2.9.3', '0.5.3')
 
 make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
 
-FEATURE_STORE_REV = '0.0.12'
+FEATURE_STORE_REV = '0.0.17'
 make_thrift_lib('com.twitter', 'feature-store-thrift-only', FEATURE_STORE_REV)
 
 idl_jar_thrift_library(name='feature-store-thrift-scala',
