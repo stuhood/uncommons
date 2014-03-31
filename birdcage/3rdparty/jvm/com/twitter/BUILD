@@ -217,13 +217,13 @@ idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.27'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.30'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.27'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.30'),
   language='java',
   rpc_style='finagle',
 )
