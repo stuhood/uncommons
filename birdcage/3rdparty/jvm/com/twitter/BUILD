@@ -11,10 +11,8 @@ make_lib('ads_shared_types', '0.0.87')
 
 make_lib('adserver_log', '1.0.142')
 
-ALGEBIRD_INTERNAL_REV='0.0.4'
-
-make_lib('algebird_internal-bijection', ALGEBIRD_INTERNAL_REV)
-make_lib('algebird_internal-thriftscala', ALGEBIRD_INTERNAL_REV)
+make_lib('algebird_internal-bijection', '0.0.8')
+make_lib('algebird_internal-thriftscala', '0.0.17')
 
 ALGEBIRD_REV='0.3.0'
 
@@ -524,8 +522,8 @@ jar_library(name='tweetypie-tweet-thrift-java',
   ]
 )
 
-make_lib('ouroboros-common', '0.0.18')
-make_lib('ouroboros-thriftscala', '0.0.21')
+make_lib('ouroboros-common', '0.0.19')
+make_lib('ouroboros-thriftscala', '0.0.26')
 
 make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
 jar_library(name='storehaus-core_2.9.3',
