@@ -102,13 +102,13 @@ jar_library(name='cassovary',
 
 make_lib('cassowary_v2_protobuf', '0.0.4', 'cassowary')
 
+CHILL_REV='0.3.6'
+
 jar_library(name='chill_2.9.3',
   dependencies=[
-    jar(org='com.twitter', name='chill_2.9.3', rev='0.3.4')
+    jar(org='com.twitter', name='chill_2.9.3', rev=CHILL_REV)
   ]
 )
-
-CHILL_REV='0.3.4'
 
 make_lib('chill-bijection_2.9.3', CHILL_REV)
 make_lib('chill-hadoop', CHILL_REV)
@@ -352,7 +352,7 @@ make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
 make_lib('twadoop-protobuf-tables', '0.0.2')
 
-SCALDING_REV='0.9.0rc4'
+SCALDING_REV='0.9.0rc17'
 
 def scalding_lib(name):
   return make_lib('scalding-%s_2.9.3' % name, SCALDING_REV)
