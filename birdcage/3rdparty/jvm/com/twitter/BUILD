@@ -350,7 +350,7 @@ make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
 make_lib('twadoop-protobuf-tables', '0.0.2')
 
-SCALDING_REV='0.9.0'
+SCALDING_REV='0.9.1'
 
 def scalding_lib(name):
   return make_lib('scalding-%s_2.9.3' % name, SCALDING_REV)
