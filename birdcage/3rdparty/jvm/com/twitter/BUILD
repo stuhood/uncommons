@@ -6,10 +6,10 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
-make_lib('ads_entities', '0.0.49')
-make_lib('ads_shared_types', '0.0.89')
+make_lib('ads_entities', '0.0.48')
+make_lib('ads_shared_types', '0.0.87')
 
-make_lib('adserver_log', '1.0.148')
+make_lib('adserver_log', '1.0.142')
 
 make_lib('algebird_internal-bijection', '0.0.8')
 make_lib('algebird_internal-thriftscala', '0.0.17')
@@ -176,11 +176,9 @@ jar_library(name='metastore-data',
   ]
 )
 
-METASTORE_THRIFT_REV='0.0.88'
-
 jar_library(name='metastore-thrift',
   dependencies=[
-    jar(org='com.twitter', name='metastore-thrift', rev=METASTORE_THRIFT_REV).with_sources().intransitive(),
+    jar(org='com.twitter', name='metastore-thrift', rev='0.0.86').with_sources().intransitive(),
     pants('3rdparty:commons-lang'),
     pants('3rdparty:libthrift-0.5.0'),
     pants('3rdparty:slf4j-api'),
@@ -190,10 +188,10 @@ jar_library(name='metastore-thrift',
   ]
 )
 
-make_thrift_lib('com.twitter', 'metastore-thrift-only', METASTORE_THRIFT_REV)
+make_thrift_lib('com.twitter', 'metastore-thrift-only', '0.0.73')
 
 idl_jar_thrift_library(name='metastore-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'metastore-thrift-only', METASTORE_THRIFT_REV),
+  thrift_jar=thrift_jar('com.twitter', 'metastore-thrift-only', '0.0.73'),
   language='scala',
   rpc_style='finagle',
 )
@@ -303,7 +301,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.38')
+make_lib('user_text_profile', '0.0.36')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
@@ -516,7 +514,7 @@ jar_library(name='tweetypie-tweet-thrift',
 
 jar_library(name='tweetypie-tweet-thrift-java',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.13').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.0.5').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
     pants('3rdparty:commons-lang'),
@@ -542,7 +540,7 @@ make_lib('tormenta-core_2.9.3', '0.5.3')
 
 make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
 
-FEATURE_STORE_REV = '0.0.18'
+FEATURE_STORE_REV = '0.0.17'
 make_thrift_lib('com.twitter', 'feature-store-thrift-only', FEATURE_STORE_REV)
 
 idl_jar_thrift_library(name='feature-store-thrift-scala',
