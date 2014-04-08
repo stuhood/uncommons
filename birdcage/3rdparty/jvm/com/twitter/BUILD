@@ -131,7 +131,7 @@ jar_library(name='limiter-thrift-only',
   ]
 )
 
-MEDIASCIENCE_DASHBOARDS_REV='0.0.1'
+MEDIASCIENCE_DASHBOARDS_REV='0.0.3'
 
 idl_jar_thrift_library(name='mediascience_dashboards-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter',
