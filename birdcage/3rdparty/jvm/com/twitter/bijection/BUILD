@@ -20,7 +20,15 @@ bijection_lib('thrift')
 bijection_lib('avro')
 bijection_lib('hbase')
 bijection_lib('jodatime')
-bijection_lib('guava')
+bijection_lib('guava',
+  # Rewrite the dependency declaration to work around the invalid rev (1.3.+) in bijection-guava POM.
+  excludes=[
+    exclude(org='com.google.code.findbugs', name='jsr305')
+  ],
+  additional_deps=[
+    jar(org='com.google.code.findbugs', name='jsr305', rev='1.3.9')
+  ]
+)
 bijection_lib('clojure')
 
 bijection_lib('scrooge',
