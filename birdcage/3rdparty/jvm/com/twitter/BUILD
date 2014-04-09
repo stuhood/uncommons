@@ -149,7 +149,7 @@ idl_jar_thrift_library(name='mediascience_dashboards-thrift-java',
   rpc_style='finagle',
 )
 
-MEDIASCIENCE_VIDEO_REV='0.0.1'
+MEDIASCIENCE_VIDEO_REV='0.0.4'
 
 idl_jar_thrift_library(name='mediascience_video-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter',
