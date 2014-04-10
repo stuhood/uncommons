@@ -583,11 +583,19 @@ jar_library(name='frigate-summingbird-client',
   dependencies=[
     jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.4')
       .exclude('com.twitter', 'frigate-summingbird-client-thrift')
+      .exclude('com.twitter', 'finagle-memcached')
+      .exclude('com.twitter', 'finagle-serversets')
+      .exclude('com.twitter', 'finagle-thrift')
       .exclude('com.twitter', 'storehaus-memcache_2.9.2')
       .exclude('com.twitter', 'storehaus_internal-memcache_2.9.2')
+      .exclude('com.twitter', 'twitter-server-internal')
       .exclude('com.twitter.summingbird_internal', 'job_2.9.2')
       .exclude('com.twitter.summingbird_internal', 'bijection_2.9.2'),
+    pants('finagle/finagle-memcached'),
+    pants('finagle/finagle-serversets'),
+    pants('finagle/finagle-thrift'),
     pants('frigate/frigate-thrift-only/src/main/thrift:thrift-scala'),
+    pants('twitter-server-internal'),
     pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
     pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
     pants('3rdparty/jvm/com/twitter/summingbird_internal:job_2.9.2'),
