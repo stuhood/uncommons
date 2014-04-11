@@ -327,7 +327,7 @@ jar_library(name='ads_extended_revenue_dataservice',
   ]
 )
 
-ADS_TV_REV='0.0.8'
+ADS_TV_REV='0.0.10'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
