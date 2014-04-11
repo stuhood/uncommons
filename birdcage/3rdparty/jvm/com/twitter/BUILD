@@ -7,9 +7,9 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.49')
-make_lib('ads_shared_types', '0.0.89')
+make_lib('ads_shared_types', '0.0.90')
 
-make_lib('adserver_log', '1.0.148')
+make_lib('adserver_log', '1.0.146')
 
 make_lib('algebird_internal-bijection', '0.0.8')
 make_lib('algebird_internal-thriftscala', '0.0.17')
@@ -211,19 +211,19 @@ jar_library(name='parquet-scrooge',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.11'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.12'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.31'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.32'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.31'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.32'),
   language='java',
   rpc_style='finagle',
 )
