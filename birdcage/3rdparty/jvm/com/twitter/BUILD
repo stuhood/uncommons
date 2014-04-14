@@ -323,7 +323,7 @@ jar_library(name='ads_entities_db_predicate',
 
 jar_library(name='ads_extended_revenue_dataservice',
   dependencies=[
-    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.46')
+    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.49')
   ]
 )
 
