@@ -507,7 +507,7 @@ jar_library(name='storehaus-algebra_2.9.3',
 
 jar_library(name='tweetypie-tweet-thrift',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.0.5').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.1.15').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('finagle/finagle-thrift'),
     pants('scrooge/scrooge-core')
@@ -516,7 +516,7 @@ jar_library(name='tweetypie-tweet-thrift',
 
 jar_library(name='tweetypie-tweet-thrift-java',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.13').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.15').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
     pants('3rdparty:commons-lang'),
