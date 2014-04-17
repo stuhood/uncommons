@@ -198,6 +198,16 @@ idl_jar_thrift_library(name='metastore-thrift-scala',
   rpc_style='finagle',
 )
 
+MOCKINGJAY_METADATA_THRIFT_REV='0.0.1'
+
+make_thrift_lib('com.twitter', 'mockingjay-metadata-thrift-only', MOCKINGJAY_METADATA_THRIFT_REV)
+
+idl_jar_thrift_library(name='mockingjay-metadata-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'mockingjay-metadata-thrift-only', MOCKINGJAY_METADATA_THRIFT_REV),
+  language='scala',
+  rpc_style='finagle',
+)
+
 jar_library(name='parquet-scrooge',
   dependencies=[
     pants('util/util-core'),
