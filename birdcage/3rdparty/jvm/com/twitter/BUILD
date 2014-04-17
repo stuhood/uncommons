@@ -534,7 +534,14 @@ jar_library(name='tweetypie-tweet-thrift-java',
   ]
 )
 
-make_lib('ouroboros-common', '0.0.19')
+jar_library(name='ouroboros-common',
+  dependencies=[
+    jar(org='com.twitter', name='ouroboros-common', rev='0.0.19')
+      .exclude('com.twitter', 'twitter-server-internal'),
+    pants('twitter-server-internal'),
+  ]
+)
+
 make_lib('ouroboros-thriftscala', '0.0.26')
 
 make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
