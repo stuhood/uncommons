@@ -113,12 +113,6 @@ make_lib('chill-hadoop', CHILL_REV)
 make_lib('chill-java', CHILL_REV)
 make_lib('chill-storm', CHILL_REV)
 
-jar_library(name='geoduck-thrift',
-  dependencies=[
-    thrift_jar('com.twitter', 'geoduck-thrift-only', '2.0.9')
-  ]
-)
-
 HBC_REV='2.0.1'
 
 make_lib('hbc-core', HBC_REV)
