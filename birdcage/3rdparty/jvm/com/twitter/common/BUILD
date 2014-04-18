@@ -29,6 +29,7 @@ make_lib('stats', '0.0.89')
 make_lib('stats-util', '0.0.42')
 make_lib('thrift', '0.0.65')
 make_lib('util', '0.0.92')
+make_lib('util-testing', '0.0.10')
 make_lib('zookeeper-testing', '0.0.43')
 
 jar_library(name='logging-scribe',

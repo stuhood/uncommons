@@ -351,6 +351,7 @@ make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('platform-analytics-test-data', '0.1.6')
 make_lib('thriftstore-thrift', '0.0.3')
 make_lib('ml', '0.1.6')
+make_lib('ml-taxonomy', '0.0.14')
 
 make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
