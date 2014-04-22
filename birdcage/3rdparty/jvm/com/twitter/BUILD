@@ -554,7 +554,13 @@ jar_library(name='storehaus-core_2.9.3',
   ]
 )
 make_lib('storehaus-testing_2.9.3', STOREHAUS_REV)
-make_lib('storehaus-memcache_2.9.3', STOREHAUS_REV)
+jar_library(name='storehaus-memcache_2.9.3',
+  dependencies=[
+    jar(org='com.twitter', name='storehaus-memcache_2.9.3', rev=STOREHAUS_REV)
+      .exclude('com.twitter', 'finagle-memcached_2.9.2'),
+    pants('finagle/finagle-memcached'),
+  ]
+)
 
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
