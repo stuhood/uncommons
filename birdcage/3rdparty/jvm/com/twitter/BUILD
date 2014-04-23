@@ -324,19 +324,6 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-
-jar_library(name='ads_entities_db_predicate',
-  dependencies=[
-    jar(org='com.twitter', name='ads_entities_db_predicate', rev='0.0.19'),
-  ]
-)
-
-jar_library(name='ads_extended_revenue_dataservice',
-  dependencies=[
-    jar(org='com.twitter', name='ads_extended_revenue_dataservice', rev='0.0.49')
-  ]
-)
-
 ADS_TV_REV='0.0.10'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
