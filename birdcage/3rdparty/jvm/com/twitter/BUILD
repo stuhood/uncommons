@@ -564,7 +564,7 @@ idl_jar_thrift_library(name='feature-store-thrift-scala',
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-BOTMAKER_REV='0.0.3'
+BOTMAKER_REV='0.0.8'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
 
