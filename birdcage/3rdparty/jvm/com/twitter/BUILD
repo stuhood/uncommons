@@ -248,19 +248,6 @@ jar_library(name='scala-zookeeper-client',
   ]
 )
 
-jar_library(name='scribe-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='scribe-thrift', rev='2.0.9').intransitive().with_sources(),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-ostrich4'),
-    pants('finagle/finagle-thrift'),
-    pants('scrooge/scrooge-runtime'),
-    pants('util/util-logging'),
-    pants('util/util-thrift')
-  ]
-)
-
 jar_library(name='payment-thrift-only',
   dependencies=[
     thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.10')
