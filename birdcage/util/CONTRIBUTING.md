@@ -6,14 +6,14 @@ We'd love to get patches from you!
 
 The workflow that we support:
 
-1.  Fork finagle
+1.  Fork util
 2.  Make a feature branch
 3.  Make your cool new feature or bugfix on your branch
 4.  Write a test for your change
-5.  From your branch, make a pull request against twitter/finagle/master
+5.  From your branch, make a pull request against twitter/util/master
 6.  Work with repo maintainers to get merged in
-7.  Wait for your change to be pulled into twitter/finagle/master
-8.  Merge twitter/finagle/master into your origin master
+7.  Wait for your change to be pulled into twitter/util/master
+8.  Merge twitter/util/master into your origin master
 9.  Delete your feature branch
 
 ## Testing
