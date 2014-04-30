@@ -11,20 +11,11 @@ make_lib('ads_shared_types', '0.0.90')
 
 make_lib('adserver_log', '1.0.146')
 
-make_lib('algebird_internal-bijection', '0.0.8')
-make_lib('algebird_internal-thriftscala', '0.0.17')
-
 ALGEBIRD_REV='0.3.0'
 
 jar_library(name='algebird-core_2.9.3',
   dependencies=[
     thrift_jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
-  ]
-)
-
-jar_library(name='algebird-thrift',
-  dependencies=[
-    thrift_jar(org='com.twitter', name='algebird_internal-thriftjava-only', rev='0.0.1')
   ]
 )
 
