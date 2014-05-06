@@ -6,10 +6,10 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
-make_lib('ads_entities', '0.0.49')
+make_lib('ads_entities', '0.0.50')
 make_lib('ads_shared_types', '0.0.90')
 
-make_lib('adserver_log', '1.0.146')
+make_lib('adserver_log', '1.0.153')
 
 ALGEBIRD_REV='0.3.0'
 
@@ -314,7 +314,7 @@ make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
 
 make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
 make_lib('platform-analytics-test-data', '0.1.6')
-make_lib('thriftstore-thrift', '0.0.3')
+make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
 make_lib('ml-taxonomy', '0.0.14')
 
