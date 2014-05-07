@@ -183,7 +183,7 @@ idl_jar_thrift_library(name='metastore-thrift-scala',
   rpc_style='finagle',
 )
 
-MOCKINGJAY_METADATA_THRIFT_REV='0.0.2'
+MOCKINGJAY_METADATA_THRIFT_REV='0.0.3'
 
 make_thrift_lib('com.twitter', 'mockingjay-metadata-thrift-only', MOCKINGJAY_METADATA_THRIFT_REV)
 
