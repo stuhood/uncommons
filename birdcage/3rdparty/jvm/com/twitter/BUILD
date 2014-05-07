@@ -285,7 +285,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.38')
+make_lib('user_text_profile', '0.0.41')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
