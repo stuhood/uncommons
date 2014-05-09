@@ -546,9 +546,9 @@ idl_jar_thrift_library(name='botmaker-thrift-scala',
   rpc_style='finagle',
 )
 
-RECOS_REV='0.0.2'
+RECOS_REV='0.0.4'
 
-make_thrift_lib('com.twitter', 'recos-scala-only', '0.0.2')
+make_thrift_lib('com.twitter', 'recos-scala-only', RECOS_REV)
 
 idl_jar_thrift_library(name='recos-thrift-scala',
   thrift_jar=thrift_jar('com.twitter', 'recos-scala-only', RECOS_REV),
