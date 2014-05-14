@@ -15,7 +15,7 @@ ALGEBIRD_REV='0.3.0'
 
 jar_library(name='algebird-core_2.9.3',
   dependencies=[
-    thrift_jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
+    jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
   ]
 )
 

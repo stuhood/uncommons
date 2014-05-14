@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ivy-module version="2.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+  <info organisation="com.twitter" module="ivy-libs"/>
+
+  <dependencies>
+    <dependency org="org.apache.ivy" name="ivy" rev="2.2.0"/>
+
+    <!-- needed to support the lastfm ivysvnresolver plugin used for publishing public jars to
+         http://maven.twttr.com (https://svn.twitter.biz/maven-public) -->
+    <dependency org="fm.last.ivy.plugins" name="ivysvnresolver" rev="2.2.0"/>
+  </dependencies>
+</ivy-module>

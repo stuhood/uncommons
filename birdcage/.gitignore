@@ -32,6 +32,8 @@
 .native/
 .native/*
 .pants.d/
+/.pids/
+/.pants.run
 .project
 .reviewboardrc
 .run_classpath

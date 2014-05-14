@@ -1,7 +1,7 @@
 <ivysettings>
   <!-- For CI environment, ivy cache is set to workspace name under user home -->
   <properties environment="env"/>
-  <property name="ivy.cache.dir" value="${env.LOCAL_CACHE_DIR}" override="false"/>
+  <property name="ivy.cache.dir" value="${env.PANTS_IVY_CACHE_DIR}" override="false"/>
   <property name="new_artifacts" value="${env.WORKSPACE}/new_artifacts"/>
 
   <settings defaultResolver="chain-repos"/>
@@ -10,8 +10,8 @@
     <chain name="chain-repos" returnFirst="true">
 
       <filesystem name="${new_artifacts}" cache="default" m2compatible="true">
-	<ivy pattern="${new_artifacts}/[organisation]/[module]/[revision]/ivy-[revision].xml" />
-	<artifact pattern="${new_artifacts}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
+        <ivy pattern="${new_artifacts}/[organisation]/[module]/[revision]/ivy-[revision].xml" />
+        <artifact pattern="${new_artifacts}/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
       </filesystem>
 
       <ibiblio name="twitter-internal-artifactory"
