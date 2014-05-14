@@ -104,11 +104,12 @@ make_lib('chill-hadoop', CHILL_REV)
 make_lib('chill-java', CHILL_REV)
 make_lib('chill-storm', CHILL_REV)
 
-HBC_REV='2.0.1'
+HBC_REV='2.0.2'
+HBC_INTERNAL_REV='2.0.3'
 
 make_lib('hbc-core', HBC_REV)
 make_lib('hbc-twitter4j', HBC_REV)
-make_lib('hbc-internal', HBC_REV)
+make_lib('hbc-internal', HBC_INTERNAL_REV)
 
 jar_library(name='limiter-thrift-only',
   dependencies=[
