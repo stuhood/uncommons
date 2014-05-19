@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.50')
 make_lib('ads_shared_types', '0.0.90')
 
-make_lib('adserver_log', '1.0.153')
+make_lib('adserver_log', '1.0.157')
 
 ALGEBIRD_REV='0.3.0'
 
@@ -478,7 +478,7 @@ jar_library(name='storehaus-algebra_2.9.3',
 
 jar_library(name='tweetypie-tweet-thrift',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.1.15').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.1.16').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('finagle/finagle-thrift'),
     pants('scrooge/scrooge-core')
@@ -487,7 +487,7 @@ jar_library(name='tweetypie-tweet-thrift',
 
 jar_library(name='tweetypie-tweet-thrift-java',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.15').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.16').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
     pants('3rdparty:commons-lang'),
