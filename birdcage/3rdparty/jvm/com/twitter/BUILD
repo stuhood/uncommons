@@ -565,7 +565,7 @@ idl_jar_thrift_library(name='recos-thrift-java',
 
 jar_library(name='frigate-summingbird-client',
   dependencies=[
-    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.6')
+    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
       .exclude('com.twitter', 'frigate-summingbird-client-thrift')
       .exclude('com.twitter', 'finagle-memcached')
       .exclude('com.twitter', 'finagle-serversets')
