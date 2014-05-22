@@ -207,7 +207,7 @@ jar_library(name='parquet-scrooge',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.17'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.18'),
   language='scala',
   rpc_style='finagle',
 )
