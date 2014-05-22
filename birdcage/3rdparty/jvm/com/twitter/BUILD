@@ -7,7 +7,7 @@ def make_thrift_lib(org, name, rev):
   jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.50')
-make_lib('ads_shared_types', '0.0.90')
+make_lib('ads_shared_types', '0.0.92')
 
 make_lib('adserver_log', '1.0.161')
 
@@ -236,7 +236,7 @@ jar_library(name='scala-zookeeper-client',
 
 jar_library(name='payment-thrift-only',
   dependencies=[
-    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.10')
+    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.14')
   ]
 )
 
