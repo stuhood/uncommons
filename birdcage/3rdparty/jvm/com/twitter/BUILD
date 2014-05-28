@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.50')
 make_lib('ads_shared_types', '0.0.92')
 
-make_lib('adserver_log', '1.0.161')
+make_lib('adserver_log', '1.0.163')
 
 ALGEBIRD_REV='0.3.0'
 
