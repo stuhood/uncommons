@@ -300,7 +300,11 @@ jar_library(name='gizzard-thrift',
 ADS_TV_REV='0.0.10'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
+  thrift_jar=
+    thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV)
+      # https://jira.twitter.biz/browse/THRIFT-183
+      .exclude(org='com.twitter', name='scrooge-runtime')
+      .exclude(org='com.twitter', name='finagle-thrift'),
   language='scala',
   rpc_style='finagle',
 )
