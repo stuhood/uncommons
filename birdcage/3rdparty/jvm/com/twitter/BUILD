@@ -207,19 +207,19 @@ jar_library(name='parquet-scrooge',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.18'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.22'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.42'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.43'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='pink-floyd-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.37'),
+  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.43'),
   language='java',
   rpc_style='finagle',
 )
