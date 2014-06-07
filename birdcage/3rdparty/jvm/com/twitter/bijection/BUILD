@@ -16,7 +16,15 @@ def bijection_lib(name, alias=None, excludes=None, sources=True, additional_deps
 
 bijection_lib('core')
 bijection_lib('json')
-bijection_lib('thrift')
+bijection_lib('protobuf')
+bijection_lib('thrift',
+  excludes=[
+    exclude(org='org.apache.thrift', name='libthrift'),
+  ],
+  additional_deps=[
+    pants('3rdparty:libthrift-0.5.0'),
+  ],
+)
 bijection_lib('avro')
 bijection_lib('hbase')
 bijection_lib('jodatime')
@@ -34,25 +42,30 @@ bijection_lib('clojure')
 bijection_lib('scrooge',
   excludes=[
     exclude(org='com.twitter', name='scrooge-runtime'),
-    exclude(org='com.twitter', name='scrooge-serializer_2.9.2')
+    exclude(org='com.twitter', name='scrooge-serializer_2.9.2'),
+    exclude(org='org.apache.thrift', name='libthrift'),
   ],
   additional_deps=[
     pants('scrooge/scrooge-serializer'),
     pants('scrooge/scrooge-runtime'),
+    pants('3rdparty:libthrift-0.5.0'),
   ]
 )
 
 bijection_lib('util',
   excludes=[
-    exclude(org='com.twitter', name='util-core_2.9.3')
+    exclude(org='com.twitter', name='util-core_2.9.3'),
   ],
   additional_deps=[
-    pants('util/util-core')
+    pants('util/util-core'),
   ]
 )
 
 bijection_lib('netty',
   excludes=[
-    exclude(org='org.jboss.netty', name='netty')
-  ]
+    exclude(org='org.jboss.netty', name='netty'),
+  ],
+  additional_deps=[
+    pants('3rdparty:netty'),
+  ],
 )

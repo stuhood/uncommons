@@ -47,28 +47,6 @@ idl_jar_thrift_library(name='app-proxy-thrift-scala',
   rpc_style='finagle',
 )
 
-# NB: synchronize with 3rdparty:bijection*
-BIJECTION_REV='0.5.4'
-
-make_lib('bijection-json_2.9.3', BIJECTION_REV)
-make_lib('bijection-netty_2.9.2', '0.4.0-SNAPSHOT', 'bijection-netty')
-
-jar_library(name='bijection-netty_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-netty_2.9.3', rev=BIJECTION_REV).with_sources().intransitive(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:netty')
-  ]
-)
-
-jar_library(name='bijection-util_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='bijection-util_2.9.3', rev=BIJECTION_REV).with_sources().intransitive(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('util/util-core')
-  ]
-)
-
 jar_library(name='beaks-data',
   dependencies=[
     jar(org='com.twitter', name='beaks-data', rev='0.0.3')
@@ -91,18 +69,7 @@ jar_library(name='cassovary',
 
 make_lib('cassowary_v2_protobuf', '0.0.4', 'cassowary')
 
-CHILL_REV='0.3.6'
-
-jar_library(name='chill_2.9.3',
-  dependencies=[
-    jar(org='com.twitter', name='chill_2.9.3', rev=CHILL_REV)
-  ]
-)
-
-make_lib('chill-bijection_2.9.3', CHILL_REV)
-make_lib('chill-hadoop', CHILL_REV)
-make_lib('chill-java', CHILL_REV)
-make_lib('chill-storm', CHILL_REV)
+make_lib('clientapp-thrift-java', '0.0.1')
 
 HBC_REV='2.0.2'
 HBC_INTERNAL_REV='2.0.3'
@@ -155,14 +122,14 @@ idl_jar_thrift_library(name='mediascience_video-thrift-java',
 
 jar_library(name='metastore-data',
   dependencies=[
-    jar(org='com.twitter', name='metastore-data', rev='0.0.24').with_sources().intransitive(),
+    jar(org='com.twitter', name='metastore-data', rev='0.0.27').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/common:base'),
     pants('3rdparty:guava'),
     pants(':metastore-thrift')
   ]
 )
 
-METASTORE_THRIFT_REV='0.0.88'
+METASTORE_THRIFT_REV='0.0.89'
 
 jar_library(name='metastore-thrift',
   dependencies=[
@@ -194,34 +161,45 @@ idl_jar_thrift_library(name='mockingjay-metadata-thrift-scala',
   rpc_style='finagle',
 )
 
+idl_jar_thrift_library(name='cproxy-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter', name='cproxy-thrift-only', rev='2.0.2'),
+  language='scala',
+  rpc_style='finagle',
+)
+
+PARQUET_REV='1.2.0'
+
+jar_library(name='parquet-pig',
+  dependencies=[
+    pants('3rdparty/jvm/org/apache/pig'),
+    jar(org='com.twitter', name='parquet-pig', rev=PARQUET_REV)
+      .exclude(org='org.apache.pig', name='pig')
+  ]
+)
+
 jar_library(name='parquet-scrooge',
   dependencies=[
+    pants(':parquet-thrift'),
     pants('util/util-core'),
     pants('finagle/finagle-core'),
     pants('finagle/finagle-thrift'),
-    jar(org='com.twitter', name='parquet-scrooge', rev='1.2.0')
+    jar(org='com.twitter', name='parquet-scrooge', rev=PARQUET_REV)
+      .exclude(org='com.twitter', name='parquet-thrift')
       .exclude(org='com.twitter', name='util-core_2.9.2')
       .exclude(org='com.twitter', name='finagle-core_2.9.2')
       .exclude(org='com.twitter', name='finagle-thrift_2.9.2')
   ]
 )
 
-idl_jar_thrift_library(name='pink-floyd-thrift-derivatives-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-derivatives-only', '0.0.22'),
-  language='scala',
-  rpc_style='finagle',
-)
-
-idl_jar_thrift_library(name='pink-floyd-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.43'),
-  language='scala',
-  rpc_style='finagle',
-)
-
-idl_jar_thrift_library(name='pink-floyd-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'pink-floyd-thrift-only', '0.0.43'),
-  language='java',
-  rpc_style='finagle',
+jar_library(name='parquet-thrift',
+  dependencies=[
+    pants(':parquet-pig'),
+    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-core'),
+    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-pig'),
+    jar(org='com.twitter', name='parquet-thrift', rev=PARQUET_REV)
+      .exclude(org='com.twitter.elephantbird')
+      .exclude(org='com.twitter', name='parquet-pig')
+  ]
 )
 
 make_lib('json_2.8.1', '2.1.6')
@@ -274,6 +252,20 @@ idl_jar_thrift_library(name='manhattanv2-thrift-scala',
   provided_by=jar(org='com.twitter.manhattan', name='manhattan-thrift-v2', rev='2.11.1'),
 )
 
+idl_jar_thrift_library(name='manhattanv2-nodash-thrift-scala',
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan_thrift_v2', rev='3.0.1_nodash'),
+  language='scala',
+  rpc_style='finagle',
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan_thrift_v2', rev='3.0.1_nodash'),
+)
+
+idl_jar_thrift_library(name='manhattanv2-nodash-thrift-java',
+  thrift_jar=thrift_jar(org='com.twitter.manhattan', name='manhattan_thrift_v2', rev='3.0.1_nodash'),
+  language='java',
+  rpc_style='finagle',
+  provided_by=jar(org='com.twitter.manhattan', name='manhattan_thrift_v2', rev='3.0.1_nodash'),
+)
+
 jar_library(name='flockdb-thrift',
   dependencies=[
     jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
@@ -317,43 +309,12 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
 
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
 
-make_lib('platform-analytics-parser', '0.0.4-20130920100303-94f8588')
-make_lib('platform-analytics-test-data', '0.1.6')
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
 make_lib('ml-taxonomy', '0.0.14')
 
 make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
-make_lib('twadoop-protobuf-tables', '0.0.2')
-
-SCALDING_REV='0.9.1'
-
-def scalding_lib(name):
-  return make_lib('scalding-%s_2.9.3' % name, SCALDING_REV)
-scalding_lib('args')
-
-jar_library(name='scalding-commons_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'scalding-commons_2.9.3', SCALDING_REV).intransitive().with_sources(),
-    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-cascading2'),
-    pants('3rdparty:algebird-core'),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:dfs-datastores'),
-    pants('3rdparty:dfs-datastores-cascading'),
-    pants('3rdparty:hadoop-lzo'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:protobuf-java'),
-    pants('3rdparty:slf4j-api'),
-    pants(':chill_2.9.3'),
-    pants(':scalding-args_2.9.3'),
-    pants(':scalding-core_2.9.3'),
-    pants(':scalding-date_2.9.3')
-  ]
-)
-
-scalding_lib('core')
-scalding_lib('date')
 
 jar_library(name='science-flock-client',
   dependencies=[
@@ -372,87 +333,13 @@ jar_library(name='science-flock-client',
 )
 
 make_lib('science-flock-util', '0.0.4')
-make_lib('summingbird-client_2.9.2', '0.0.7')
-make_lib('summingbird-core_2.9.2', '0.0.7')
-make_lib('summingbird-thrift', '0.0.6')
-
-def summingbird_lib(name, version='0.2.2'):
-  return make_lib('summingbird-%s_2.9.3' % name, version)
-summingbird_lib('batch')
-
-SUMMINGBIRD_REV='0.2.2'
-
-jar_library(name='summingbird-builder_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-builder_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:log4j'),
-    pants(':summingbird-core_2.9.3'),
-    pants(':summingbird-scalding_2.9.3'),
-    pants(':summingbird-storm_2.9.3')
-  ]
-)
-
-jar_library(name='summingbird-client_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-client_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:log4j'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':storehaus-algebra_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3')
-  ]
-)
-
-summingbird_lib('core')
-
-jar_library(name='summingbird-scalding_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-scalding_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:dfs-datastores'),
-    pants('3rdparty:dfs-datastores-cascading'),
-    pants('3rdparty:log4j'),
-    pants(':algebird-bijection_2.9.3'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':bijection-json_2.9.3'),
-    pants(':chill-bijection_2.9.3'),
-    pants(':chill-hadoop'),
-    pants(':chill_2.9.3'),
-    pants(':scalding-commons_2.9.3'),
-    pants(':scalding-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3'),
-    pants(':summingbird-core_2.9.3'),
-  ]
-)
-
-jar_library(name='summingbird-storm_2.9.3',
-  dependencies=[
-    jar('com.twitter', 'summingbird-storm_2.9.3', SUMMINGBIRD_REV).intransitive().with_sources(),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants('3rdparty:log4j'),
-    pants('3rdparty/jvm/storm:storm-no-thrift7'),
-    pants(':algebird-core_2.9.3'),
-    pants(':chill-bijection_2.9.3'),
-    pants(':chill-storm'),
-    pants(':chill_2.9.3'),
-    pants(':storehaus-algebra_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':summingbird-batch_2.9.3'),
-    pants(':summingbird-core_2.9.3'),
-    pants(':tormenta-core_2.9.3'),
-    pants('util/util-core')
-  ]
-)
 
 jar_library(name='storehaus_internal-memcache_2.9.2',
   dependencies=[
     jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/common_internal:zookeeper-utils'),
-    pants('3rdparty:bijection-core_2.9.3'),
-    pants(':bijection-netty_2.9.3'),
+    pants('3rdparty/jvm/com/twitter/bijection:core'),
+    pants('3rdparty/jvm/com/twitter/bijection:netty'),
     pants(':storehaus-memcache_2.9.3')
   ]
 )
@@ -504,6 +391,22 @@ jar_library(name='ouroboros-common',
     jar(org='com.twitter', name='ouroboros-common', rev='0.0.19')
       .exclude('com.twitter', 'twitter-server-internal'),
     pants('twitter-server-internal'),
+  ]
+)
+
+jar_library(name='hato-dm-url',
+  dependencies=[
+    jar(org='com.twitter', name='hato-dm-url', rev='0.0.2'),
+  ],
+)
+
+jar_library(name='vit-retweet-count-client',
+  dependencies=[
+    jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.6')
+      .exclude(org='com.twitter', name='util-core')
+      .exclude(org='com.twitter', name='finagle-memcached_2.9.2'),
+    pants('finagle/finagle-memcached'),
+    pants('util/util-core'),
   ]
 )
 
