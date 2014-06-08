@@ -50,7 +50,7 @@ make_lib('zookeeper-testing', '0.0.46')
 jar_library(name='logging-scribe',
    dependencies=[
       jar(org='com.twitter.common', name='logging-scribe', rev='0.0.21')
-         .exclude(org='org.apache.scribe', name='scribe-client'),
+         .exclude(org='org.apache.scribe', name='scribe_client'),
       pants('3rdparty/jvm/org/apache/scribe:scribe_client'),
    ]
 )
