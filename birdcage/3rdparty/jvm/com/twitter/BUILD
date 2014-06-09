@@ -11,6 +11,8 @@ make_lib('ads_shared_types', '0.0.92')
 
 make_lib('adserver_log', '1.0.163')
 
+make_lib('ads-thrift-scala', '3.0.20')
+
 ALGEBIRD_REV='0.3.0'
 
 jar_library(name='algebird-core_2.9.3',
