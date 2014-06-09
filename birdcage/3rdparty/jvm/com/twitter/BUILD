@@ -9,7 +9,7 @@ def make_thrift_lib(org, name, rev):
 make_lib('ads_entities', '0.0.50')
 make_lib('ads_shared_types', '0.0.92')
 
-make_lib('adserver_log', '1.0.163')
+make_lib('adserver_log', '1.0.165')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
@@ -131,7 +131,7 @@ jar_library(name='metastore-data',
   ]
 )
 
-METASTORE_THRIFT_REV='0.0.89'
+METASTORE_THRIFT_REV='0.0.90'
 
 jar_library(name='metastore-thrift',
   dependencies=[
@@ -280,7 +280,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.41')
+make_lib('user_text_profile', '0.0.43')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
