@@ -169,7 +169,7 @@ idl_jar_thrift_library(name='cproxy-thrift-scala',
   rpc_style='finagle',
 )
 
-PARQUET_REV='1.2.0'
+PARQUET_REV='1.4.3'
 
 jar_library(name='parquet-pig',
   dependencies=[
