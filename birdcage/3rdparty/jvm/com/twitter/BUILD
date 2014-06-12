@@ -412,7 +412,7 @@ jar_library(name='vit-retweet-count-client',
   ]
 )
 
-make_lib('ouroboros-thriftscala', '0.0.26')
+make_lib('ouroboros-thriftscala', '0.0.27')
 
 make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
 jar_library(name='storehaus-core_2.9.3',
