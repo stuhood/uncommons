@@ -372,7 +372,7 @@ jar_library(name='storehaus-algebra_2.9.3',
 
 jar_library(name='tweetypie-tweet-thrift',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.1.16').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift', rev='3.1.20').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('finagle/finagle-thrift'),
     pants('scrooge/scrooge-core')
@@ -381,7 +381,7 @@ jar_library(name='tweetypie-tweet-thrift',
 
 jar_library(name='tweetypie-tweet-thrift-java',
   dependencies=[
-    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.16').with_sources().intransitive(),
+    jar(org='com.twitter', name='tweetypie-tweet-thrift-java', rev='3.1.20').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/expandodo:expandodo-cards-thrift'),
     pants('3rdparty/jvm/com/twitter:tweetypie-tweet-thrift'),
     pants('3rdparty:commons-lang'),
@@ -447,7 +447,7 @@ idl_jar_thrift_library(name='feature-store-thrift-scala',
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-BOTMAKER_REV='0.0.8'
+BOTMAKER_REV='0.0.9'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
 
@@ -496,3 +496,14 @@ jar_library(name='frigate-summingbird-client',
     pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection_2.9.2'),
   ]
 )
+
+SCARECROW_REV='0.0.9'
+
+make_thrift_lib('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV)
+
+idl_jar_thrift_library(name='scarecrow-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV),
+  language='scala',
+  rpc_style='finagle',
+)
+
