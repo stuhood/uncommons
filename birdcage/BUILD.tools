@@ -25,9 +25,9 @@ jar_library(name = 'emma',
 
 jar_library(name = 'benchmark-caliper-0.5',
             dependencies = [
-              jar(org = 'com.google.caliper', name = 'caliper', rev = '0.5-rc1')
-                .exclude(org='com.google.guava', name='guava'),
-              pants('3rdparty:guava')
+              # The tool lib needs to stay lockstep with the 3rdparty dep benchmark writers will
+              # use so we favor 3rdparty here as the central edit / viewing spot.
+              pants('3rdparty:caliper')
             ])
 
 jar_library(name = 'benchmark-java-allocation-instrumenter-2.1',
