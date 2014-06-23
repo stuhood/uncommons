@@ -23,6 +23,7 @@
 .cache
 .classpath
 .classpath.txt
+.coverage
 .ensime
 .ensime.msg.counter
 .idea/
