@@ -7,7 +7,16 @@ def make_lib(name, rev):
 
 make_lib('application', '0.0.75')
 make_lib('application-action', '0.0.75')
-make_lib('application-module-http', '0.0.66')
+jar_library(name='application-module-http',
+  dependencies=[
+    jar(org='com.twitter.common', name='application-module-http', rev='0.0.66')
+      .exclude('com.twitter', 'util-core')
+      .exclude('com.twitter', 'util-jvm')
+      .with_sources(),
+    pants('util/util-core'),
+    pants('util/util-jvm'),
+  ]
+)
 make_lib('application-module-log', '0.0.57')
 make_lib('application-module-stats', '0.0.44')
 make_lib('args', '0.2.13')
