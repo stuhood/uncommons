@@ -457,22 +457,6 @@ idl_jar_thrift_library(name='botmaker-thrift-scala',
   rpc_style='finagle',
 )
 
-RECOS_REV='0.0.4'
-
-make_thrift_lib('com.twitter', 'recos-scala-only', RECOS_REV)
-
-idl_jar_thrift_library(name='recos-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'recos-scala-only', RECOS_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
-idl_jar_thrift_library(name='recos-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'recos-scala-only', RECOS_REV),
-  language='java',
-  rpc_style='finagle',
-)
-
 jar_library(name='frigate-summingbird-client',
   dependencies=[
     jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
