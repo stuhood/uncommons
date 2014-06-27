@@ -292,7 +292,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.10'
+ADS_TV_REV='0.0.11'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
@@ -460,7 +460,7 @@ idl_jar_thrift_library(name='botmaker-thrift-scala',
 jar_library(name='frigate-summingbird-client',
   dependencies=[
     jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
-      .exclude('com.twitter', 'frigate-summingbird-client-thrift')	
+      .exclude('com.twitter', 'frigate-summingbird-client-thrift')
       .exclude('com.twitter', 'finagle-memcached')
       .exclude('com.twitter', 'finagle-serversets')
       .exclude('com.twitter', 'finagle-thrift')
@@ -490,4 +490,3 @@ idl_jar_thrift_library(name='scarecrow-thrift-scala',
   language='scala',
   rpc_style='finagle',
 )
-
