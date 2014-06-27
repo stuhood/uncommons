@@ -481,7 +481,7 @@ jar_library(name='frigate-summingbird-client',
   ]
 )
 
-SCARECROW_REV='0.0.10'
+SCARECROW_REV='0.0.12'
 
 make_thrift_lib('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV)
 
