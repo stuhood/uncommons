@@ -223,7 +223,7 @@ jar_library(name='payment-thrift-only',
 
 jar_library(name='tpay_signature',
   dependencies=[
-    jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.8')
+    jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.11')
   ]
 )
 
