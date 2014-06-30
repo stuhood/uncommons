@@ -8,9 +8,9 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.50')
 
-make_lib('ads_shared_types', '0.0.99')
+make_lib('ads_shared_types', '0.0.100')
 
-make_lib('adserver_log', '1.0.168')
+make_lib('adserver_log', '1.0.171')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
@@ -217,7 +217,7 @@ jar_library(name='scala-zookeeper-client',
 
 jar_library(name='payment-thrift-only',
   dependencies=[
-    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.14')
+    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.21')
   ]
 )
 
@@ -281,7 +281,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.43')
+make_lib('user_text_profile', '0.0.45')
 
 jar_library(name='gizzard-thrift',
   dependencies=[
@@ -310,7 +310,7 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
   rpc_style='finagle',
 )
 
-make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.13')
+make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.17')
 
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
@@ -434,9 +434,9 @@ jar_library(name='storehaus-memcache_2.9.3',
 
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
-make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.3')
+make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.4')
 
-FEATURE_STORE_REV = '0.0.18'
+FEATURE_STORE_REV = '0.0.19'
 make_thrift_lib('com.twitter', 'feature-store-thrift-only', FEATURE_STORE_REV)
 
 idl_jar_thrift_library(name='feature-store-thrift-scala',
@@ -447,7 +447,7 @@ idl_jar_thrift_library(name='feature-store-thrift-scala',
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-BOTMAKER_REV='0.0.9'
+BOTMAKER_REV='0.0.10'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
 
