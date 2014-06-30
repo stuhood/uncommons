@@ -406,8 +406,31 @@ jar_library(name='hato-dm-url',
 jar_library(name='vit-retweet-count-client',
   dependencies=[
     jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.6')
-      .exclude(org='com.twitter', name='util-core')
-      .exclude(org='com.twitter', name='finagle-memcached_2.9.2'),
+      .intransitive(),
+    pants(':vit-retweet-count-common'),
+    pants('3rdparty/jvm/com/twitter/algebird:util'),
+    pants('3rdparty/jvm/com/twitter/bijection:util'),
+    pants('3rdparty/jvm/com/twitter/storehaus:core'),
+    pants('3rdparty/jvm/com/twitter/summingbird:client'),
+    pants('3rdparty/jvm/com/twitter/summingbird:core'),
+    pants('finagle/finagle-memcached'),
+    pants('util/util-core'),
+  ]
+)
+jar_library(name='vit-retweet-count-common',
+  dependencies=[
+    jar(org='com.twitter', name='vit-retweet-count-common', rev='0.0.4')
+      .intransitive(),
+    pants('3rdparty:jackson-core'),
+    pants('3rdparty:jackson-databind'),
+    pants('3rdparty:jackson-module-scala'),
+    pants('3rdparty/jvm/com/twitter/algebird:core'),
+    pants('3rdparty/jvm/com/twitter/bijection:util'),
+    pants('3rdparty/jvm/com/twitter/bijection:netty'),
+    pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
+    pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
+    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection_2.9.2'),
+    pants('3rdparty/jvm/com/twitter/summingbird:batch'),
     pants('finagle/finagle-memcached'),
     pants('util/util-core'),
   ]
