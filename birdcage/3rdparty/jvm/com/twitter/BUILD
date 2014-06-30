@@ -459,15 +459,6 @@ make_lib('tormenta-core_2.9.3', '0.5.3')
 
 make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.4')
 
-FEATURE_STORE_REV = '0.0.19'
-make_thrift_lib('com.twitter', 'feature-store-thrift-only', FEATURE_STORE_REV)
-
-idl_jar_thrift_library(name='feature-store-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='feature-store-thrift-only', rev=FEATURE_STORE_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
 BOTMAKER_REV='0.0.10'
