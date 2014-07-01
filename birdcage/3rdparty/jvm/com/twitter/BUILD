@@ -370,14 +370,6 @@ jar_library(name='storehaus-algebra_2.9.3',
   ]
 )
 
-jar_library(name='ouroboros-common',
-  dependencies=[
-    jar(org='com.twitter', name='ouroboros-common', rev='0.0.19')
-      .exclude('com.twitter', 'twitter-server-internal'),
-    pants('twitter-server-internal'),
-  ]
-)
-
 jar_library(name='hato-dm-url',
   dependencies=[
     jar(org='com.twitter', name='hato-dm-url', rev='0.0.2'),
@@ -416,8 +408,6 @@ jar_library(name='vit-retweet-count-common',
     pants('util/util-core'),
   ]
 )
-
-make_lib('ouroboros-thriftscala', '0.0.27')
 
 make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
 jar_library(name='storehaus-core_2.9.3',
