@@ -10,7 +10,7 @@ make_lib('ads_entities', '0.0.50')
 
 make_lib('ads_shared_types', '0.0.100')
 
-make_lib('adserver_log', '1.0.171')
+make_lib('adserver_log', '1.0.172')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
@@ -442,7 +442,7 @@ make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.4')
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-BOTMAKER_REV='0.0.10'
+BOTMAKER_REV='0.0.11'
 
 make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
 
@@ -476,7 +476,7 @@ jar_library(name='frigate-summingbird-client',
   ]
 )
 
-SCARECROW_REV='0.0.12'
+SCARECROW_REV='0.0.13'
 
 make_thrift_lib('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV)
 
