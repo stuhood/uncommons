@@ -154,16 +154,6 @@ idl_jar_thrift_library(name='metastore-thrift-scala',
   rpc_style='finagle',
 )
 
-MOCKINGJAY_METADATA_THRIFT_REV='0.0.4'
-
-make_thrift_lib('com.twitter', 'mockingjay-metadata-thrift-only', MOCKINGJAY_METADATA_THRIFT_REV)
-
-idl_jar_thrift_library(name='mockingjay-metadata-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'mockingjay-metadata-thrift-only', MOCKINGJAY_METADATA_THRIFT_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
 idl_jar_thrift_library(name='cproxy-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter', name='cproxy-thrift-only', rev='2.0.2'),
   language='scala',
