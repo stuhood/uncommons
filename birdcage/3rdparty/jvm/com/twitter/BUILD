@@ -418,8 +418,6 @@ jar_library(name='storehaus-memcache_2.9.3',
 
 make_lib('tormenta-core_2.9.3', '0.5.3')
 
-make_thrift_lib('com.twitter', 'spam-thrift-only', '0.0.4')
-
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
 BOTMAKER_REV='0.0.11'
