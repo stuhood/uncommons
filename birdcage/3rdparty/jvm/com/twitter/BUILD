@@ -16,18 +16,18 @@ make_lib('ads-thrift-scala', '3.0.20')
 
 ALGEBIRD_REV='0.3.0'
 
-jar_library(name='algebird-core_2.9.3',
+jar_library(name='algebird-core',
   dependencies=[
     jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
   ]
 )
 
-make_lib('algebird-bijection_2.9.3', ALGEBIRD_REV)
+make_lib('algebird-bijection_2.9.3', ALGEBIRD_REV, alias='algebird-bijection')
 
-jar_library(name='algebird-util_2.9.3',
+jar_library(name='algebird-util',
   dependencies=[
     jar(org='com.twitter', name='algebird-util_2.9.3', rev=ALGEBIRD_REV).with_sources().intransitive(),
-    pants(':algebird-core_2.9.3'),
+    pants(':algebird-core'),
     pants('util/util-core')
   ]
 )
@@ -164,8 +164,6 @@ jar_library(name='parquet-thrift',
   ]
 )
 
-make_lib('json_2.8.1', '2.1.6')
-
 jar_library(name='scala-zookeeper-client',
   dependencies=[
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
@@ -296,13 +294,13 @@ jar_library(name='science-flock-client',
 
 make_lib('science-flock-util', '0.0.4')
 
-jar_library(name='storehaus_internal-memcache_2.9.2',
+jar_library(name='storehaus_internal-memcache',
   dependencies=[
     jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3').with_sources().intransitive(),
     pants('3rdparty/jvm/com/twitter/common_internal:zookeeper-utils'),
     pants('3rdparty/jvm/com/twitter/bijection:core'),
     pants('3rdparty/jvm/com/twitter/bijection:netty'),
-    pants(':storehaus-memcache_2.9.3')
+    pants(':storehaus-memcache')
   ]
 )
 
@@ -318,14 +316,14 @@ jar_library(name='storehaus_internal-util',
 
 STOREHAUS_REV='0.6.0'
 
-jar_library(name='storehaus-algebra_2.9.3',
+jar_library(name='storehaus-algebra',
   dependencies=[
     jar('com.twitter', 'storehaus-algebra_2.9.3', STOREHAUS_REV).with_sources().intransitive(),
-    pants(':algebird-bijection_2.9.3'),
-    pants(':algebird-core_2.9.3'),
-    pants(':algebird-util_2.9.3'),
-    pants(':storehaus-core_2.9.3'),
-    pants(':storehaus-testing_2.9.3')
+    pants(':algebird-bijection'),
+    pants(':algebird-core'),
+    pants(':algebird-util'),
+    pants(':storehaus-core'),
+    pants(':storehaus-testing')
   ]
 )
 
@@ -361,23 +359,23 @@ jar_library(name='vit-retweet-count-common',
     pants('3rdparty/jvm/com/twitter/bijection:netty'),
     pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
     pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection_2.9.2'),
+    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection'),
     pants('3rdparty/jvm/com/twitter/summingbird:batch'),
     pants('finagle/finagle-memcached'),
     pants('util/util-core'),
   ]
 )
 
-make_lib('storehaus-cache_2.9.3', STOREHAUS_REV)
-jar_library(name='storehaus-core_2.9.3',
+make_lib('storehaus-cache_2.9.3', STOREHAUS_REV, alias='storehaus-cache')
+jar_library(name='storehaus-core',
   dependencies=[
     jar(org='com.twitter', name='storehaus-core_2.9.3', rev=STOREHAUS_REV)
       .exclude('com.twitter', 'util-core_2.9.2'),
     pants('util/util-core'),
   ]
 )
-make_lib('storehaus-testing_2.9.3', STOREHAUS_REV)
-jar_library(name='storehaus-memcache_2.9.3',
+make_lib('storehaus-testing_2.9.3', STOREHAUS_REV, alias='storehaus-testing')
+jar_library(name='storehaus-memcache',
   dependencies=[
     jar(org='com.twitter', name='storehaus-memcache_2.9.3', rev=STOREHAUS_REV)
       .exclude('com.twitter', 'finagle-memcached_2.9.2'),
@@ -385,7 +383,7 @@ jar_library(name='storehaus-memcache_2.9.3',
   ]
 )
 
-make_lib('tormenta-core_2.9.3', '0.5.3')
+make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
@@ -418,8 +416,8 @@ jar_library(name='frigate-summingbird-client',
     pants('twitter-server-internal'),
     pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
     pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:job_2.9.2'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection_2.9.2'),
+    pants('3rdparty/jvm/com/twitter/summingbird_internal:job'),
+    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection'),
   ]
 )
 

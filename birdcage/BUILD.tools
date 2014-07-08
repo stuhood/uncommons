@@ -46,7 +46,7 @@ jar_library(name = 'zinc',
                 .exclude(org = 'org.ensime', name = 'ensime-sbt-cmd')
             ])
 
-jar_library(name = 'scala-compile-2.9.3',
+jar_library(name = 'scala-compile',
             dependencies = [
               jar(org = 'org.scala-lang', name = 'scala-compiler', rev = '2.9.3'),
               jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.9.3'),
@@ -66,14 +66,14 @@ jar_library(name = 'junit',
               jar(org = 'com.twitter.common', name = 'junit-runner', rev = '0.0.40')
             ])
 
-jar_library(name = 'scala-specs-2.9.3',
+jar_library(name = 'scala-specs',
             dependencies = [
               jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.9.3').intransitive(),
               jar(org = 'org.scala-tools.testing', name = 'specs_2.9.3', rev = '1.6.9'),
               jar(org = 'com.twitter.common', name = 'specs-testing', rev = '0.0.6')
             ])
 
-jar_library(name = 'scala-repl-2.9.3',
+jar_library(name = 'scala-repl',
             dependencies = [
               jar(org = 'org.scala-lang', name = 'scala-compiler', rev = '2.9.3').intransitive(),
               jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.9.3').intransitive(),
