@@ -123,37 +123,6 @@ idl_jar_thrift_library(name='mediascience_video-thrift-java',
   rpc_style='finagle',
 )
 
-jar_library(name='metastore-data',
-  dependencies=[
-    jar(org='com.twitter', name='metastore-data', rev='0.0.27').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common:base'),
-    pants('3rdparty:guava'),
-    pants(':metastore-thrift')
-  ]
-)
-
-METASTORE_THRIFT_REV='0.0.90'
-
-jar_library(name='metastore-thrift',
-  dependencies=[
-    jar(org='com.twitter', name='metastore-thrift', rev=METASTORE_THRIFT_REV).with_sources().intransitive(),
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
-  ]
-)
-
-make_thrift_lib('com.twitter', 'metastore-thrift-only', METASTORE_THRIFT_REV)
-
-idl_jar_thrift_library(name='metastore-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'metastore-thrift-only', METASTORE_THRIFT_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
 idl_jar_thrift_library(name='cproxy-thrift-scala',
   thrift_jar=thrift_jar(org='com.twitter', name='cproxy-thrift-only', rev='2.0.2'),
   language='scala',
