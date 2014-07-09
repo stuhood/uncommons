@@ -14,24 +14,6 @@ make_lib('adserver_log', '1.0.172')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
-ALGEBIRD_REV='0.3.0'
-
-jar_library(name='algebird-core',
-  dependencies=[
-    jar(org='com.twitter', name='algebird-core_2.9.3', rev=ALGEBIRD_REV)
-  ]
-)
-
-make_lib('algebird-bijection_2.9.3', ALGEBIRD_REV, alias='algebird-bijection')
-
-jar_library(name='algebird-util',
-  dependencies=[
-    jar(org='com.twitter', name='algebird-util_2.9.3', rev=ALGEBIRD_REV).with_sources().intransitive(),
-    pants(':algebird-core'),
-    pants('util/util-core')
-  ]
-)
-
 jar_library(name='app-proxy-thrift',
   dependencies=[
     thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2')
@@ -319,9 +301,9 @@ STOREHAUS_REV='0.6.0'
 jar_library(name='storehaus-algebra',
   dependencies=[
     jar('com.twitter', 'storehaus-algebra_2.9.3', STOREHAUS_REV).with_sources().intransitive(),
-    pants(':algebird-bijection'),
-    pants(':algebird-core'),
-    pants(':algebird-util'),
+    pants('3rdparty/jvm/com/twitter/algebird:bijection'),
+    pants('3rdparty/jvm/com/twitter/algebird:core'),
+    pants('3rdparty/jvm/com/twitter/algebird:util'),
     pants(':storehaus-core'),
     pants(':storehaus-testing')
   ]
