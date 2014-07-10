@@ -7,16 +7,27 @@ def make_lib(name, rev):
 
 make_lib('application', '0.0.75')
 make_lib('application-action', '0.0.75')
+make_lib('application-http', '0.0.61')
+
 jar_library(name='application-module-http',
   dependencies=[
     jar(org='com.twitter.common', name='application-module-http', rev='0.0.66')
-      .exclude('com.twitter', 'util-core')
-      .exclude('com.twitter', 'util-jvm')
+      .intransitive()
       .with_sources(),
+    pants(':application-action'),
+    pants(':application-http'),
+    pants(':application-module-lifecycle'),
+    pants(':base'),
+    pants(':net-http'),
+    pants(':net-http-handlers'),
+    pants(':net-http-handlers-time-series'),
+    pants(':net-http-handlers-pprof'),
+    pants('3rdparty:guice'),
     pants('util/util-core'),
     pants('util/util-jvm'),
   ]
 )
+make_lib('application-module-lifecycle', '0.0.50')
 make_lib('application-module-log', '0.0.57')
 make_lib('application-module-stats', '0.0.44')
 make_lib('args', '0.2.13')
@@ -43,6 +54,22 @@ make_lib('memcached', '0.0.9')
 make_lib('metastore-client_v2', '0.0.3')
 make_lib('metrics', '0.0.29')
 make_lib('metrics-data-sample', '0.0.1')
+make_lib('net-http', '0.0.46')
+make_lib('net-http-handlers', '0.0.73')
+make_lib('net-http-handlers-time-series', '0.0.53')
+make_lib('net-http-handlers-params', '0.0.21')
+jar_library(name='net-http-handlers-pprof',
+  dependencies=[
+    jar(org='com.twitter.common', name='net-http-handlers-pprof', rev='0.0.31')
+      .intransitive()
+      .with_sources(),
+    pants(':net-http-handlers-params'),
+    pants(':quantity'),
+    pants('3rdparty:guava'),
+    pants('util/util-core'),
+    pants('util/util-jvm'),
+  ]
+)
 make_lib('net-pool', '0.0.60')
 make_lib('net-util', '0.0.84')
 make_lib('objectsize', '0.0.10')
