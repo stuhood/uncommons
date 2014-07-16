@@ -236,39 +236,6 @@ jar_library(name='science-flock-client',
 
 make_lib('science-flock-util', '0.0.4')
 
-jar_library(name='storehaus_internal-memcache',
-  dependencies=[
-    jar(org='com.twitter', name='storehaus_internal-memcache_2.9.2', rev='0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common_internal:zookeeper-utils'),
-    pants('3rdparty/jvm/com/twitter/bijection:core'),
-    pants('3rdparty/jvm/com/twitter/bijection:netty'),
-    pants(':storehaus-memcache')
-  ]
-)
-
-jar_library(name='storehaus_internal-util',
-  dependencies=[
-    jar('com.twitter', 'storehaus_internal-util_2.9.2', '0.0.3').with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/common/zookeeper:client'),
-    pants('3rdparty/jvm/com/twitter/common/zookeeper:server-set'),
-    pants('finagle/finagle-serversets'),
-    pants('finagle/finagle-thrift')
-  ]
-)
-
-STOREHAUS_REV='0.6.0'
-
-jar_library(name='storehaus-algebra',
-  dependencies=[
-    jar('com.twitter', 'storehaus-algebra_2.9.3', STOREHAUS_REV).with_sources().intransitive(),
-    pants('3rdparty/jvm/com/twitter/algebird:bijection'),
-    pants('3rdparty/jvm/com/twitter/algebird:core'),
-    pants('3rdparty/jvm/com/twitter/algebird:util'),
-    pants(':storehaus-core'),
-    pants(':storehaus-testing')
-  ]
-)
-
 jar_library(name='hato-dm-url',
   dependencies=[
     jar(org='com.twitter', name='hato-dm-url', rev='0.0.2'),
@@ -305,23 +272,6 @@ jar_library(name='vit-retweet-count-common',
     pants('3rdparty/jvm/com/twitter/summingbird:batch'),
     pants('finagle/finagle-memcached'),
     pants('util/util-core'),
-  ]
-)
-
-make_lib('storehaus-cache_2.9.3', STOREHAUS_REV, alias='storehaus-cache')
-jar_library(name='storehaus-core',
-  dependencies=[
-    jar(org='com.twitter', name='storehaus-core_2.9.3', rev=STOREHAUS_REV)
-      .exclude('com.twitter', 'util-core_2.9.2'),
-    pants('util/util-core'),
-  ]
-)
-make_lib('storehaus-testing_2.9.3', STOREHAUS_REV, alias='storehaus-testing')
-jar_library(name='storehaus-memcache',
-  dependencies=[
-    jar(org='com.twitter', name='storehaus-memcache_2.9.3', rev=STOREHAUS_REV)
-      .exclude('com.twitter', 'finagle-memcached_2.9.2'),
-    pants('finagle/finagle-memcached'),
   ]
 )
 
