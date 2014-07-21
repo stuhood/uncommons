@@ -44,10 +44,12 @@ bijection_lib('scrooge',
     exclude(org='com.twitter', name='scrooge-runtime'),
     exclude(org='com.twitter', name='scrooge-serializer_2.9.2'),
     exclude(org='org.apache.thrift', name='libthrift'),
+    exclude(org='com.twitter', name='util-core'),
   ],
   additional_deps=[
     pants('scrooge/scrooge-serializer'),
     pants('scrooge/scrooge-runtime'),
+    pants('util/util-core'),
     pants('3rdparty:libthrift-0.5.0'),
   ]
 )
@@ -55,6 +57,8 @@ bijection_lib('scrooge',
 bijection_lib('util',
   excludes=[
     exclude(org='com.twitter', name='util-core_2.9.3'),
+    exclude(org='com.twitter', name='util-core_2.9.2'),
+    exclude(org='com.twitter', name='util-core'),
   ],
   additional_deps=[
     pants('util/util-core'),
