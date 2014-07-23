@@ -279,16 +279,6 @@ make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-BOTMAKER_REV='0.0.11'
-
-make_thrift_lib('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV)
-
-idl_jar_thrift_library(name='botmaker-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'botmaker-thrift-only', BOTMAKER_REV),
-  language='scala',
-  rpc_style='finagle',
-)
-
 jar_library(name='frigate-summingbird-client',
   dependencies=[
     jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
