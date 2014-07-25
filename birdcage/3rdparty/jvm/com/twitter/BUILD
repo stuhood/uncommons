@@ -38,22 +38,6 @@ jar_library(name='beaks-data',
   ]
 )
 
-jar_library(name='cassovary',
-  dependencies=[
-    jar(org='com.twitter', name='cassovary_2.8.1', rev='2.0.3').intransitive(),
-
-    # old version of util used by cassovary
-    jar(org='com.twitter', name='util', rev='4.0.1').intransitive(),
-
-    pants('3rdparty:configgy'),
-    pants('3rdparty:fastutil'),
-    pants('3rdparty:guava'),
-    pants('ostrich')
-  ]
-)
-
-make_lib('cassowary_v2_protobuf', '0.0.4', 'cassowary')
-
 make_lib('clientapp-thrift-java', '0.0.1')
 
 HBC_REV='2.0.2'
@@ -211,11 +195,16 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
 
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.17')
 
+jar_library(name='talon-backend-logging-protobuf',
+  dependencies=[
+    jar(org='com.twitter.talon', name='protobuf', rev='0.0.1').with_sources(),
+  ],
+)
+
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
 make_lib('ml-taxonomy', '0.0.14')
 
-make_lib('talon-backend-logging-protobuf', '0.0.2')
 make_lib('url-canonicalizer-core', '0.0.10')
 
 jar_library(name='science-flock-client',
