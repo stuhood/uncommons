@@ -321,3 +321,30 @@ idl_jar_thrift_library(name='scarecrow-thrift-scala',
   language='scala',
   rpc_style='finagle',
 )
+
+jar_library(name='self_unsuspension_thrift_scala',
+  jars=[
+    jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.10')
+      .exclude(org='com.twitter', name='finagle-core')
+      .exclude(org='com.twitter', name='finagle-thrift')
+      .exclude(org='com.twitter', name='scrooge-core')
+      .exclude(org='com.twitter', name='util-app')
+      .exclude(org='com.twitter', name='util-collection')
+      .exclude(org='com.twitter', name='util-core')
+      .exclude(org='com.twitter', name='util-hashing')
+      .exclude(org='com.twitter', name='util-jvm')
+      .exclude(org='com.twitter', name='util-logging'),
+  ],
+  dependencies=[
+    pants('finagle/finagle-thrift'),
+    pants('finagle/finagle-core'),
+    pants('finagle/finagle-thrift'),
+    pants('scrooge/scrooge-core'),
+    pants('util/util-app'),
+    pants('util/util-collection'),
+    pants('util/util-core'),
+    pants('util/util-hashing'),
+    pants('util/util-jvm'),
+    pants('util/util-logging'),
+  ],
+)
