@@ -1,6 +1,6 @@
 def make_lib(name, rev):
   return jar_library(name=name,
-    dependencies=[
+    jars=[
       jar(org='com.twitter.common', name=name, rev=rev).with_sources()
     ]
   )
@@ -10,10 +10,12 @@ make_lib('application-action', '0.0.75')
 make_lib('application-http', '0.0.61')
 
 jar_library(name='application-module-http',
-  dependencies=[
+  jars=[
     jar(org='com.twitter.common', name='application-module-http', rev='0.0.66')
       .intransitive()
       .with_sources(),
+  ],
+  dependencies=[
     pants(':application-action'),
     pants(':application-http'),
     pants(':application-module-lifecycle'),
@@ -35,11 +37,13 @@ make_lib('base', '0.0.95')
 make_lib('collections', '0.0.82')
 
 jar_library(name='flags',
-  dependencies=[
+  jars=[
     jar(org='com.twitter.common', name='flags', rev='1.0.0')
       .exclude('com.twitter', 'util-core')
       .exclude('com.twitter.common', 'args')
       .with_sources(),
+  ],
+  dependencies=[
     pants('util/util-core'),
     pants(':args'),
   ],
@@ -59,10 +63,12 @@ make_lib('net-http-handlers', '0.0.73')
 make_lib('net-http-handlers-time-series', '0.0.53')
 make_lib('net-http-handlers-params', '0.0.21')
 jar_library(name='net-http-handlers-pprof',
-  dependencies=[
+  jars=[
     jar(org='com.twitter.common', name='net-http-handlers-pprof', rev='0.0.31')
       .intransitive()
       .with_sources(),
+  ],
+  dependencies=[
     pants(':net-http-handlers-params'),
     pants(':quantity'),
     pants('3rdparty:guava'),
@@ -84,9 +90,11 @@ make_lib('util-testing', '0.0.11')
 make_lib('zookeeper-testing', '0.0.46')
 
 jar_library(name='logging-scribe',
-   dependencies=[
-      jar(org='com.twitter.common', name='logging-scribe', rev='0.0.21')
-         .exclude(org='org.apache.scribe', name='scribe_client'),
-      pants('3rdparty/jvm/org/apache/scribe:scribe_client'),
-   ]
+  jars=[
+     jar(org='com.twitter.common', name='logging-scribe', rev='0.0.21')
+        .exclude(org='org.apache.scribe', name='scribe_client'),
+  ],
+  dependencies=[
+     pants('3rdparty/jvm/org/apache/scribe:scribe_client'),
+  ]
 )

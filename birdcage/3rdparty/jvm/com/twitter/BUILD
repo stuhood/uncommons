@@ -1,10 +1,10 @@
 def make_lib(name, rev, alias=None):
   if not alias:
     alias = name
-  jar_library(name=alias, dependencies=[jar(org='com.twitter', name=name, rev=rev).with_sources()])
+  jar_library(name=alias, jars=[jar(org='com.twitter', name=name, rev=rev).with_sources()])
 
 def make_thrift_lib(org, name, rev):
-  jar_library(name, dependencies=[thrift_jar(org=org, name=name, rev=rev)])
+  jar_library(name=name, jars=[thrift_jar(org=org, name=name, rev=rev)])
 
 make_lib('ads_entities', '0.0.50')
 
@@ -15,7 +15,7 @@ make_lib('adserver_log', '1.0.172')
 make_lib('ads-thrift-scala', '3.0.20')
 
 jar_library(name='app-proxy-thrift',
-  dependencies=[
+  jars=[
     thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2')
   ]
 )
@@ -33,7 +33,7 @@ idl_jar_thrift_library(name='app-proxy-thrift-scala',
 )
 
 jar_library(name='beaks-data',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='beaks-data', rev='0.0.3')
   ]
 )
@@ -48,7 +48,7 @@ make_lib('hbc-twitter4j', HBC_REV)
 make_lib('hbc-internal', HBC_INTERNAL_REV)
 
 jar_library(name='limiter-thrift-only',
-  dependencies=[
+  jars=[
     thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.34')
   ]
 )
@@ -98,54 +98,62 @@ idl_jar_thrift_library(name='cproxy-thrift-scala',
 PARQUET_REV='1.4.3'
 
 jar_library(name='parquet-pig',
+  jars=[
+    jar(org='com.twitter', name='parquet-pig', rev=PARQUET_REV)
+      .exclude(org='org.apache.pig', name='pig'),
+  ],
   dependencies=[
     pants('3rdparty/jvm/org/apache/pig'),
-    jar(org='com.twitter', name='parquet-pig', rev=PARQUET_REV)
-      .exclude(org='org.apache.pig', name='pig')
   ]
 )
 
 jar_library(name='parquet-scrooge',
-  dependencies=[
-    pants(':parquet-thrift'),
-    pants('util/util-core'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
+  jars=[
     jar(org='com.twitter', name='parquet-scrooge', rev=PARQUET_REV)
       .exclude(org='com.twitter', name='parquet-thrift')
       .exclude(org='com.twitter', name='util-core_2.9.2')
       .exclude(org='com.twitter', name='finagle-core_2.9.2')
       .exclude(org='com.twitter', name='finagle-thrift_2.9.2')
+  ],
+  dependencies=[
+    pants(':parquet-thrift'),
+    pants('util/util-core'),
+    pants('finagle/finagle-core'),
+    pants('finagle/finagle-thrift'),
   ]
 )
 
 jar_library(name='parquet-thrift',
+  jars=[
+    jar(org='com.twitter', name='parquet-thrift', rev=PARQUET_REV)
+      .exclude(org='com.twitter.elephantbird')
+      .exclude(org='com.twitter', name='parquet-pig'),
+  ],
   dependencies=[
     pants(':parquet-pig'),
     pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-core'),
     pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-pig'),
-    jar(org='com.twitter', name='parquet-thrift', rev=PARQUET_REV)
-      .exclude(org='com.twitter.elephantbird')
-      .exclude(org='com.twitter', name='parquet-pig')
   ]
 )
 
 jar_library(name='scala-zookeeper-client',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
+  ],
+  dependencies=[
     pants('3rdparty:zookeeper'),
     pants('ostrich')
   ]
 )
 
 jar_library(name='payment-thrift-only',
-  dependencies=[
+  jars=[
     thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.21')
   ]
 )
 
 jar_library(name='tpay_signature',
-  dependencies=[
+  jars=[
     jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.11')
   ]
 )
@@ -153,8 +161,10 @@ jar_library(name='tpay_signature',
 make_lib('sarus_v2', '0.0.5')
 
 jar_library(name='flockdb-thrift',
-  dependencies=[
+  jars=[
     jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
+  ],
+  dependencies=[
     pants('3rdparty:commons-lang'),
     pants('3rdparty:libthrift-0.5.0'),
     pants('3rdparty:slf4j-api'),
@@ -167,8 +177,10 @@ jar_library(name='flockdb-thrift',
 make_lib('user_text_profile', '0.0.45')
 
 jar_library(name='gizzard-thrift',
-  dependencies=[
+  jars=[
     jar('com.twitter', 'gizzard-thrift', '0.0.4').intransitive(),
+  ],
+  dependencies=[
     pants('finagle/finagle-core'),
     pants('finagle/finagle-thrift'),
     pants('util/util-core')
@@ -196,7 +208,7 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
 make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.17')
 
 jar_library(name='talon-backend-logging-protobuf',
-  dependencies=[
+  jars=[
     jar(org='com.twitter.talon', name='protobuf', rev='0.0.1').with_sources(),
   ],
 )
@@ -208,8 +220,10 @@ make_lib('ml-taxonomy', '0.0.14')
 make_lib('url-canonicalizer-core', '0.0.10')
 
 jar_library(name='science-flock-client',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='science-flock-client', rev='0.0.8').with_sources().intransitive(),
+  ],
+  dependencies=[
     pants('3rdparty/jvm/com/twitter/common:base'),
     pants('3rdparty/jvm/com/twitter/common:collections'),
     pants('3rdparty/jvm/com/twitter/common:quantity'),
@@ -226,15 +240,17 @@ jar_library(name='science-flock-client',
 make_lib('science-flock-util', '0.0.4')
 
 jar_library(name='hato-dm-url',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='hato-dm-url', rev='0.0.2'),
   ],
 )
 
 jar_library(name='vit-retweet-count-client',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.6')
       .intransitive(),
+  ],
+  dependencies=[
     pants(':vit-retweet-count-common'),
     pants('3rdparty/jvm/com/twitter/algebird:util'),
     pants('3rdparty/jvm/com/twitter/bijection:util'),
@@ -246,9 +262,11 @@ jar_library(name='vit-retweet-count-client',
   ]
 )
 jar_library(name='vit-retweet-count-common',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='vit-retweet-count-common', rev='0.0.4')
       .intransitive(),
+  ],
+  dependencies=[
     pants('3rdparty:jackson-core'),
     pants('3rdparty:jackson-databind'),
     pants('3rdparty:jackson-module-scala'),
@@ -269,7 +287,7 @@ make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
 jar_library(name='frigate-summingbird-client',
-  dependencies=[
+  jars=[
     jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
       .exclude('com.twitter', 'frigate-summingbird-client-thrift')
       .exclude('com.twitter', 'finagle-memcached')
@@ -280,6 +298,8 @@ jar_library(name='frigate-summingbird-client',
       .exclude('com.twitter', 'twitter-server-internal')
       .exclude('com.twitter.summingbird_internal', 'job_2.9.2')
       .exclude('com.twitter.summingbird_internal', 'bijection_2.9.2'),
+  ],
+  dependencies=[
     pants('finagle/finagle-memcached'),
     pants('finagle/finagle-serversets'),
     pants('finagle/finagle-thrift'),

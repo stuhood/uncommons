@@ -1,17 +1,18 @@
 BIJECTION_REV = '0.6.2'
 
-def bijection_lib(name, alias=None, excludes=None, sources=True, additional_deps=None):
-  dep = jar(org='com.twitter', name='bijection-' + name + '_2.9.3', rev=BIJECTION_REV)
+def bijection_lib(name, alias=None, excludes=None, sources=True, additional_jars=None, additional_deps=None):
+  mainjar = jar(org='com.twitter', name='bijection-' + name + '_2.9.3', rev=BIJECTION_REV)
   if sources:
-    dep.with_sources()
+    mainjar.with_sources()
   if excludes:
     for item in excludes:
-      dep.exclude(org=item.org, name=item.name)
+      mainjar.exclude(item.org, item.name)
 
-  deplist = [dep] if not additional_deps else additional_deps + [dep]
-  lib = jar_library(name=name, dependencies=deplist)
+  jarlist = [mainjar] if not additional_jars else additional_jars + [mainjar]
+  deplist = [] if not additional_deps else additional_deps
+  lib = jar_library(name=name, jars=jarlist, dependencies=deplist)
   if alias:
-    jar_library(name=alias, dependencies=[lib])
+    jar_library(name=alias, dependencies=[pants(':%s' % name)])
   return lib
 
 bijection_lib('core')
@@ -33,7 +34,7 @@ bijection_lib('guava',
   excludes=[
     exclude(org='com.google.code.findbugs', name='jsr305')
   ],
-  additional_deps=[
+  additional_jars=[
     jar(org='com.google.code.findbugs', name='jsr305', rev='2.0.1')
   ]
 )
