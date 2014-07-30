@@ -288,27 +288,24 @@ make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
 jar_library(name='frigate-summingbird-client',
   jars=[
-    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.8')
-      .exclude('com.twitter', 'frigate-summingbird-client-thrift')
-      .exclude('com.twitter', 'finagle-memcached')
-      .exclude('com.twitter', 'finagle-serversets')
-      .exclude('com.twitter', 'finagle-thrift')
-      .exclude('com.twitter', 'storehaus-memcache_2.9.2')
-      .exclude('com.twitter', 'storehaus_internal-memcache_2.9.2')
-      .exclude('com.twitter', 'twitter-server-internal')
-      .exclude('com.twitter.summingbird_internal', 'job_2.9.2')
-      .exclude('com.twitter.summingbird_internal', 'bijection_2.9.2'),
+    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.9')
+      .intransitive(),
   ],
   dependencies=[
-    pants('finagle/finagle-memcached'),
-    pants('finagle/finagle-serversets'),
-    pants('finagle/finagle-thrift'),
-    pants('frigate/frigate-thrift-only/src/main/thrift:thrift-scala'),
-    pants('twitter-server-internal'),
-    pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
+    pants('3rdparty/jvm/com/twitter/algebird_internal:injection'),
+    pants('3rdparty/jvm/com/twitter/bijection:core'),
+    pants('3rdparty/jvm/com/twitter/bijection:json'),
+    pants('3rdparty/jvm/com/twitter/bijection:scrooge'),
     pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
+    pants('3rdparty/jvm/com/twitter/storehaus_internal:manhattan'),
+    pants('3rdparty/jvm/com/twitter/storehaus_internal:jubjub'),
+    pants('3rdparty/jvm/com/twitter/summingbird:batch'),
+    pants('3rdparty/jvm/com/twitter/summingbird:core'),
     pants('3rdparty/jvm/com/twitter/summingbird_internal:job'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection'),
+    pants('3rdparty/jvm/com/twitter/jubjub:jubjub-data-thrift-scala'),
+    pants('3rdparty/jvm/com/twitter/metastore:thrift-scala'),
+    pants('3rdparty:joda-time'),
+    pants('frigate/frigate-thrift-only/src/main/thrift:thrift-scala'),
   ]
 )
 
