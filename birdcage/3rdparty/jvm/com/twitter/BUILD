@@ -8,9 +8,9 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.50')
 
-make_lib('ads_shared_types', '0.0.100')
+make_lib('ads_shared_types', '0.0.103')
 
-make_lib('adserver_log', '1.0.172')
+make_lib('adserver_log', '1.0.178')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
@@ -38,7 +38,7 @@ jar_library(name='beaks-data',
   ]
 )
 
-make_lib('clientapp-thrift-java', '0.0.1')
+make_lib('clientapp-thrift-java', '3.9.2')
 
 HBC_REV='2.0.2'
 HBC_INTERNAL_REV='2.0.3'
@@ -148,7 +148,7 @@ jar_library(name='scala-zookeeper-client',
 
 jar_library(name='payment-thrift-only',
   jars=[
-    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.21')
+    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.26')
   ]
 )
 
@@ -174,7 +174,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.45')
+make_lib('user_text_profile', '0.0.46')
 
 jar_library(name='gizzard-thrift',
   jars=[
