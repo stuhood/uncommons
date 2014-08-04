@@ -6,8 +6,8 @@ jar_library(name='scribe_client',
       .exclude(org='com.twitter', name='finagle-thrift'),
   ],
   dependencies=[
-    pants('util/util-core'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
+    'util/util-core',
+    'finagle/finagle-core',
+    'finagle/finagle-thrift',
   ]
 )

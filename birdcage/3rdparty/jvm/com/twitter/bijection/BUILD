@@ -12,7 +12,7 @@ def bijection_lib(name, alias=None, excludes=None, sources=True, additional_jars
   deplist = [] if not additional_deps else additional_deps
   lib = jar_library(name=name, jars=jarlist, dependencies=deplist)
   if alias:
-    jar_library(name=alias, dependencies=[pants(':%s' % name)])
+    jar_library(name=alias, dependencies=[':%s' % name])
   return lib
 
 bijection_lib('core')
@@ -23,7 +23,7 @@ bijection_lib('thrift',
     exclude(org='org.apache.thrift', name='libthrift'),
   ],
   additional_deps=[
-    pants('3rdparty:libthrift-0.5.0'),
+    '3rdparty:libthrift-0.5.0',
   ],
 )
 bijection_lib('avro')
@@ -48,10 +48,10 @@ bijection_lib('scrooge',
     exclude(org='com.twitter', name='util-core'),
   ],
   additional_deps=[
-    pants('scrooge/scrooge-serializer'),
-    pants('scrooge/scrooge-runtime'),
-    pants('util/util-core'),
-    pants('3rdparty:libthrift-0.5.0'),
+    'scrooge/scrooge-serializer',
+    'scrooge/scrooge-runtime',
+    'util/util-core',
+    '3rdparty:libthrift-0.5.0',
   ]
 )
 
@@ -62,7 +62,7 @@ bijection_lib('util',
     exclude(org='com.twitter', name='util-core'),
   ],
   additional_deps=[
-    pants('util/util-core'),
+    'util/util-core',
   ]
 )
 
@@ -71,6 +71,6 @@ bijection_lib('netty',
     exclude(org='org.jboss.netty', name='netty'),
   ],
   additional_deps=[
-    pants('3rdparty:netty'),
+    '3rdparty:netty',
   ],
 )

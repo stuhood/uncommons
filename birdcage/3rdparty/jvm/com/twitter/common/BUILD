@@ -16,17 +16,17 @@ jar_library(name='application-module-http',
       .with_sources(),
   ],
   dependencies=[
-    pants(':application-action'),
-    pants(':application-http'),
-    pants(':application-module-lifecycle'),
-    pants(':base'),
-    pants(':net-http'),
-    pants(':net-http-handlers'),
-    pants(':net-http-handlers-time-series'),
-    pants(':net-http-handlers-pprof'),
-    pants('3rdparty:guice'),
-    pants('util/util-core'),
-    pants('util/util-jvm'),
+    ':application-action',
+    ':application-http',
+    ':application-module-lifecycle',
+    ':base',
+    ':net-http',
+    ':net-http-handlers',
+    ':net-http-handlers-time-series',
+    ':net-http-handlers-pprof',
+    '3rdparty:guice',
+    'util/util-core',
+    'util/util-jvm',
   ]
 )
 make_lib('application-module-lifecycle', '0.0.50')
@@ -44,8 +44,8 @@ jar_library(name='flags',
       .with_sources(),
   ],
   dependencies=[
-    pants('util/util-core'),
-    pants(':args'),
+    'util/util-core',
+    ':args',
   ],
 )
 
@@ -69,11 +69,11 @@ jar_library(name='net-http-handlers-pprof',
       .with_sources(),
   ],
   dependencies=[
-    pants(':net-http-handlers-params'),
-    pants(':quantity'),
-    pants('3rdparty:guava'),
-    pants('util/util-core'),
-    pants('util/util-jvm'),
+    ':net-http-handlers-params',
+    ':quantity',
+    '3rdparty:guava',
+    'util/util-core',
+    'util/util-jvm',
   ]
 )
 make_lib('net-pool', '0.0.60')
@@ -95,6 +95,6 @@ jar_library(name='logging-scribe',
         .exclude(org='org.apache.scribe', name='scribe_client'),
   ],
   dependencies=[
-     pants('3rdparty/jvm/org/apache/scribe:scribe_client'),
+     '3rdparty/jvm/org/apache/scribe:scribe_client',
   ]
 )

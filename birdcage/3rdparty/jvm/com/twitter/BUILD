@@ -103,7 +103,7 @@ jar_library(name='parquet-pig',
       .exclude(org='org.apache.pig', name='pig'),
   ],
   dependencies=[
-    pants('3rdparty/jvm/org/apache/pig'),
+    '3rdparty/jvm/org/apache/pig',
   ]
 )
 
@@ -116,10 +116,10 @@ jar_library(name='parquet-scrooge',
       .exclude(org='com.twitter', name='finagle-thrift_2.9.2')
   ],
   dependencies=[
-    pants(':parquet-thrift'),
-    pants('util/util-core'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
+    ':parquet-thrift',
+    'util/util-core',
+    'finagle/finagle-core',
+    'finagle/finagle-thrift',
   ]
 )
 
@@ -130,9 +130,9 @@ jar_library(name='parquet-thrift',
       .exclude(org='com.twitter', name='parquet-pig'),
   ],
   dependencies=[
-    pants(':parquet-pig'),
-    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-core'),
-    pants('3rdparty/jvm/com/twitter/elephantbird:elephant-bird-pig'),
+    ':parquet-pig',
+    '3rdparty/jvm/com/twitter/elephantbird:elephant-bird-core',
+    '3rdparty/jvm/com/twitter/elephantbird:elephant-bird-pig',
   ]
 )
 
@@ -141,8 +141,8 @@ jar_library(name='scala-zookeeper-client',
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
   ],
   dependencies=[
-    pants('3rdparty:zookeeper'),
-    pants('ostrich')
+    '3rdparty:zookeeper',
+    'ostrich'
   ]
 )
 
@@ -165,12 +165,12 @@ jar_library(name='flockdb-thrift',
     jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
   ],
   dependencies=[
-    pants('3rdparty:commons-lang'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:slf4j-api'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
+    '3rdparty:commons-lang',
+    '3rdparty:libthrift-0.5.0',
+    '3rdparty:slf4j-api',
+    'finagle/finagle-core',
+    'finagle/finagle-thrift',
+    'util/util-core'
   ]
 )
 
@@ -181,9 +181,9 @@ jar_library(name='gizzard-thrift',
     jar('com.twitter', 'gizzard-thrift', '0.0.4').intransitive(),
   ],
   dependencies=[
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
-    pants('util/util-core')
+    'finagle/finagle-core',
+    'finagle/finagle-thrift',
+    'util/util-core'
   ]
 )
 
@@ -224,16 +224,16 @@ jar_library(name='science-flock-client',
     jar(org='com.twitter', name='science-flock-client', rev='0.0.8').with_sources().intransitive(),
   ],
   dependencies=[
-    pants('3rdparty/jvm/com/twitter/common:base'),
-    pants('3rdparty/jvm/com/twitter/common:collections'),
-    pants('3rdparty/jvm/com/twitter/common:quantity'),
-    pants('3rdparty/jvm/com/twitter/common:thrift'),
-    pants('3rdparty:guava'),
-    pants('3rdparty:javax.inject'),
-    pants('3rdparty:libthrift-0.5.0'),
-    pants('3rdparty:slf4j-api'),
-    pants(':flockdb-thrift'),
-    pants(':science-flock-util')
+    '3rdparty/jvm/com/twitter/common:base',
+    '3rdparty/jvm/com/twitter/common:collections',
+    '3rdparty/jvm/com/twitter/common:quantity',
+    '3rdparty/jvm/com/twitter/common:thrift',
+    '3rdparty:guava',
+    '3rdparty:javax.inject',
+    '3rdparty:libthrift-0.5.0',
+    '3rdparty:slf4j-api',
+    ':flockdb-thrift',
+    ':science-flock-util'
   ]
 )
 
@@ -251,14 +251,14 @@ jar_library(name='vit-retweet-count-client',
       .intransitive(),
   ],
   dependencies=[
-    pants(':vit-retweet-count-common'),
-    pants('3rdparty/jvm/com/twitter/algebird:util'),
-    pants('3rdparty/jvm/com/twitter/bijection:util'),
-    pants('3rdparty/jvm/com/twitter/storehaus:core'),
-    pants('3rdparty/jvm/com/twitter/summingbird:client'),
-    pants('3rdparty/jvm/com/twitter/summingbird:core'),
-    pants('finagle/finagle-memcached'),
-    pants('util/util-core'),
+    ':vit-retweet-count-common',
+    '3rdparty/jvm/com/twitter/algebird:util',
+    '3rdparty/jvm/com/twitter/bijection:util',
+    '3rdparty/jvm/com/twitter/storehaus:core',
+    '3rdparty/jvm/com/twitter/summingbird:client',
+    '3rdparty/jvm/com/twitter/summingbird:core',
+    'finagle/finagle-memcached',
+    'util/util-core',
   ]
 )
 jar_library(name='vit-retweet-count-common',
@@ -267,18 +267,18 @@ jar_library(name='vit-retweet-count-common',
       .intransitive(),
   ],
   dependencies=[
-    pants('3rdparty:jackson-core'),
-    pants('3rdparty:jackson-databind'),
-    pants('3rdparty:jackson-module-scala'),
-    pants('3rdparty/jvm/com/twitter/algebird:core'),
-    pants('3rdparty/jvm/com/twitter/bijection:util'),
-    pants('3rdparty/jvm/com/twitter/bijection:netty'),
-    pants('3rdparty/jvm/com/twitter/storehaus:memcache'),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:bijection'),
-    pants('3rdparty/jvm/com/twitter/summingbird:batch'),
-    pants('finagle/finagle-memcached'),
-    pants('util/util-core'),
+    '3rdparty:jackson-core',
+    '3rdparty:jackson-databind',
+    '3rdparty:jackson-module-scala',
+    '3rdparty/jvm/com/twitter/algebird:core',
+    '3rdparty/jvm/com/twitter/bijection:util',
+    '3rdparty/jvm/com/twitter/bijection:netty',
+    '3rdparty/jvm/com/twitter/storehaus:memcache',
+    '3rdparty/jvm/com/twitter/storehaus_internal:memcache',
+    '3rdparty/jvm/com/twitter/summingbird_internal:bijection',
+    '3rdparty/jvm/com/twitter/summingbird:batch',
+    'finagle/finagle-memcached',
+    'util/util-core',
   ]
 )
 
@@ -292,20 +292,20 @@ jar_library(name='frigate-summingbird-client',
       .intransitive(),
   ],
   dependencies=[
-    pants('3rdparty/jvm/com/twitter/algebird_internal:injection'),
-    pants('3rdparty/jvm/com/twitter/bijection:core'),
-    pants('3rdparty/jvm/com/twitter/bijection:json'),
-    pants('3rdparty/jvm/com/twitter/bijection:scrooge'),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:memcache'),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:manhattan'),
-    pants('3rdparty/jvm/com/twitter/storehaus_internal:jubjub'),
-    pants('3rdparty/jvm/com/twitter/summingbird:batch'),
-    pants('3rdparty/jvm/com/twitter/summingbird:core'),
-    pants('3rdparty/jvm/com/twitter/summingbird_internal:job'),
-    pants('3rdparty/jvm/com/twitter/jubjub:jubjub-data-thrift-scala'),
-    pants('3rdparty/jvm/com/twitter/metastore:thrift-scala'),
-    pants('3rdparty:joda-time'),
-    pants('frigate/frigate-thrift-only/src/main/thrift:thrift-scala'),
+    '3rdparty/jvm/com/twitter/algebird_internal:injection',
+    '3rdparty/jvm/com/twitter/bijection:core',
+    '3rdparty/jvm/com/twitter/bijection:json',
+    '3rdparty/jvm/com/twitter/bijection:scrooge',
+    '3rdparty/jvm/com/twitter/storehaus_internal:memcache',
+    '3rdparty/jvm/com/twitter/storehaus_internal:manhattan',
+    '3rdparty/jvm/com/twitter/storehaus_internal:jubjub',
+    '3rdparty/jvm/com/twitter/summingbird:batch',
+    '3rdparty/jvm/com/twitter/summingbird:core',
+    '3rdparty/jvm/com/twitter/summingbird_internal:job',
+    '3rdparty/jvm/com/twitter/jubjub:jubjub-data-thrift-scala',
+    '3rdparty/jvm/com/twitter/metastore:thrift-scala',
+    '3rdparty:joda-time',
+    'frigate/frigate-thrift-only/src/main/thrift:thrift-scala',
   ]
 )
 
@@ -332,15 +332,15 @@ jar_library(name='self_unsuspension_thrift_scala',
       .exclude(org='com.twitter', name='util-logging'),
   ],
   dependencies=[
-    pants('finagle/finagle-thrift'),
-    pants('finagle/finagle-core'),
-    pants('finagle/finagle-thrift'),
-    pants('scrooge/scrooge-core'),
-    pants('util/util-app'),
-    pants('util/util-collection'),
-    pants('util/util-core'),
-    pants('util/util-hashing'),
-    pants('util/util-jvm'),
-    pants('util/util-logging'),
+    'finagle/finagle-thrift',
+    'finagle/finagle-core',
+    'finagle/finagle-thrift',
+    'scrooge/scrooge-core',
+    'util/util-app',
+    'util/util-collection',
+    'util/util-core',
+    'util/util-hashing',
+    'util/util-jvm',
+    'util/util-logging',
   ],
 )
