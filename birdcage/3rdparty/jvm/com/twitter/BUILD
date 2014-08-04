@@ -309,14 +309,13 @@ jar_library(name='frigate-summingbird-client',
   ]
 )
 
-SCARECROW_REV='0.0.13'
+SCARECROW_REV='0.0.1'
 
-make_thrift_lib('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV)
 
-idl_jar_thrift_library(name='scarecrow-thrift-scala',
-  thrift_jar=thrift_jar('com.twitter', 'scarecrow-thrift-only', SCARECROW_REV),
-  language='scala',
-  rpc_style='finagle',
+jar_library(name='scarecrow-thrift-scala',
+  jars=[
+    jar('com.twitter', 'scarecrow-thrift-scala', rev=SCARECROW_REV)
+  ],
 )
 
 jar_library(name='self_unsuspension_thrift_scala',
