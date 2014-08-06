@@ -55,7 +55,28 @@ make_lib('io-thrift', '0.0.53')
 make_lib('logging', '0.0.61')
 make_lib('logging-buffered', '0.0.6')
 make_lib('memcached', '0.0.9')
-make_lib('metastore-client_v2', '0.0.3')
+
+jar_library(name='metastore-client_v2',
+  jars=[
+    jar(org='com.twitter.common', name='metastore-client_v2', rev='0.0.3')
+      .intransitive(),
+  ],
+  dependencies=[
+    pants('3rdparty/jvm/com/twitter/common:base'),
+    pants('3rdparty/jvm/com/twitter/common_internal:manhattan'),
+    pants('3rdparty/jvm/com/twitter/metastore:data'),
+    pants('3rdparty/jvm/com/twitter/metastore:thrift'),
+    pants('3rdparty:commons-lang'),
+    pants('3rdparty:guava'),
+    pants('3rdparty:javax.inject'),
+    pants('3rdparty:jsr305'),
+    pants('3rdparty:libthrift-0.5.0'),
+    pants('3rdparty:slf4j-api'),
+    pants('3rdparty:slf4j-jdk14'),
+    pants('util/util-core'),
+  ]
+)
+
 make_lib('metrics', '0.0.29')
 make_lib('metrics-data-sample', '0.0.1')
 make_lib('net-http', '0.0.46')
