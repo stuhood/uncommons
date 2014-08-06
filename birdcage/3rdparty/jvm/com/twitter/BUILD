@@ -332,7 +332,6 @@ jar_library(name='self_unsuspension_thrift_scala',
       .exclude(org='com.twitter', name='util-logging'),
   ],
   dependencies=[
-    'finagle/finagle-thrift',
     'finagle/finagle-core',
     'finagle/finagle-thrift',
     'scrooge/scrooge-core',
