@@ -286,28 +286,6 @@ make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
 
 make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
 
-jar_library(name='frigate-summingbird-client',
-  jars=[
-    jar(org='com.twitter', name='frigate-summingbird-client', rev='0.0.9')
-      .intransitive(),
-  ],
-  dependencies=[
-    '3rdparty/jvm/com/twitter/algebird_internal:injection',
-    '3rdparty/jvm/com/twitter/bijection:core',
-    '3rdparty/jvm/com/twitter/bijection:json',
-    '3rdparty/jvm/com/twitter/bijection:scrooge',
-    '3rdparty/jvm/com/twitter/storehaus_internal:memcache',
-    '3rdparty/jvm/com/twitter/storehaus_internal:manhattan',
-    '3rdparty/jvm/com/twitter/storehaus_internal:jubjub',
-    '3rdparty/jvm/com/twitter/summingbird:batch',
-    '3rdparty/jvm/com/twitter/summingbird:core',
-    '3rdparty/jvm/com/twitter/summingbird_internal:job',
-    '3rdparty/jvm/com/twitter/jubjub:jubjub-data-thrift-scala',
-    '3rdparty/jvm/com/twitter/metastore:thrift-scala',
-    '3rdparty:joda-time',
-    'frigate/frigate-thrift-only/src/main/thrift:thrift-scala',
-  ]
-)
 
 SCARECROW_REV='0.0.1'
 
