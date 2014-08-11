@@ -28,7 +28,7 @@ jar_library(name = 'cobertura',
               jar(
                 org = 'net.sourceforge.cobertura',
                 name = 'cobertura',
-                rev = '2.0.4-twitter-02')
+                rev = '2.1.0-twitter-03')
             ])
 
 jar_library(name = 'benchmark-caliper-0.5',
