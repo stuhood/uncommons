@@ -8,9 +8,9 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.50')
 
-make_lib('ads_shared_types', '0.0.103')
+make_lib('ads_shared_types', '0.0.104')
 
-make_lib('adserver_log', '1.0.178')
+make_lib('adserver_log', '1.0.181')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
@@ -38,7 +38,7 @@ jar_library(name='beaks-data',
   ]
 )
 
-make_lib('clientapp-thrift-java', '3.9.2')
+make_lib('clientapp-thrift-java', '3.11.0')
 
 HBC_REV='2.0.2'
 HBC_INTERNAL_REV='2.0.3'
@@ -174,7 +174,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.46')
+make_lib('user_text_profile', '0.0.47')
 
 jar_library(name='gizzard-thrift',
   jars=[
@@ -187,7 +187,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.11'
+ADS_TV_REV='0.0.12'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
