@@ -284,11 +284,10 @@ jar_library(name='vit-retweet-count-common',
 
 make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
 
-make_thrift_lib('com.twitter', 'logbase-thrift-only', '0.1.2')
+make_thrift_lib('com.twitter', 'logbase-thrift-java-only', '3.11.7')
 
 
-SCARECROW_REV='0.0.1'
-
+SCARECROW_REV='0.0.2'
 
 jar_library(name='scarecrow-thrift-scala',
   jars=[
