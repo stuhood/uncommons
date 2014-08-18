@@ -35,6 +35,7 @@
 .pants.d/
 /.pids/
 /.pants.run
+/.pex
 .project
 .reviewboardrc
 .run_classpath
