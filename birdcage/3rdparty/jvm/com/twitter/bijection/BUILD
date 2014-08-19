@@ -1,4 +1,4 @@
-BIJECTION_REV = '0.6.2'
+BIJECTION_REV = '0.6.3'
 
 def bijection_lib(name, alias=None, excludes=None, sources=True, additional_jars=None, additional_deps=None):
   mainjar = jar(org='com.twitter', name='bijection-' + name + '_2.9.3', rev=BIJECTION_REV)
