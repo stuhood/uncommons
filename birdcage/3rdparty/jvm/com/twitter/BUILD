@@ -38,7 +38,7 @@ jar_library(name='beaks-data',
   ]
 )
 
-make_lib('clientapp-thrift-java', '3.11.1')
+make_lib('clientapp-thrift-java', '3.11.0')
 
 HBC_REV='2.0.2'
 HBC_INTERNAL_REV='2.0.3'
@@ -187,7 +187,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.13'
+ADS_TV_REV='0.0.12'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
