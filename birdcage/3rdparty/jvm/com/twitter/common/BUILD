@@ -32,22 +32,9 @@ jar_library(name='application-module-http',
 make_lib('application-module-lifecycle', '0.0.50')
 make_lib('application-module-log', '0.0.57')
 make_lib('application-module-stats', '0.0.44')
-make_lib('args', '0.2.13')
+make_lib('args', '0.2.16')
 make_lib('base', '0.0.95')
 make_lib('collections', '0.0.82')
-
-jar_library(name='flags',
-  jars=[
-    jar(org='com.twitter.common', name='flags', rev='1.0.0')
-      .exclude('com.twitter', 'util-core')
-      .exclude('com.twitter.common', 'args')
-      .with_sources(),
-  ],
-  dependencies=[
-    'util/util-core',
-    ':args',
-  ],
-)
 
 make_lib('io', '0.0.56')
 make_lib('io-json', '0.0.44')
