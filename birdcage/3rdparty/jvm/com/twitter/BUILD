@@ -10,7 +10,7 @@ make_lib('ads_entities', '0.0.50')
 
 make_lib('ads_shared_types', '0.0.104')
 
-make_lib('adserver_log', '1.0.181')
+make_lib('adserver_log', '1.0.182')
 
 make_lib('ads-thrift-scala', '3.0.20')
 
