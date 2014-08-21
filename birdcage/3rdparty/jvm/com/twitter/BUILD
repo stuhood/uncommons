@@ -47,12 +47,6 @@ make_lib('hbc-core', HBC_REV)
 make_lib('hbc-twitter4j', HBC_REV)
 make_lib('hbc-internal', HBC_INTERNAL_REV)
 
-jar_library(name='limiter-thrift-only',
-  jars=[
-    thrift_jar(org='com.twitter', name='limiter-thrift-only', rev='1.1.34')
-  ]
-)
-
 MEDIASCIENCE_DASHBOARDS_REV='0.0.3'
 
 idl_jar_thrift_library(name='mediascience_dashboards-thrift-scala',
