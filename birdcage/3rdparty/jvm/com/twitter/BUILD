@@ -38,8 +38,6 @@ jar_library(name='beaks-data',
   ]
 )
 
-make_lib('clientapp-thrift-java', '3.17.0')
-
 HBC_REV='2.0.2'
 HBC_INTERNAL_REV='2.0.3'
 
