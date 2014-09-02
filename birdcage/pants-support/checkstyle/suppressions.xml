@@ -88,7 +88,8 @@
   <suppress files="twitter-zookeeper/common/src/test/java/.*.java" checks=".*"/>
   <suppress files="twitter-zookeeper/generated/src/main/java/.*\.java" checks=".*"/>
   <suppress files="twitteractors/src/main/java/.*.java" checks=".*"/>
-  <suppress files="util/.*/src/main/java/.*\.java" checks=".*"/>
+  <suppress files="util/.*/src/main/java/.*.java" checks=".*"/>
+  <suppress files="util/.*/src/test/java/.*.java" checks=".*"/>
   <suppress files="wikid/binutil/src/test/java/.*.java" checks=".*"/>
   <suppress files="wikid/parser/src/main/java/.*.java" checks=".*"/>
   <suppress files="wikid/parser/src/test/java/.*.java" checks=".*"/>
