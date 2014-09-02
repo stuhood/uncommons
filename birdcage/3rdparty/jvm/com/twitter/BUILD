@@ -12,7 +12,7 @@ make_lib('ads_shared_types', '0.0.104')
 
 make_lib('adserver_log', '1.0.182')
 
-make_lib('ads-thrift-scala', '3.0.20')
+make_lib('ads-thrift-scala_2.10', '0.0.1-TWOTEN-1407647274', alias='ads-thrift-scala')
 
 jar_library(name='app-proxy-thrift',
   jars=[
@@ -103,9 +103,9 @@ jar_library(name='parquet-scrooge',
   jars=[
     jar(org='com.twitter', name='parquet-scrooge', rev=PARQUET_REV)
       .exclude(org='com.twitter', name='parquet-thrift')
-      .exclude(org='com.twitter', name='util-core_2.9.2')
-      .exclude(org='com.twitter', name='finagle-core_2.9.2')
-      .exclude(org='com.twitter', name='finagle-thrift_2.9.2')
+      .exclude(org='com.twitter', name='util-core_2.10')
+      .exclude(org='com.twitter', name='finagle-core_2.10')
+      .exclude(org='com.twitter', name='finagle-thrift_2.10')
   ],
   dependencies=[
     ':parquet-thrift',
@@ -170,7 +170,7 @@ make_lib('user_text_profile', '0.0.47')
 
 jar_library(name='gizzard-thrift',
   jars=[
-    jar('com.twitter', 'gizzard-thrift', '0.0.4').intransitive(),
+    jar('com.twitter', 'gizzard-thrift', '0.0.5-TWOTEN-1407954556').intransitive(),
   ],
   dependencies=[
     'finagle/finagle-core',
@@ -233,13 +233,13 @@ make_lib('science-flock-util', '0.0.4')
 
 jar_library(name='hato-dm-url',
   jars=[
-    jar(org='com.twitter', name='hato-dm-url', rev='0.0.2'),
+    scala_jar(org='com.twitter', name='hato-dm-url', rev='0.0.1-TWOTEN-1408137047'),
   ],
 )
 
 jar_library(name='vit-retweet-count-client',
   jars=[
-    jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.6')
+    scala_jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.1-TWOTEN-20140703')
       .intransitive(),
   ],
   dependencies=[
@@ -255,7 +255,7 @@ jar_library(name='vit-retweet-count-client',
 )
 jar_library(name='vit-retweet-count-common',
   jars=[
-    jar(org='com.twitter', name='vit-retweet-count-common', rev='0.0.4')
+    scala_jar(org='com.twitter', name='vit-retweet-count-common', rev='0.0.1-TWOTEN-20140703')
       .intransitive(),
   ],
   dependencies=[
@@ -274,22 +274,23 @@ jar_library(name='vit-retweet-count-common',
   ]
 )
 
-make_lib('tormenta-core_2.9.3', '0.5.3', alias='tormenta-core')
+make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
 
 make_thrift_lib('com.twitter', 'logbase-thrift-java-only', '3.11.7')
 
 
 SCARECROW_REV='0.0.2'
+SCARECROW_SCALA_REV='0.0.1-TWOTEN-1407629276'
 
 jar_library(name='scarecrow-thrift-scala',
   jars=[
-    jar('com.twitter', 'scarecrow-thrift-scala', rev=SCARECROW_REV)
+    jar('com.twitter', 'scarecrow-thrift-scala_2.10', rev=SCARECROW_SCALA_REV)
   ],
 )
 
 jar_library(name='self_unsuspension_thrift_scala',
   jars=[
-    jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.10')
+    scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.1-TWOTEN-1407630022')
       .exclude(org='com.twitter', name='finagle-core')
       .exclude(org='com.twitter', name='finagle-thrift')
       .exclude(org='com.twitter', name='scrooge-core')

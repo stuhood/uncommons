@@ -57,6 +57,7 @@ dist/
 ensime_port
 git.properties
 iago/scripts**
+kestrel/lib
 lib_managed/
 macaw/macaw
 macaw/run

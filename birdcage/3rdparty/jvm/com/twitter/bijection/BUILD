@@ -1,7 +1,7 @@
 BIJECTION_REV = '0.6.3'
 
 def bijection_lib(name, alias=None, excludes=None, sources=True, additional_jars=None, additional_deps=None):
-  mainjar = jar(org='com.twitter', name='bijection-' + name + '_2.9.3', rev=BIJECTION_REV)
+  mainjar = jar(org='com.twitter', name='bijection-' + name + '_2.10', rev=BIJECTION_REV)
   if sources:
     mainjar.with_sources()
   if excludes:
@@ -43,7 +43,7 @@ bijection_lib('clojure')
 bijection_lib('scrooge',
   excludes=[
     exclude(org='com.twitter', name='scrooge-runtime'),
-    exclude(org='com.twitter', name='scrooge-serializer_2.9.2'),
+    exclude(org='com.twitter', name='scrooge-serializer_2.10'),
     exclude(org='org.apache.thrift', name='libthrift'),
     exclude(org='com.twitter', name='util-core'),
   ],
@@ -60,6 +60,7 @@ bijection_lib('util',
     exclude(org='com.twitter', name='util-core_2.9.3'),
     exclude(org='com.twitter', name='util-core_2.9.2'),
     exclude(org='com.twitter', name='util-core'),
+    exclude(org='com.twitter', name='util-core_2.10'),
   ],
   additional_deps=[
     'util/util-core',
