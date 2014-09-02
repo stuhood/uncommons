@@ -1,3 +1,5 @@
+SCALA_REV='2.10.4'
+
 jar_library(name = 'antlr-3.4',
             jars = [jar(org = 'org.antlr', name = 'antlr', rev = '3.4')]
            )
@@ -61,8 +63,8 @@ jar_library(name = 'zinc',
 
 jar_library(name = 'scala-compile',
             jars = [
-              jar(org = 'org.scala-lang', name = 'scala-compiler', rev = '2.10.4'),
-              jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.10.4'),
+              jar(org = 'org.scala-lang', name = 'scala-compiler', rev = SCALA_REV),
+              jar(org = 'org.scala-lang', name = 'scala-library', rev = SCALA_REV),
             ])
 
 jar_library(name = 'twitter-checkstyle',
@@ -82,16 +84,17 @@ jar_library(name = 'junit',
 
 jar_library(name = 'scala-specs',
             jars = [
-              jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.10.4').intransitive(),
+              jar(org = 'org.scala-lang', name = 'scala-library', rev = SCALA_REV).intransitive(),
               jar(org = 'org.scala-tools.testing', name = 'specs_2.10', rev = '1.6.9'),
               jar(org = 'com.twitter.common', name = 'specs-testing', rev = '0.0.6')
             ])
 
 jar_library(name = 'scala-repl',
             jars = [
-              jar(org = 'org.scala-lang', name = 'scala-compiler', rev = '2.10.4').intransitive(),
-              jar(org = 'org.scala-lang', name = 'scala-library', rev = '2.10.4').intransitive(),
-              jar(org = 'org.scala-lang', name = 'jline', rev = '2.10.4').intransitive(),
+              jar(org = 'org.scala-lang', name = 'scala-compiler', rev = SCALA_REV).intransitive(),
+              jar(org = 'org.scala-lang', name = 'scala-library', rev = SCALA_REV).intransitive(),
+              jar(org = 'org.scala-lang', name = 'scala-reflect', rev = SCALA_REV).intransitive(),
+              jar(org = 'org.scala-lang', name = 'jline', rev = SCALA_REV).intransitive(),
             ])
 
 jar_library(name = 'scalastyle',
