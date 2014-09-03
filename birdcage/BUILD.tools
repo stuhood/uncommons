@@ -79,7 +79,7 @@ jar_library(name = 'junit',
               jar(org = 'junit', name = 'junit-dep', rev = '4.10'),
               jar(org = 'org.hamcrest', name = 'hamcrest-core', rev = '1.2'),
               jar(org = 'com.twitter.common', name = 'junit-runner', rev = '0.0.42'),
-              jar(org = 'com.twitter.common_internal', name = 'junit-sm', rev = '0.0.2'),
+              jar(org = 'com.twitter.common_internal', name = 'junit-sm', rev = '0.0.3'),
             ])
 
 jar_library(name = 'scala-specs',
