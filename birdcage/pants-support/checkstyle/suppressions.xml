@@ -50,6 +50,7 @@
   <suppress files="frigate/frigate-fanout/src/main/java/.*.java" checks=".*"/>
   <suppress files="frigate/frigate-store/src/main/java/.*.java" checks=".*"/>
   <suppress files="geoip/src/main/java/.*.java" checks=".*"/>
+  <suppress files="haplo/server/src/main/java/.*.java" checks=".*"/>
   <suppress files="ibis/ibis-common/src/main/java/.*.java" checks=".*"/>
   <suppress files="ibis/ibis-datastore/src/main/java/.*.java" checks=".*"/>
   <suppress files="ibis/ibis-executor/src/main/java/.*.java" checks=".*"/>
