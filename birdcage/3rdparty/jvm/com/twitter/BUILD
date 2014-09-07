@@ -6,11 +6,11 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name=name, jars=[thrift_jar(org=org, name=name, rev=rev)])
 
-make_lib('ads_entities', '0.0.50')
+make_lib('ads_entities', '0.0.51')
 
 make_lib('ads_shared_types', '0.0.104')
 
-make_lib('adserver_log', '1.0.182')
+make_lib('adserver_log', '1.0.190')
 
 make_lib('ads-thrift-scala_2.10', '0.0.1-TWOTEN-1407647274', alias='ads-thrift-scala')
 
@@ -140,7 +140,7 @@ jar_library(name='scala-zookeeper-client',
 
 jar_library(name='payment-thrift-only',
   jars=[
-    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.26')
+    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.33')
   ]
 )
 
@@ -166,7 +166,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.47')
+make_lib('user_text_profile', '0.0.52')
 
 jar_library(name='gizzard-thrift',
   jars=[
@@ -197,7 +197,7 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
   rpc_style='finagle',
 )
 
-make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.17')
+make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.19')
 
 jar_library(name='talon-backend-logging-protobuf',
   jars=[
@@ -276,7 +276,7 @@ jar_library(name='vit-retweet-count-common',
 
 make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
 
-make_thrift_lib('com.twitter', 'logbase-thrift-java-only', '3.11.7')
+make_thrift_lib('com.twitter', 'logbase-thrift-java-only', '3.17.8')
 
 
 SCARECROW_REV='0.0.2'
