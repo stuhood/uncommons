@@ -12,8 +12,6 @@ make_lib('ads_shared_types', '0.0.104')
 
 make_lib('adserver_log', '1.0.190')
 
-make_lib('ads-thrift-scala_2.10', '0.0.1-TWOTEN-1407647274', alias='ads-thrift-scala')
-
 jar_library(name='app-proxy-thrift',
   jars=[
     thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2')
@@ -275,8 +273,6 @@ jar_library(name='vit-retweet-count-common',
 )
 
 make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
-
-make_thrift_lib('com.twitter', 'logbase-thrift-java-only', '3.17.8')
 
 
 SCARECROW_REV='0.0.2'
