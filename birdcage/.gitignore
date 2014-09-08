@@ -26,6 +26,7 @@
 .coverage
 .ensime
 .ensime.msg.counter
+.gcprof/
 .idea/
 .idea/*
 .ivy2
