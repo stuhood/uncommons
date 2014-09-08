@@ -6,7 +6,7 @@
   <info organisation="com.twitter" module="ivy-libs"/>
 
   <dependencies>
-    <dependency org="org.apache.ivy" name="ivy" rev="2.5.0.alpha_20140623200829" conf="default"/>
+    <dependency org="org.apache.ivy" name="ivy" rev="2.5.0.alpha_20140905000000" conf="default"/>
 
     <!-- needed to support the lastfm ivysvnresolver plugin used for publishing public jars to
          http://maven.twttr.com (https://svn.twitter.biz/maven-public) -->
