@@ -41,11 +41,13 @@
   <suppress files="finagle-thrift/src/main/java/.*.java" checks=".*"/>
   <suppress files="finagle-thrift/src/test/java/.*.java" checks=".*"/>
   <suppress files="finagle-thriftmux/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finatra2/finatra/finatra-http/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finatra2/finatra/finatra-jackson/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finatra2/finatra/finatra-server/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finatra2/finatra/finatra-utils/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finatra2/finatra/finatra-utils/src/test/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-http/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-jackson/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-http/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-server/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-scopes/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-utils/src/main/java/.*.java" checks=".*"/>
+  <suppress files="finatra/finatra/finatra-utils/src/test/java/.*.java" checks=".*"/>
   <suppress files="flock-client/src/main/java/.*.java" checks=".*"/>
   <suppress files="frigate/frigate-fanout/src/main/java/.*.java" checks=".*"/>
   <suppress files="frigate/frigate-store/src/main/java/.*.java" checks=".*"/>
