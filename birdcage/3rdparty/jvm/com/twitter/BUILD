@@ -274,16 +274,6 @@ jar_library(name='vit-retweet-count-common',
 
 make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
 
-
-SCARECROW_REV='0.0.2'
-SCARECROW_SCALA_REV='0.0.1-TWOTEN-1407629276'
-
-jar_library(name='scarecrow-thrift-scala',
-  jars=[
-    jar('com.twitter', 'scarecrow-thrift-scala_2.10', rev=SCARECROW_SCALA_REV)
-  ],
-)
-
 jar_library(name='self_unsuspension_thrift_scala',
   jars=[
     scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.1-TWOTEN-1407630022')
