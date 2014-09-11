@@ -87,6 +87,13 @@ idl_jar_thrift_library(name='cproxy-thrift-scala',
 
 PARQUET_REV='1.6.0rc1'
 
+jar_library(name='parquet-cascading',
+  jars=[
+    jar(org='com.twitter', name='parquet-cascading', rev=PARQUET_REV)
+  ],
+)
+
+
 jar_library(name='parquet-pig',
   jars=[
     jar(org='com.twitter', name='parquet-pig', rev=PARQUET_REV)
@@ -264,8 +271,8 @@ jar_library(name='vit-retweet-count-common',
     '3rdparty/jvm/com/twitter/bijection:util',
     '3rdparty/jvm/com/twitter/bijection:netty',
     '3rdparty/jvm/com/twitter/storehaus:memcache',
-    '3rdparty/jvm/com/twitter/storehaus_internal:memcache',
-    '3rdparty/jvm/com/twitter/summingbird_internal:bijection',
+    'storehaus_internal:memcache',
+    'summingbird_internal:bijection',
     '3rdparty/jvm/com/twitter/summingbird:batch',
     'finagle/finagle-memcached',
     'util/util-core',
