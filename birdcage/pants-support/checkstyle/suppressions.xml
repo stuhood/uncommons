@@ -18,6 +18,7 @@
   <suppress files="common-internal/analytics/client-analytics-data-layer/src/main/java/.*.java" checks=".*"/>
   <suppress files="common-internal/analytics/client-event-util/src/main/java/.*.java" checks=".*"/>
   <suppress files="common-internal/analytics/client-event-util/src/test/java/.*.java" checks=".*"/>
+  <suppress files="cuckoo/cuckoo-jmh/src/main/java/.*.java" checks=".*"/>
   <suppress files="curator/matcher/src/main/java/.*.java" checks=".*"/>
   <suppress files="curator/matcher/src/test/java/.*.java" checks=".*"/>
   <suppress files="curator/web/src/main/java/.*.java" checks=".*"/>
