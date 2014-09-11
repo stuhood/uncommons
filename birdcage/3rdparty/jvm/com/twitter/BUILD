@@ -184,7 +184,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.17'
+ADS_TV_REV='0.0.18'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
