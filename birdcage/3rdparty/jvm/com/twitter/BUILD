@@ -191,13 +191,16 @@ idl_jar_thrift_library(name='ads-tv-thrift-scala',
     thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV)
       # https://jira.twitter.biz/browse/THRIFT-183
       .exclude(org='com.twitter', name='scrooge-runtime')
-      .exclude(org='com.twitter', name='finagle-thrift'),
+      .exclude(org='com.twitter', name='finagle-thrift_2.10'),
   language='scala',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='ads-tv-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV),
+  thrift_jar=
+    thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV)
+      .exclude(org='com.twitter', name='scrooge-runtime')
+      .exclude(org='com.twitter', name='finagle-thrift_2.10'),
   language='java',
   rpc_style='finagle',
 )
