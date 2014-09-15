@@ -85,54 +85,6 @@ idl_jar_thrift_library(name='cproxy-thrift-scala',
   rpc_style='finagle',
 )
 
-PARQUET_REV='1.6.0rc1'
-
-jar_library(name='parquet-cascading',
-  jars=[
-    jar(org='com.twitter', name='parquet-cascading', rev=PARQUET_REV)
-  ],
-)
-
-
-jar_library(name='parquet-pig',
-  jars=[
-    jar(org='com.twitter', name='parquet-pig', rev=PARQUET_REV)
-      .exclude(org='org.apache.pig', name='pig'),
-  ],
-  dependencies=[
-    '3rdparty/jvm/org/apache/pig',
-  ]
-)
-
-jar_library(name='parquet-scrooge',
-  jars=[
-    jar(org='com.twitter', name='parquet-scrooge', rev=PARQUET_REV)
-      .exclude(org='com.twitter', name='parquet-thrift')
-      .exclude(org='com.twitter', name='util-core_2.10')
-      .exclude(org='com.twitter', name='finagle-core_2.10')
-      .exclude(org='com.twitter', name='finagle-thrift_2.10')
-  ],
-  dependencies=[
-    ':parquet-thrift',
-    'util/util-core',
-    'finagle/finagle-core',
-    'finagle/finagle-thrift',
-  ]
-)
-
-jar_library(name='parquet-thrift',
-  jars=[
-    jar(org='com.twitter', name='parquet-thrift', rev=PARQUET_REV)
-      .exclude(org='com.twitter.elephantbird')
-      .exclude(org='com.twitter', name='parquet-pig'),
-  ],
-  dependencies=[
-    ':parquet-pig',
-    '3rdparty/jvm/com/twitter/elephantbird:elephant-bird-core',
-    '3rdparty/jvm/com/twitter/elephantbird:elephant-bird-pig',
-  ]
-)
-
 jar_library(name='scala-zookeeper-client',
   jars=[
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
