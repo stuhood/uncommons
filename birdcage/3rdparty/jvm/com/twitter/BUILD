@@ -157,14 +157,6 @@ idl_jar_thrift_library(name='ads-tv-thrift-java',
   rpc_style='finagle',
 )
 
-make_thrift_lib('com.twitter', 'talon-thrift-only', '0.0.19')
-
-jar_library(name='talon-backend-logging-protobuf',
-  jars=[
-    jar(org='com.twitter.talon', name='protobuf', rev='0.0.1').with_sources(),
-  ],
-)
-
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
 make_lib('ml-taxonomy', '0.0.14')
