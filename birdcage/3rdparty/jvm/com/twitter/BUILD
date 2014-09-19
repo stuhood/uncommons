@@ -95,12 +95,6 @@ jar_library(name='scala-zookeeper-client',
   ]
 )
 
-jar_library(name='payment-thrift-only',
-  jars=[
-    thrift_jar(org='com.twitter.payment', name='thrift-only', rev='0.0.33')
-  ]
-)
-
 jar_library(name='tpay_signature',
   jars=[
     jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.11')
