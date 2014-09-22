@@ -963,15 +963,9 @@ abstract class Future[+A] extends Awaitable[A] {
 
   /**
    * Send updates from this Future to the other.
-   * `other` must not yet be satisfied at the time of the call.
-   * After this call, nobody else should satisfy `other`.
+   * ``other'' must not yet be satisfied.
    */
   def proxyTo[B >: A](other: Promise[B]) {
-    if (other.isDefined) {
-      val value = other.get(Duration.Zero)
-      throw new IllegalStateException(
-        s"Cannot call proxyTo on an already satisfied Promise: $value")
-    }
     respond { other() = _ }
   }
 

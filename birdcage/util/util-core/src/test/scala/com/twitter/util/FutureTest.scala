@@ -1,8 +1,11 @@
 package com.twitter.util
 
-import com.twitter.common.objectsize.ObjectSizeCalculator
-import com.twitter.conversions.time._
 import java.util.concurrent.ConcurrentLinkedQueue
+
+import scala.collection.JavaConverters._
+import scala.runtime.NonLocalReturnControl
+import scala.util.control.ControlThrowable
+
 import org.junit.runner.RunWith
 import org.mockito.Matchers.any
 import org.mockito.Mockito.{never, verify, when}
@@ -11,9 +14,9 @@ import org.mockito.stubbing.Answer
 import org.scalatest.WordSpec
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import scala.collection.JavaConverters._
-import scala.runtime.NonLocalReturnControl
-import scala.util.control.ControlThrowable
+
+import com.twitter.common.objectsize.ObjectSizeCalculator
+import com.twitter.conversions.time._
 
 @RunWith(classOf[JUnitRunner])
 class FutureTest extends WordSpec with MockitoSugar {
@@ -179,40 +182,6 @@ class FutureTest extends WordSpec with MockitoSugar {
             iteration.raise(new Exception)
             assert((queue.asScala forall ( _.handled.isDefined)) === true)
           }
-        }
-      }
-
-      "proxyTo" should {
-        "reject satisfied promises" in {
-          val str = "um um excuse me um"
-          val p1 = new Promise[String]()
-          p1.update(Return(str))
-
-          val p2 = new Promise[String]()
-          val ex = intercept[IllegalStateException] { p2.proxyTo(p1) }
-          assert(ex.getMessage.contains(str))
-        }
-
-        "proxies success" in {
-          val p1 = new Promise[Int]()
-          val p2 = new Promise[Int]()
-          p2.proxyTo(p1)
-          p2.update(Return(5))
-          assert(5 === Await.result(p1))
-          assert(5 === Await.result(p2))
-        }
-
-        "proxies failure" in {
-          val p1 = new Promise[Int]()
-          val p2 = new Promise[Int]()
-          p2.proxyTo(p1)
-
-          val t = new RuntimeException("wurmp")
-          p2.update(Throw(t))
-          val ex1 = intercept[RuntimeException] { Await.result(p1) }
-          assert(ex1.getMessage === t.getMessage)
-          val ex2 = intercept[RuntimeException] { Await.result(p2) }
-          assert(ex2.getMessage === t.getMessage)
         }
       }
 
@@ -1015,7 +984,7 @@ class FutureTest extends WordSpec with MockitoSugar {
                 assert(f2.handled === None)
                 f.raise(new Exception)
                 assert(f1.handled.isDefined)
-                f1() = Return.Unit
+                f1() = Return(2)
                 assert(f2.handled.isDefined)
               }
 
