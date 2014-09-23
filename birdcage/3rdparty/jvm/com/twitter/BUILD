@@ -10,7 +10,7 @@ make_lib('ads_entities', '0.0.51')
 
 make_lib('ads_shared_types', '0.0.104')
 
-make_lib('adserver_log', '1.0.190')
+make_lib('adserver_log', '1.0.197')
 
 jar_library(name='app-proxy-thrift',
   jars=[
