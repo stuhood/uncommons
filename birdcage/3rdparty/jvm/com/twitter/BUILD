@@ -8,7 +8,7 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.51')
 
-make_lib('ads_shared_types', '0.0.104')
+make_lib('ads_shared_types', '0.0.111')
 
 make_lib('adserver_log', '1.0.200')
 
