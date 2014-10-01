@@ -10,22 +10,18 @@ make_lib('ads_entities', '0.0.51')
 
 make_lib('ads_shared_types', '0.0.111')
 
-make_lib('adserver_log', '1.0.200')
+make_lib('adserver_log', '1.0.204')
 
-jar_library(name='app-proxy-thrift',
-  jars=[
-    thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2')
-  ]
-)
+APP_PROXY_THRIFT_REV='2.1.3'
 
 idl_jar_thrift_library(name='app-proxy-thrift-java',
-  thrift_jar=thrift_jar('com.twitter', 'app-proxy-thrift-only', '2.1.2'),
+  thrift_jar=thrift_jar('com.twitter', 'app-proxy-thrift-only', APP_PROXY_THRIFT_REV),
   language='java',
   rpc_style='finagle',
 )
 
 idl_jar_thrift_library(name='app-proxy-thrift-scala',
-  thrift_jar=thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev='2.1.2'),
+  thrift_jar=thrift_jar(org='com.twitter', name='app-proxy-thrift-only', rev=APP_PROXY_THRIFT_REV),
   language='scala',
   rpc_style='finagle',
 )
@@ -130,7 +126,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.20'
+ADS_TV_REV='0.0.22'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
