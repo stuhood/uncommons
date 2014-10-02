@@ -6,7 +6,7 @@ def make_lib(name, rev):
   )
 
 make_lib('application', '0.0.75')
-make_lib('application-action', '0.0.79')
+make_lib('application-action', '0.0.80')
 make_lib('application-http', '0.0.61')
 
 jar_library(name='application-module-http',
@@ -33,8 +33,8 @@ make_lib('application-module-lifecycle', '0.0.50')
 make_lib('application-module-log', '0.0.57')
 make_lib('application-module-stats', '0.0.44')
 make_lib('args', '0.2.17')
-make_lib('base', '0.0.99')
-make_lib('collections', '0.0.87')
+make_lib('base', '0.0.100')
+make_lib('collections', '0.0.88')
 
 make_lib('io', '0.0.57')
 make_lib('io-json', '0.0.45')
@@ -86,13 +86,13 @@ jar_library(name='net-http-handlers-pprof',
 make_lib('net-pool', '0.0.60')
 make_lib('net-util', '0.0.88')
 make_lib('objectsize', '0.0.10')
-make_lib('quantity', '0.0.83')
+make_lib('quantity', '0.0.84')
 make_lib('service-thrift', '0.1.0')
-make_lib('stats', '0.0.101')
+make_lib('stats', '0.0.102')
 make_lib('stats-util', '0.0.49')
 make_lib('thrift', '0.0.68')
-make_lib('util', '0.0.107')
-make_lib('util-system-mocks', '0.0.85')
+make_lib('util', '0.0.108')
+make_lib('util-system-mocks', '0.0.88')
 make_lib('util-testing', '0.0.11')
 make_lib('zookeeper-testing', '0.0.46')
 
