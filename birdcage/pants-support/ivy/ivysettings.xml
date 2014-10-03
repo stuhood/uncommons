@@ -4,7 +4,7 @@
 
   <settings defaultResolver="chain-repos"/>
 
-  <credentials host="artifactory.local.twitter.com"
+  <credentials host="artifactory.twitter.biz"
                realm="Artifactory Realm"
                username="${login}"
                passwd="${password}"/>
@@ -13,7 +13,7 @@
     <chain name="chain-repos" returnFirst="true">
       <ibiblio name="twitter-internal-artifactory"
                m2compatible="true"
-               root="http://artifactory.local.twitter.com/repo/"/>
+	       root="https://artifactory.twitter.biz/repo/"/>
 
       <!-- Fall back to local repositories-->
       <!-- sbt standard -->
@@ -30,8 +30,8 @@
                checkmodified="true"
                root="file://${user.home}/.m2/repository"/>
     </chain>
-    <url name="artifactory.local.twitter.com" m2compatible="true">
-      <artifact pattern="http://artifactory.local.twitter.com/libs-releases-local/[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" />
+    <url name="artifactory.twitter.biz" m2compatible="true">
+      <artifact pattern="https://artifactory.twitter.biz/libs-releases-local/[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" />
     </url>
   </resolvers>
 
