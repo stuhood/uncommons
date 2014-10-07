@@ -20,7 +20,8 @@ import com.twitter.scrooge.ast._
 import com.twitter.scrooge.mustache.Dictionary
 import com.twitter.scrooge.mustache.Dictionary._
 
-trait ServiceTemplate { self: TemplateGenerator =>
+trait ServiceTemplate {
+  self: Generator =>
   def toDictionary(function: Function, generic: Option[String]): Dictionary = {
     val hasThrows = generic.isEmpty && function.throws.size > 0
     val throwsDictionaries =

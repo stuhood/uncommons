@@ -18,12 +18,11 @@ package com.twitter.scrooge.mustache
 
 import java.util.logging.{Level, Logger}
 import java.util.Properties
-import scala.collection.concurrent.TrieMap
+import scala.collection.mutable.HashMap
 import scala.io.Source
 
-
 class HandlebarLoader(prefix: String, suffix: String = ".scala") {
-  private[this] val cache = new TrieMap[String, Handlebar]
+  private val cache = new HashMap[String, Handlebar]
 
   def apply(name: String): Handlebar = {
     val fullName = prefix + name + suffix

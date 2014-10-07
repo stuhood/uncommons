@@ -4,7 +4,8 @@ import com.twitter.scrooge.mustache.Dictionary
 import com.twitter.scrooge.mustache.Dictionary._
 import com.twitter.scrooge.ast.{Enum, Identifier}
 
-trait EnumTemplate { self: TemplateGenerator =>
+trait EnumTemplate {
+  self: Generator =>
   def enumDict(
                 namespace: Identifier,
                 enum: Enum

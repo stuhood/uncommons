@@ -5,8 +5,6 @@ import bintray.Keys._
 import com.typesafe.sbt.SbtSite.site
 import com.typesafe.sbt.site.SphinxSupport.Sphinx
 import net.virtualvoid.sbt.cross.CrossPlugin
-import sbtassembly.Plugin._
-import AssemblyKeys._
 
 object Scrooge extends Build {
   val libVersion = "3.16.6"
@@ -151,7 +149,8 @@ object Scrooge extends Build {
       "cglib" % "cglib" % "2.1_3" % "test",
       "asm" % "asm" % "1.5.3" % "test",
       "org.objenesis" % "objenesis" % "1.1" % "test",
-      "org.mockito" % "mockito-all" % "1.9.5" % "test"
+      "org.hamcrest" % "hamcrest-all" % "1.1" % "test",
+      "org.mockito" % "mockito-all" % "1.9.0" % "test"
     )
   )
 
@@ -176,8 +175,7 @@ object Scrooge extends Build {
     settings = Project.defaultSettings ++
       inConfig(Test)(thriftSettings) ++
       sharedSettings ++
-      assemblySettings ++
-      inConfig(Test)(jmockSettings)
+      jmockSettings
   ).settings(
     name := "scrooge-generator",
     libraryDependencies ++= Seq(
@@ -192,12 +190,7 @@ object Scrooge extends Build {
       "commons-cli" % "commons-cli" % "1.2",
       finagle("core"),
       finagle("thrift") % "test"
-    ),
-    test in assembly := {},  // Skip tests when running assembly.
-    mainClass in assembly := Some("com.twitter.scrooge.Main"),
-    mergeStrategy in assembly <<= (mergeStrategy in assembly) { _ =>
-      { _ => MergeStrategy.first }
-    }
+    )
   ).dependsOn(scroogeRuntime % "test")
 
   lazy val scroogeCore = Project(
@@ -272,8 +265,7 @@ object Scrooge extends Build {
     id = "scrooge-linter",
     base = file("scrooge-linter"),
     settings = Project.defaultSettings ++
-      sharedSettings ++
-      assemblySettings
+      sharedSettings
   ).settings(
     name := "scrooge-linter"
   ).dependsOn(scroogeGenerator)

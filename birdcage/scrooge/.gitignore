@@ -1,5 +1,4 @@
 target/
-scrooge-benchmark/src/generated
 scrooge-core/target/
 scrooge-runtime/target/
 dist/

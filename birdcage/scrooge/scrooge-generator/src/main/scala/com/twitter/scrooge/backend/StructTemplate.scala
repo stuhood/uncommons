@@ -21,7 +21,8 @@ import com.twitter.scrooge.mustache.Dictionary
 import com.twitter.scrooge.mustache.Dictionary._
 import com.twitter.scrooge.frontend.ScroogeInternalException
 
-trait StructTemplate { self: TemplateGenerator =>
+trait StructTemplate {
+  self: Generator =>
 
   case class Binding[FT <: FieldType](name: String, fieldType: FT)
 
