@@ -18,9 +18,9 @@ private[finagle] object NamerTracingFilter {
     nameTry: Try[Name.Bound],
     record: (String, String) => Unit = Trace.recordBinary
   ): Unit = {
-    record("namer.path", path.show)
-    record("namer.dtab.base", baseDtab.show)
-    // dtab.local is annotated on the client & server tracers.
+    record("wily.path", path.show)
+    record("wily.dtab.base", baseDtab.show)
+    record("wily.dtab.local", Dtab.local.show)
 
     nameTry match {
       case Return(name) =>
@@ -29,9 +29,9 @@ private[finagle] object NamerTracingFilter {
           case pathId: Path => pathId.show
           case _ => name.id.toString
         }
-        record("namer.name", id)
+        record("wily.name", id)
 
-      case Throw(exc) => record("namer.failure", exc.getClass.getName)
+      case Throw(exc) => record("wily.failure", exc.getClass.getName)
     }
   }
 
@@ -39,7 +39,7 @@ private[finagle] object NamerTracingFilter {
 
   /**
    * Creates a [[com.twitter.finagle.Stackable]]
-   * [[com.twitter.finagle.factory.NamerTracingFilter]].
+   * [[com.twitter.finagle.tracing.NamerTracingFilter]].
    */
   def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
     new Stack.Simple[ServiceFactory[Req, Rep]] {
@@ -58,7 +58,7 @@ private[finagle] object NamerTracingFilter {
   /**
    * A class eligible for configuring a [[com.twitter.finagle.Stackable]]
    * [[com.twitter.finagle.factory.NamerTracingFilter]] with a
-   * [[com.twitter.finagle.Path]] and [[com.twitter.finagle.Name.Bound]]
+   * [[com.twitter.finagle.Path]] and [[com.twitter.fiangle.Name.Bound]]
    */
   case class BoundPath(boundPath: Option[(Path, Name.Bound)])
   implicit object BoundPath extends Stack.Param[BoundPath] {
