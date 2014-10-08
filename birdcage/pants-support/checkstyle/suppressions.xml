@@ -37,6 +37,7 @@
   <suppress files="finagle-httpx/src/test/java/.*.java" checks=".*"/>
   <suppress files="finagle-kestrel/src/main/java/.*.java" checks=".*"/>
   <suppress files="finagle-kestrel/src/test/java/.*.java" checks=".*"/>
+  <suppress files="finagle-kestrelx/src/main/java/.*.java" checks=".*"/>
   <suppress files="finagle-memcached/src/main/java/.*.java" checks=".*"/>
   <suppress files="finagle-memcached/src/test/java/.*.java" checks=".*"/>
   <suppress files="finagle-memcachedx/src/main/java/.*.java" checks=".*"/>
