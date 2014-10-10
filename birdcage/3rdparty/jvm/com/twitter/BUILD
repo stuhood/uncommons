@@ -101,7 +101,7 @@ make_lib('sarus_v2', '0.0.5')
 
 jar_library(name='flockdb-thrift',
   jars=[
-    jar('com.twitter', 'flockdb-thrift', '0.0.10').intransitive(),
+    jar('com.twitter', 'flockdb-thrift', '0.0.12').intransitive(),
   ],
   dependencies=[
     '3rdparty:commons-lang',
@@ -153,74 +153,11 @@ make_lib('ml-taxonomy', '0.0.14')
 
 make_lib('url-canonicalizer-core', '0.0.10')
 
-jar_library(name='science-flock-client',
-  jars=[
-    jar(org='com.twitter', name='science-flock-client', rev='0.0.8').with_sources().intransitive(),
-  ],
-  dependencies=[
-    '3rdparty/jvm/com/twitter/common:base',
-    '3rdparty/jvm/com/twitter/common:collections',
-    '3rdparty/jvm/com/twitter/common:quantity',
-    '3rdparty/jvm/com/twitter/common:thrift',
-    '3rdparty:guava',
-    '3rdparty:javax.inject',
-    '3rdparty:libthrift-0.5.0',
-    '3rdparty:slf4j-api',
-    ':flockdb-thrift',
-    ':science-flock-util'
-  ]
-)
-
-make_lib('science-flock-util', '0.0.4')
-
-jar_library(name='hato-dm-url',
-  jars=[
-    scala_jar(org='com.twitter', name='hato-dm-url', rev='0.0.1-TWOTEN-1408137047'),
-  ],
-)
-
-jar_library(name='vit-retweet-count-client',
-  jars=[
-    scala_jar(org='com.twitter', name='vit-retweet-count-client', rev='0.0.1-TWOTEN-20140703')
-      .intransitive(),
-  ],
-  dependencies=[
-    ':vit-retweet-count-common',
-    '3rdparty/jvm/com/twitter/algebird:util',
-    '3rdparty/jvm/com/twitter/bijection:util',
-    '3rdparty/jvm/com/twitter/storehaus:core',
-    '3rdparty/jvm/com/twitter/summingbird:client',
-    '3rdparty/jvm/com/twitter/summingbird:core',
-    'finagle/finagle-memcached',
-    'util/util-core',
-  ]
-)
-jar_library(name='vit-retweet-count-common',
-  jars=[
-    scala_jar(org='com.twitter', name='vit-retweet-count-common', rev='0.0.1-TWOTEN-20140703')
-      .intransitive(),
-  ],
-  dependencies=[
-    '3rdparty:jackson-core',
-    '3rdparty:jackson-databind',
-    '3rdparty:jackson-module-scala',
-    '3rdparty/jvm/com/twitter/algebird:core',
-    '3rdparty/jvm/com/twitter/bijection:util',
-    '3rdparty/jvm/com/twitter/bijection:netty',
-    '3rdparty/jvm/com/twitter/storehaus:memcache',
-    'storehaus_internal:memcache',
-    'summingbird_internal:bijection',
-    '3rdparty/jvm/com/twitter/summingbird:batch',
-    'finagle/finagle-memcached',
-    'util/util-core',
-  ]
-)
-
 make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
 
 jar_library(name='self_unsuspension_thrift_scala',
   jars=[
-    scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.1-TWOTEN-1407630022')
+    scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.10')
       .exclude(org='com.twitter', name='finagle-core')
       .exclude(org='com.twitter', name='finagle-thrift')
       .exclude(org='com.twitter', name='scrooge-core')
