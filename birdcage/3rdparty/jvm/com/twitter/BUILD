@@ -6,11 +6,11 @@ def make_lib(name, rev, alias=None):
 def make_thrift_lib(org, name, rev):
   jar_library(name=name, jars=[thrift_jar(org=org, name=name, rev=rev)])
 
-make_lib('ads_entities', '0.0.51')
+make_lib('ads_entities', '0.0.52')
 
 make_lib('ads_shared_types', '0.0.112')
 
-make_lib('adserver_log', '1.0.204')
+make_lib('adserver_log', '1.0.211')
 
 APP_PROXY_THRIFT_REV='2.1.3'
 
@@ -126,7 +126,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-ADS_TV_REV='0.0.25'
+ADS_TV_REV='0.0.28'
 
 idl_jar_thrift_library(name='ads-tv-thrift-scala',
   thrift_jar=
