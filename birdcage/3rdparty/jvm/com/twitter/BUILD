@@ -8,6 +8,8 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.52')
 
+make_lib('ads_shared_types', '0.0.112')
+
 make_lib('adserver_log', '1.0.211')
 
 APP_PROXY_THRIFT_REV='2.1.3'
@@ -111,7 +113,7 @@ jar_library(name='flockdb-thrift',
   ]
 )
 
-make_lib('user_text_profile', '0.0.53')
+make_lib('user_text_profile', '0.0.52')
 
 jar_library(name='gizzard-thrift',
   jars=[
@@ -124,7 +126,26 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-consume_thrift_libraries('com.twitter', 'ads-tv-thrift', '0.0.28', '0.0.7', 'ads_tv', 'ads_tv-thrift-scala')
+ADS_TV_REV='0.0.28'
+
+idl_jar_thrift_library(name='ads-tv-thrift-scala',
+  thrift_jar=
+    thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV)
+      # https://jira.twitter.biz/browse/THRIFT-183
+      .exclude(org='com.twitter', name='scrooge-runtime')
+      .exclude(org='com.twitter', name='finagle-thrift_2.10'),
+  language='scala',
+  rpc_style='finagle',
+)
+
+idl_jar_thrift_library(name='ads-tv-thrift-java',
+  thrift_jar=
+    thrift_jar('com.twitter', 'ads_tv-only', ADS_TV_REV)
+      .exclude(org='com.twitter', name='scrooge-runtime')
+      .exclude(org='com.twitter', name='finagle-thrift_2.10'),
+  language='java',
+  rpc_style='finagle',
+)
 
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
