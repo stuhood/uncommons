@@ -45,7 +45,7 @@ make_lib('memcached', '0.0.9')
 
 jar_library(name='metastore-client_v2',
   jars=[
-    jar(org='com.twitter.common', name='metastore-client_v2', rev='0.0.6')
+    jar(org='com.twitter.common', name='metastore-client_v2', rev='0.0.7')
       .intransitive(),
   ],
   dependencies=[
