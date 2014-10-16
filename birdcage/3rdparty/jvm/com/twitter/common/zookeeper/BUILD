@@ -7,12 +7,12 @@ def zk_lib(name, rev):
     ]
   )
 
-zk_lib('client', '0.0.69')
-zk_lib('candidate', '0.0.72')
+zk_lib('client', '0.0.70')
+zk_lib('candidate', '0.0.75')
 zk_lib('lock', '0.0.36')
 zk_lib('map', '0.0.47')
 zk_lib('node', '0.0.47')
 zk_lib('partitioner', '0.0.48')
-zk_lib('singleton-service', '0.0.94')
+zk_lib('singleton-service', '0.0.98')
 zk_lib('group', '0.0.81')
 zk_lib('server-set', '1.0.87')
