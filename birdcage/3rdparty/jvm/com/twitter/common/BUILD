@@ -5,13 +5,13 @@ def make_lib(name, rev):
     ]
   )
 
-make_lib('application', '0.0.75')
-make_lib('application-action', '0.0.80')
-make_lib('application-http', '0.0.61')
+make_lib('application', '0.0.78')
+make_lib('application-action', '0.0.81')
+make_lib('application-http', '0.0.63')
 
 jar_library(name='application-module-http',
   jars=[
-    jar(org='com.twitter.common', name='application-module-http', rev='0.0.66')
+    jar(org='com.twitter.common', name='application-module-http', rev='0.0.73')
       .intransitive()
       .with_sources(),
   ],
@@ -29,17 +29,17 @@ jar_library(name='application-module-http',
     'util/util-jvm',
   ]
 )
-make_lib('application-module-lifecycle', '0.0.50')
-make_lib('application-module-log', '0.0.57')
-make_lib('application-module-stats', '0.0.44')
-make_lib('args', '0.2.17')
-make_lib('base', '0.0.100')
-make_lib('collections', '0.0.89')
+make_lib('application-module-lifecycle', '0.0.52')
+make_lib('application-module-log', '0.0.60')
+make_lib('application-module-stats', '0.0.45')
+make_lib('args', '0.2.18')
+make_lib('base', '0.0.101')
+make_lib('collections', '0.0.90')
 
-make_lib('io', '0.0.57')
+make_lib('io', '0.0.58')
 make_lib('io-json', '0.0.45')
-make_lib('io-thrift', '0.0.54')
-make_lib('logging', '0.0.61')
+make_lib('io-thrift', '0.0.55')
+make_lib('logging', '0.0.64')
 make_lib('logging-buffered', '0.0.6')
 make_lib('memcached', '0.0.9')
 
@@ -65,13 +65,13 @@ jar_library(name='metastore-client_v2',
 
 make_lib('metrics', '0.0.29')
 make_lib('metrics-data-sample', '0.0.1')
-make_lib('net-http', '0.0.46')
-make_lib('net-http-handlers', '0.0.73')
-make_lib('net-http-handlers-time-series', '0.0.53')
-make_lib('net-http-handlers-params', '0.0.21')
+make_lib('net-http', '0.0.47')
+make_lib('net-http-handlers', '0.0.75')
+make_lib('net-http-handlers-time-series', '0.0.54')
+make_lib('net-http-handlers-params', '0.0.23')
 jar_library(name='net-http-handlers-pprof',
   jars=[
-    jar(org='com.twitter.common', name='net-http-handlers-pprof', rev='0.0.31')
+    jar(org='com.twitter.common', name='net-http-handlers-pprof', rev='0.0.37')
       .intransitive()
       .with_sources(),
   ],
@@ -84,15 +84,15 @@ jar_library(name='net-http-handlers-pprof',
   ]
 )
 make_lib('net-pool', '0.0.60')
-make_lib('net-util', '0.0.88')
+make_lib('net-util', '0.0.89')
 make_lib('objectsize', '0.0.10')
-make_lib('quantity', '0.0.85')
+make_lib('quantity', '0.0.86')
 make_lib('service-thrift', '0.1.0')
-make_lib('stats', '0.0.102')
+make_lib('stats', '0.0.103')
 make_lib('stats-util', '0.0.49')
 make_lib('thrift', '0.0.68')
-make_lib('util', '0.0.108')
-make_lib('util-system-mocks', '0.0.88')
+make_lib('util', '0.0.109')
+make_lib('util-system-mocks', '0.0.89')
 make_lib('util-testing', '0.0.11')
 make_lib('zookeeper-testing', '0.0.46')
 
