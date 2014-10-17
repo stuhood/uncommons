@@ -115,7 +115,8 @@ make_lib('user_text_profile', '0.0.53')
 
 jar_library(name='gizzard-thrift',
   jars=[
-    jar('com.twitter', 'gizzard-thrift', '0.0.5-TWOTEN-1407954556').intransitive(),
+    jar(org='com.twitter', name='gizzard-thrift', rev='0.0.5')
+      .intransitive(),
   ],
   dependencies=[
     'finagle/finagle-core',
@@ -136,7 +137,7 @@ make_lib('tormenta-core_2.10', '0.5.3', alias='tormenta-core')
 
 jar_library(name='self_unsuspension_thrift_scala',
   jars=[
-    scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.10')
+    scala_jar(org='com.twitter', name='self_unsuspension_thrift_scala', rev='0.0.1')
       .exclude(org='com.twitter', name='finagle-core')
       .exclude(org='com.twitter', name='finagle-thrift')
       .exclude(org='com.twitter', name='scrooge-core')
