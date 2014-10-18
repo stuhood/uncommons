@@ -8,7 +8,7 @@ def make_thrift_lib(org, name, rev):
 
 make_lib('ads_entities', '0.0.52')
 
-make_lib('adserver_log', '1.0.211')
+make_lib('adserver_log', '1.0.214')
 
 APP_PROXY_THRIFT_REV='2.1.3'
 
@@ -125,7 +125,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-consume_thrift_libraries('com.twitter', 'ads-tv-thrift', '0.0.28', '0.0.7', 'ads_tv', 'ads_tv-thrift-scala')
+consume_thrift_libraries('com.twitter', 'ads-tv-thrift', '0.0.31', '0.0.8', 'ads_tv', 'ads_tv-thrift-scala')
 
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
