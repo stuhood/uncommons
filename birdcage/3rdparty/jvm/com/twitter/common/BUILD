@@ -32,7 +32,8 @@ jar_library(name='application-module-http',
 make_lib('application-module-lifecycle', '0.0.52')
 make_lib('application-module-log', '0.0.60')
 make_lib('application-module-stats', '0.0.45')
-make_lib('args', '0.2.18')
+# TODO: Args version 0.2.18 breaks eventbus/loadtest:bundle (See DPB-2119)
+make_lib('args', '0.2.17')
 make_lib('base', '0.0.101')
 make_lib('collections', '0.0.90')
 
