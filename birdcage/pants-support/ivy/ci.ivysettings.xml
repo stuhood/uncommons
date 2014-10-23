@@ -6,6 +6,11 @@
 
   <settings defaultResolver="chain-repos"/>
 
+  <credentials host="artifactory.twitter.biz"
+               realm="Artifactory Realm"
+               username="${login}"
+               passwd="${password}"/>
+
   <resolvers>
     <chain name="chain-repos" returnFirst="true">
 
@@ -16,7 +21,7 @@
 
       <ibiblio name="twitter-internal-artifactory"
                m2compatible="true"
-               root="http://artifactory.local.twitter.com/repo/"/>
+	             root="https://artifactory.twitter.biz/repo/"/>
     </chain>
     <url name="artifactory.twitter.biz" m2compatible="true">
       <artifact pattern="https://artifactory.twitter.biz/libs-releases-local/[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]" />
