@@ -21,8 +21,6 @@ object Future {
   val True: Future[Boolean] = new ConstFuture(Return.True)
   val False: Future[Boolean] = new ConstFuture(Return.False)
 
-  private val NotApplied: Future[Nothing] = new NoFuture
-  private val AlwaysNotApplied: Any => Future[Nothing] = scala.Function.const(NotApplied) _
   private val toUnit: Any => Future[Unit] = scala.Function.const(Unit)
   private val toVoid: Any => Future[Void] = scala.Function.const(Void)
 
@@ -817,9 +815,7 @@ abstract class Future[+A] extends Awaitable[A] {
   def rescue[B >: A](
     rescueException: PartialFunction[Throwable, Future[B]]
   ): Future[B] = transform({
-    case Throw(t) =>
-      val result = rescueException.applyOrElse(t, Future.AlwaysNotApplied)
-      if (result eq Future.NotApplied) this else result
+    case Throw(t) if rescueException.isDefinedAt(t) => rescueException(t)
     case _ => this
   })
 
