@@ -93,6 +93,7 @@
   <suppress files="tv-platform/amplify/src/test/java/.*.java" checks=".*"/>
   <suppress files="tv-platform/feature-extraction/src/main/java/.*.java" checks=".*"/>
   <suppress files="tv-platform/feature-extraction/src/test/java/.*.java" checks=".*"/>
+  <suppress files="twitter-rpc/src/test/java/com/twitter/test/.*.java" checks=".*"/>
   <suppress files="twitter-zookeeper/.*/src/main/java/.*\.java" checks=".*"/>
   <suppress files="twitter-zookeeper/client-internal/src/test/java/.*.java" checks=".*"/>
   <suppress files="twitter-zookeeper/client-serverset2/src/test/java/.*.java" checks=".*"/>
