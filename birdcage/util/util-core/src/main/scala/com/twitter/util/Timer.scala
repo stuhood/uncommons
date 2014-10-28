@@ -1,7 +1,7 @@
 package com.twitter.util
 
 import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent._
+import java.util.concurrent.{CancellationException, ExecutorService, RejectedExecutionHandler, ScheduledThreadPoolExecutor, ThreadFactory, TimeUnit}
 
 import scala.collection.mutable.ArrayBuffer
 

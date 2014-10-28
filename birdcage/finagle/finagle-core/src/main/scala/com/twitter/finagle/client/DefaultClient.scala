@@ -17,11 +17,8 @@ import com.twitter.util.{Duration, Monitor, Timer, Var}
 import java.net.{SocketAddress, InetSocketAddress}
 
 object DefaultClient {
-  private def defaultFailureAccrual(sr: StatsReceiver): ServiceFactoryWrapper =
-    FailureAccrualFactory.wrapper(sr, 5, 5.seconds)(DefaultTimer.twitter)
-
-  /** marker trait for uninitialized failure accrual */
-  private[finagle] trait UninitializedFailureAccrual
+  private val defaultFailureAccrual: ServiceFactoryWrapper =
+    FailureAccrualFactory.wrapper(5, 5.seconds)(DefaultTimer.twitter)
 }
 
 /**
@@ -63,10 +60,9 @@ case class DefaultClient[Req, Rep](
   maxLifetime: Duration = Duration.Top,
   requestTimeout: Duration = Duration.Top,
   failFast: Boolean = true,
-  failureAccrual: Transformer[Req, Rep] =
-    new DefaultClient.UninitializedFailureAccrual with Transformer[Req,Rep] {
-        def apply(f: ServiceFactory[Req, Rep]) = f
-    },
+  failureAccrual: Transformer[Req, Rep] = { factory: ServiceFactory[Req, Rep] =>
+    DefaultClient.defaultFailureAccrual andThen factory
+  },
   serviceTimeout: Duration = Duration.Top,
   timer: Timer = DefaultTimer.twitter,
   statsReceiver: StatsReceiver = ClientStatsReceiver,
@@ -79,15 +75,8 @@ case class DefaultClient[Req, Rep](
 ) extends Client[Req, Rep] { outer =>
 
   private[this] def transform(stack: Stack[ServiceFactory[Req, Rep]]) = {
-    val failureAccrualTransform: Transformer[Req,Rep] = failureAccrual match {
-      case _: DefaultClient.UninitializedFailureAccrual => { factory: ServiceFactory[Req, Rep] =>
-            DefaultClient.defaultFailureAccrual(statsReceiver) andThen factory
-        }
-      case _ => failureAccrual
-    }
-
     val stk = stack
-      .replace(FailureAccrualFactory.role, failureAccrualTransform)
+      .replace(FailureAccrualFactory.role, failureAccrual)
       .replace(StackClient.Role.pool, pool(statsReceiver))
       .replace(TraceInitializerFilter.role, newTraceInitializer)
 

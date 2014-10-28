@@ -10,7 +10,6 @@ object Duration extends TimeLikeOps[Duration] {
   // This is needed for Java compatibility.
   override def fromSeconds(seconds: Int): Duration = super.fromSeconds(seconds)
   override def fromMilliseconds(millis: Long): Duration = super.fromMilliseconds(millis)
-  override def fromMicroseconds(micros: Long): Duration = super.fromMicroseconds(micros)
 
   val NanosPerMicrosecond = 1000L
   val NanosPerMillisecond = NanosPerMicrosecond * 1000L
@@ -21,7 +20,7 @@ object Duration extends TimeLikeOps[Duration] {
 
   /**
    * Create a duration from a [[java.util.concurrent.TimeUnit]].
-   * Synonym for `apply`.
+   * Synonyn for `apply`.
    */
   def fromTimeUnit(value: Long, unit: TimeUnit) = apply(value, unit)
 
@@ -349,26 +348,20 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
 
   override def hashCode = nanos.hashCode
 
-  /**
-   * Scales this `Duration` by multiplying by `x`.
-   */
+  /** Scale the duration by the given multiplier */
   def *(x: Long) = try fromNanoseconds(LongOverflowArith.mul(nanos, x)) catch {
     case _: LongOverflowException if nanos < 0 == x < 0 => Top
     case _: LongOverflowException => Bottom
   }
 
-  /**
-   * Scales this `Duration` by dividing by `x`.
-   */
+  /** Scale the duration by the given denominator */
   def /(x: Long): Duration =
     if (x != 0) fromNanoseconds(nanos / x)
     else if (nanos == 0) Undefined
     else if (nanos < 0) Bottom
     else Top
 
-  /**
-   * Scales this `Duration` by modding by `x`.
-   */
+  /** Scale the duration by the given denominator, returning its remainder */
   def %(x: Duration) = x match {
     case Undefined | Nanoseconds(0) => Undefined
     case Nanoseconds(ns) => fromNanoseconds(nanos % ns)
@@ -395,36 +388,4 @@ sealed class Duration private[util] (protected val nanos: Long) extends {
   def isFinite = true
 
   private def writeReplace(): Object = DurationBox.Finite(inNanoseconds)
-
-  /**
-   * @see operator +
-   */
-  def plus(delta: Duration): Duration = this + delta
-
-  /**
-   * @see operator -
-   */
-  def minus(delta: Duration): Duration = this - delta
-
-  /**
-   * Negates this `Duration`.
-   */
-  def neg: Duration = -this
-
-  /**
-   * @see operator *
-   */
-  def mul(x: Long): Duration = this * x
-
-  /**
-   * @see operator /
-   */
-  def div(x: Long): Duration = this / x
-
-  /**
-   * @see operator %
-   */
-  def rem(x: Duration): Duration = this % x
-
-  override def floor(x: Duration): Duration = super.floor(x) // for Java-compatibility
 }
