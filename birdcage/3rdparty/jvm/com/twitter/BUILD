@@ -91,7 +91,7 @@ jar_library(name='scala-zookeeper-client',
 
 jar_library(name='tpay_signature',
   jars=[
-    jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.11')
+    jar(org='com.twitter.payment', name='tpay_signature', rev='0.0.12')
   ]
 )
 
