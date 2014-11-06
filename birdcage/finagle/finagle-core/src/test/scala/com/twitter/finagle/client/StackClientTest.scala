@@ -5,17 +5,12 @@ import com.twitter.finagle.util.StackRegistry
 import com.twitter.finagle.{param, Name}
 import java.net.InetSocketAddress
 import org.junit.runner.RunWith
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.concurrent.Eventually.eventually
 import org.scalatest.FunSuite
 import org.scalatest.junit.{AssertionsForJUnit, JUnitRunner}
 
 @RunWith(classOf[JUnitRunner])
-class StackClientTest extends FunSuite
-  with StringClient
-  with AssertionsForJUnit
-  with Eventually
-  with IntegrationPatience {
-
+class StackClientTest extends FunSuite with StringClient with AssertionsForJUnit {
   trait Ctx {
     val sr = new InMemoryStatsReceiver
     val client = stringClient

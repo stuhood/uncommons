@@ -5,16 +5,12 @@ import com.twitter.finagle.serverset2.client._
 import org.apache.zookeeper.WatchedEvent
 import org.apache.zookeeper.Watcher.Event.{EventType, KeeperState}
 import org.junit.runner.RunWith
-import org.scalatest.concurrent.{Eventually, IntegrationPatience}
+import org.scalatest.concurrent.Eventually._
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, OneInstancePerTest}
 
 @RunWith(classOf[JUnitRunner])
-class ApacheWatcherTest extends FlatSpec
-  with OneInstancePerTest
-  with Eventually
-  with IntegrationPatience {
-
+class ApacheWatcherTest extends FlatSpec with OneInstancePerTest {
   val statsReceiver = new InMemoryStatsReceiver
   val watcher = new ApacheWatcher(statsReceiver)
 
