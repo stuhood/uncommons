@@ -67,9 +67,7 @@ class Memcached(stats: StatsReceiver) extends CodecFactory[Command, Response] {
 
       // pass every request through a filter to create trace data
       override def prepareConnFactory(underlying: ServiceFactory[Command, Response]) =
-        new MemcachedLoggingFilter(stats) andThen underlying
-
-      override def newTraceInitializer = MemcachedxTraceInitializer.Module
+        new MemcachedTracingFilter() andThen new MemcachedLoggingFilter(stats) andThen underlying
     }
   }
 }

@@ -20,7 +20,7 @@ import com.twitter.io.Buf
 import com.twitter.util.{Duration, Future}
 import scala.collection.mutable
 
-private[finagle] object MemcachedxTraceInitializer {
+private object MemcachedxTraceInitializer {
   object Module extends Stack.Module1[param.Tracer, ServiceFactory[Command, Response]] {
     val role = TraceInitializerFilter.role
     val description = "Initialize traces for the client and record hits/misses"
@@ -34,8 +34,6 @@ private[finagle] object MemcachedxTraceInitializer {
   class Filter(tracer: Tracer) extends SimpleFilter[Command, Response] {
     def apply(command: Command, service: Service[Command, Response]): Future[Response] = Trace.unwind {
       Trace.pushTracerAndSetNextId(tracer)
-      Trace.recordRpc(command.name)
-
       val response = service(command)
       command match {
         case command: RetrievalCommand if Trace.isActivelyTracing =>
