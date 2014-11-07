@@ -99,9 +99,11 @@ class ScribeHandler(
     _lastLogStats = Time.now
   }
 
-  @volatile private var _lastTransmission = Time.epoch
+  private var _lastTransmission = Time.epoch
   // visible for testing
-  private[logging] def updateLastTransmission(): Unit = _lastTransmission = Time.now
+  private[logging] def updateLastTransmission(): Unit = synchronized {
+    _lastTransmission = Time.now
+  }
 
   private var socket: Option[Socket] = None
   private var archaicServer = false
@@ -145,7 +147,7 @@ class ScribeHandler(
         val skipped = reconnectionSkipped.getAndSet(0)
         log.info("sent records: %d, per second: %d, dropped records: %d, reconnection failures: %d, reconnection skipped: %d",
                  sent, sent/period.inSeconds, dropped, failed, skipped)
-        _lastLogStats = Time.now
+        updateLastLogStats()
       }
     }
 
