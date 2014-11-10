@@ -6,7 +6,6 @@ java_library(name='java',
   ),
   sources=rglobs('*.java'),
   dependencies=[
-    '3rdparty:scala-library',
     'util/util-core/src/main/scala'
   ]
 )
