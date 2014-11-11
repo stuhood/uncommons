@@ -3,7 +3,7 @@ package com.twitter.finagle.filter
 import com.twitter.concurrent.AsyncSemaphore
 import com.twitter.finagle.{param, Service, ServiceFactory, SimpleFilter, Stack, Stackable}
 
-object RequestSemaphoreFilter {
+private[finagle] object RequestSemaphoreFilter {
   val role = Stack.Role("RequestConcurrencyLimit")
 
   /**
@@ -18,7 +18,7 @@ object RequestSemaphoreFilter {
   /**
    * Creates a [[com.twitter.finagle.Stackable]] [[com.twitter.finagle.filter.RequestSemaphoreFilter]].
    */
-  private[finagle] def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
+  def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
     new Stack.Module2[Param, param.Stats, ServiceFactory[Req, Rep]] {
       val role = RequestSemaphoreFilter.role
       val description = "Restrict number of concurrent requests"

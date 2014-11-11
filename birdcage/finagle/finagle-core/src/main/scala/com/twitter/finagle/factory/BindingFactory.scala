@@ -7,14 +7,15 @@ import com.twitter.finagle.stats.{NullStatsReceiver, StatsReceiver}
 import com.twitter.finagle.tracing.Trace
 import com.twitter.finagle.util.{Drv, Rng}
 import com.twitter.util._
+import java.net.SocketAddress
 import scala.collection.immutable
 
-object NamerTracingFilter {
+private[finagle] object NamerTracingFilter {
   /**
    * Trace a lookup from [[com.twitter.finagle.Path]] to
    * [[com.twitter.finagle.Name.Bound]] with the given `record` function.
    */
-  private[finagle] def trace(
+  def trace(
     path: Path,
     baseDtab: Dtab,
     nameTry: Try[Name.Bound],
@@ -43,7 +44,7 @@ object NamerTracingFilter {
    * Creates a [[com.twitter.finagle.Stackable]]
    * [[com.twitter.finagle.factory.NamerTracingFilter]].
    */
-  private[finagle] def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
+  def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
     new Stack.Module2[BindingFactory.BaseDtab, BoundPath, ServiceFactory[Req, Rep]] {
       val role = NamerTracingFilter.role
       val description = "Trace the details of the Namer lookup"
@@ -343,7 +344,7 @@ private[finagle] class BindingFactory[Req, Rep](
   override def isAvailable = dtabCache.isAvailable
 }
 
-object BindingFactory {
+private[finagle] object BindingFactory {
   val role = Stack.Role("Binding")
 
   /**
@@ -357,7 +358,7 @@ object BindingFactory {
     val default = Dest(Name.Path(Path.read("/$/fail")))
   }
 
-  private[finagle] val DefaultBaseDtab = () => Dtab.base
+  val DefaultBaseDtab = () => Dtab.base
 
   /**
    * A class eligible for configuring a [[com.twitter.finagle.Stackable]]
@@ -377,7 +378,7 @@ object BindingFactory {
    * `BindingFactory.Dest` (with caching of previously seen
    * `Name.Bound`s).
    */
-  private[finagle] def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
+  def module[Req, Rep]: Stackable[ServiceFactory[Req, Rep]] =
     new Stack.Module[ServiceFactory[Req, Rep]] {
       val role = BindingFactory.role
       val description = "Bind destination names to endpoints"
