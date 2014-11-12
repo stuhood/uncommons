@@ -60,11 +60,17 @@ object Httpx extends Client[Request, Response] with HttpxRichClient
     }
 
     private[Httpx] def applyToCodec(
-      params: Stack.Params, codec: httpx.Http): httpx.Http =
+      params: Stack.Params, codec: httpx.Http): httpx.RichHttp[Request] = {
+      val richCodec = httpx.RichHttp[Request](
         codec
           .maxRequestSize(params[MaxRequestSize].size)
-          .maxResponseSize(params[MaxResponseSize].size)
-          .streaming(params[Streaming].enabled)
+          .maxResponseSize(params[MaxResponseSize].size))
+      applyToCodec(params, richCodec)
+    }
+
+    private[Httpx] def applyToCodec(
+      params: Stack.Params, codec: httpx.RichHttp[Request]): httpx.RichHttp[Request] =
+      codec.copy(aggregateChunks = !params[Streaming].enabled)
   }
 
   object Client {

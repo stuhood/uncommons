@@ -11,10 +11,10 @@ import com.twitter.util.{Future, Promise, Throw, Return}
 import java.net.InetSocketAddress
 import org.jboss.netty.handler.codec.http.{HttpRequest, HttpResponse, HttpHeaders}
 
-class HttpServerDispatcher(
+class HttpServerDispatcher[REQUEST <: Request](
     trans: Transport[Any, Any],
-    service: Service[Request, Response])
-  extends GenSerialServerDispatcher[Request, Response, Any, Any](trans) {
+    service: Service[REQUEST, Response])
+  extends GenSerialServerDispatcher[REQUEST, Response, Any, Any](trans) {
 
   import ReaderUtils.{readChunk, streamChunks}
 
@@ -42,7 +42,7 @@ class HttpServerDispatcher(
             BufReader(ChannelBufferBuf.Unsafe(reqIn.getContent))
           }
 
-      }
+      }.asInstanceOf[REQUEST]
 
       service(req)
 

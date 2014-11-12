@@ -1,14 +1,12 @@
 package com.twitter.finagle.httpx.codec
 
-import com.twitter.finagle.httpx.{
-  HttpTransport, Request, Version, Method, Response, Fields, Status
-}
+import com.twitter.finagle.httpx.{HttpTransport, Request, Version}
 import com.twitter.finagle.transport.Transport
 import com.twitter.util.{Promise, Return, Future, Time}
 import java.net.InetSocketAddress
 import java.nio.charset.Charset
 import org.jboss.netty.channel._
-import org.jboss.netty.handler.codec.http.{HttpRequest, HttpResponse}
+import org.jboss.netty.handler.codec.http._
 import org.junit.runner.RunWith
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -28,36 +26,41 @@ class ConnectionManagerTest extends FunSuite with MockitoSugar {
   val cFuture = new DefaultChannelFuture(c, false)
   when(me.getChannel).thenReturn(c)
 
-  def makeRequest(version: Version, headers: (String, String)*) = {
-    val request = Request(Method.Get, "/", version)
+  def makeRequest(version: HttpVersion, headers: (String, String)*) = {
+    val request = new DefaultHttpRequest(version, HttpMethod.GET, "/")
     headers foreach { case (k, v) =>
       request.headers.set(k, v)
     }
+
     request
   }
 
-  def makeResponse(version: Version, headers: (String, String)*) = {
-    val response = Response(version, Status.Ok)
+  def makeResponse(version: HttpVersion, headers: (String, String)*) = {
+    val response = new DefaultHttpResponse(version, HttpResponseStatus.OK)
     headers foreach { case (k, v) =>
       response.headers.set(k, v)
     }
+
     response
   }
 
-  def perform(request: Request, response: Response, shouldMarkDead: Boolean) {
+  def perform(request: HttpRequest, response: HttpResponse, shouldMarkDead: Boolean) {
     val trans = mock[Transport[Any, Any]]
     when(trans.close(any[Time])).thenReturn(Future.Done)
     when(trans.close).thenReturn(Future.Done)
 
-    val disp = new HttpClientDispatcher(new HttpTransport(trans))
+    val disp = new HttpClientDispatcher[Request](new HttpTransport(trans))
 
     val wp = new Promise[Unit]
     when(trans.write(any[HttpRequest])).thenReturn(wp)
 
-    val f = disp(request)
+    val f = disp(new Request {
+      val httpRequest = request
+      lazy val remoteSocketAddress = new InetSocketAddress(0)
+    })
     assert(f.isDefined === false)
 
-    verify(trans, times(1)).write(any[HttpRequest])
+    verify(trans, times(1)).write(request)
     verify(trans, never()).read()
 
     val rp = new Promise[HttpResponse]
@@ -68,12 +71,12 @@ class ConnectionManagerTest extends FunSuite with MockitoSugar {
     verify(trans, times(1)).read()
 
     assert(f.isDefined === false)
-    rp.setValue(response.httpResponse)
+    rp.setValue(response)
 
     f.poll match {
-      case Some(Return(r)) =>
-        assert(r.version === response.version)
-        assert(r.status === response.status)
+      case Some(Return(r: HttpResponse)) =>
+        assert(r.getProtocolVersion === response.getProtocolVersion)
+        assert(r.getStatus === response.getStatus)
 
       case _ =>
         fail()
@@ -85,24 +88,24 @@ class ConnectionManagerTest extends FunSuite with MockitoSugar {
 
   test("not terminate regular http/1.1 connections") {
     perform(
-      makeRequest(Version.Http11),
-      makeResponse(Version.Http11, Fields.ContentLength -> "1"),
+      makeRequest(HttpVersion.HTTP_1_1),
+      makeResponse(HttpVersion.HTTP_1_1, HttpHeaders.Names.CONTENT_LENGTH -> "1"),
       false)
   }
 
   // Note: by way of the codec, this reply is already taken care of.
   test("terminate http/1.1 connections without content length") {
     perform(
-      makeRequest(Version.Http11),
-      makeResponse(Version.Http11),
+      makeRequest(HttpVersion.HTTP_1_1),
+      makeResponse(HttpVersion.HTTP_1_1),
       true
     )
   }
 
   test("terminate http/1.1 connections with Connection: close") {
     perform(
-      makeRequest(Version.Http11, "Connection" -> "close"),
-      makeResponse(Version.Http11),
+      makeRequest(HttpVersion.HTTP_1_1, "Connection" -> "close"),
+      makeResponse(HttpVersion.HTTP_1_1),
       true
     )
   }
