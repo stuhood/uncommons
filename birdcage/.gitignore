@@ -79,3 +79,4 @@ spoonbill/server/deploy-cache/
 *.sublime-project
 _build/
 gosearch/src/main/resources/public/bower_components
+hooks.pex
