@@ -1,9 +1,6 @@
 package com.twitter.finagle.stats
 
 import com.twitter.conversions.time._
-import com.twitter.finagle.builder.{ClientBuilder, ServerBuilder}
-import com.twitter.finagle.integration.StringCodec
-import com.twitter.finagle.{Service, WriteException, IndividualRequestTimeoutException}
 import com.twitter.util.{Await, Future, Promise}
 import java.net.InetSocketAddress
 import java.util.concurrent.TimeUnit
@@ -123,95 +120,4 @@ class StatsReceiverTest extends FunSuite {
     assert(NullStatsReceiver.scope("foo").scope("bar").isNull)
   }
 
-  test("rollup statsReceiver work in action") {
-    val never = new Service[String, String] {
-      def apply(request: String) = new Promise[String]
-    }
-    val address = new InetSocketAddress(0)
-    val server = ServerBuilder()
-      .codec(StringCodec)
-      .bindTo(address)
-      .name("FinagleServer")
-      .build(never)
-
-    val mem = new InMemoryStatsReceiver
-    val client = ClientBuilder()
-      .name("client")
-      .hosts(server.localAddress)
-      .codec(StringCodec)
-      .requestTimeout(10.millisecond)
-      .hostConnectionLimit(1)
-      .hostConnectionMaxWaiters(1)
-      .reportTo(mem)
-      .build()
-
-    // generate com.twitter.finagle.IndividualRequestTimeoutException
-    intercept[IndividualRequestTimeoutException] { Await.result(client("hi")) }
-    Await.ready(server.close())
-    // generate com.twitter.finagle.WriteException$$anon$1
-    intercept[WriteException] { Await.result(client("hi")) }
-
-    val requestFailures = mem.counters(Seq("client", "failures"))
-    val serviceCreationFailures =
-      mem.counters(Seq("client", "service_creation", "failures"))
-
-    assert(requestFailures === 1)
-    assert(serviceCreationFailures === 1)
-  }
-
-  test("Forwarding to LoadedStatsReceiver") {
-    val prev = LoadedStatsReceiver.self
-    LoadedStatsReceiver.self = NullStatsReceiver
-
-    val dsr = DefaultStatsReceiver // StatsReceiverProxy
-    val csr = ClientStatsReceiver // NameTranslatingStatsReceiver
-    val ssr = ServerStatsReceiver // NameTranslatingStatsReceiver
-
-    try {
-      assert(dsr.isNull, "DefaultStatsReceiver should be null")
-      assert(csr.isNull, "ClientStatsReceiver should be null")
-      assert(ssr.isNull, "ServerStatsReceiver should be null")
-
-      val mem = new InMemoryStatsReceiver
-      LoadedStatsReceiver.self = mem
-
-      assert(!dsr.isNull, "DefaultStatsReceiver should not be null")
-      assert(!csr.isNull, "ClientStatsReceiver should not be null")
-      assert(!ssr.isNull, "ServerStatsReceiver should not be null")
-
-      dsr.counter("req").incr()
-      csr.counter("req").incr()
-      ssr.counter("req").incr()
-
-      assert(mem.counters(Seq("req")) === 1)
-      assert(mem.counters(Seq("clnt", "req")) === 1)
-      assert(mem.counters(Seq("srv", "req")) === 1)
-    } finally {
-      LoadedStatsReceiver.self = prev
-    }
-  }
-
-  test("SummarizingStatsReceiver doesn't fail on empty/low stats") {
-    val receiver = new SummarizingStatsReceiver
-    assert(receiver.summary() === "# counters\n\n# gauges\n\n# stats\n")
-
-    val stats = receiver.stat("toto")
-    stats.add(1)
-    val expected = """# counters
-      |
-      |# gauges
-      |
-      |# stats
-      |toto                           n=1 min=1.0 med=1.0 p90=1.0 p95=1.0 p99=1.0 p999=1.0 p9999=1.0 max=1.0""".stripMargin
-    assert(receiver.summary() === expected)
-
-    (2 to 10) foreach { stats.add(_) }
-    val expected2 = """# counters
-      |
-      |# gauges
-      |
-      |# stats
-      |toto                           n=10 min=1.0 med=6.0 p90=10.0 p95=10.0 p99=10.0 p999=10.0 p9999=10.0 max=10.0""".stripMargin
-    assert(receiver.summary() === expected2)
-  }
 }
