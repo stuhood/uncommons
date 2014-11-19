@@ -15,13 +15,8 @@ import org.jboss.netty.buffer.{ChannelBuffer => CB, ChannelBuffers}
 
 @deprecated("Use object ThriftMux", "7.0.0")
 class ThriftMuxClientLike private[finagle](client: ThriftMux.Client)
-  extends Client[ThriftClientRequest, Array[Byte]] with ThriftRichClient
-  with (Stack.Params => Client[ThriftClientRequest, Array[Byte]])
-{
-  /**
-   * Used for Java access.
-   */
-  def get() = this
+    extends Client[ThriftClientRequest, Array[Byte]] with ThriftRichClient
+    with (Stack.Params => Client[ThriftClientRequest, Array[Byte]]) {
 
   /**
    * The [[com.twitter.finagle.ServiceFactory]] stack that requests
