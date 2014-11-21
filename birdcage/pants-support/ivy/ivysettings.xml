@@ -13,7 +13,7 @@
     <chain name="chain-repos" returnFirst="true">
       <ibiblio name="twitter-internal-artifactory"
                m2compatible="true"
-	       root="https://artifactory.twitter.biz/repo/"/>
+	       root="https://artifactory.twitter.biz/java-virtual/"/>
 
       <!-- Fall back to local repositories-->
       <!-- sbt standard -->
