@@ -64,7 +64,7 @@ jar_library(name='metastore-client_v2',
   ]
 )
 
-make_lib('metrics', '0.0.29')
+make_lib('metrics', '0.0.31')
 make_lib('metrics-data-sample', '0.0.1')
 make_lib('net-http', '0.0.47')
 make_lib('net-http-handlers', '0.0.75')
