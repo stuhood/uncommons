@@ -49,11 +49,6 @@ object StringHandler {
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
   ) = () => new StringHandler(formatter, level)
-
-  /**
-   * for java compatibility
-   */
-  def apply() = () => new StringHandler()
 }
 
 /**
@@ -93,11 +88,6 @@ object ConsoleHandler {
     formatter: Formatter = new Formatter(),
     level: Option[Level] = None
   ) = () => new ConsoleHandler(formatter, level)
-
-  /**
-   * for java compatibility
-   */
-  def apply() = () => new ConsoleHandler()
 }
 
 /**

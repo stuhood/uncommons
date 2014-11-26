@@ -1,7 +1,10 @@
 package com.twitter.logging;
 
+import com.twitter.logging.Logger;
+import java.util.ArrayList;
 import junit.framework.TestCase;
-import scala.Function0;
+import scala.collection.immutable.Nil$;
+import com.twitter.util.Function0;
 
 // Just make sure this compiles
 public class LoggerFactoryTest extends TestCase {
@@ -27,7 +30,11 @@ public class LoggerFactoryTest extends TestCase {
   public void testAddHandler() {
     LoggerFactoryBuilder builder = LoggerFactory.newBuilder();
 
-    Function0<StringHandler> handler = StringHandler.apply();
+    Function0<Handler> handler = new Function0<Handler>() {
+      public Handler apply() {
+        return NullHandler.get();
+      }
+    };
 
     LoggerFactoryBuilder intermediate = builder
       .addHandler(handler);
