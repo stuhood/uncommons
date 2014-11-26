@@ -107,11 +107,6 @@ jar_library(name = 'scrooge-gen',
               jar(org='com.twitter', name='scrooge-generator_2.10', rev='3.16.2-TWOTEN')
             ])
 
-jar_library(name = 'scrooge-legacy-gen',
-            jars = [
-              jar(org = 'com.twitter', name = 'scrooge', rev = '2.6.1', type_='jar')
-            ])
-
 jar_library(name = 'twitter-webcoretools',
             jars = [
               jar(org = 'com.twitter', name = 'web-core', rev = '1.0.0-20131002074507-fab5f10')
