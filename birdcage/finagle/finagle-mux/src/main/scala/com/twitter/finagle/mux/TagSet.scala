@@ -58,8 +58,5 @@ private object TagSet {
         cur
       }
     }
-
-    // for performance
-    override def isEmpty: Boolean = synchronized { bits.isEmpty }
   }
 }

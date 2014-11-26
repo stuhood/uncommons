@@ -7,7 +7,6 @@ import com.twitter.finagle.mux.lease.exp.Lessor
 import com.twitter.finagle.netty3._
 import com.twitter.finagle.pool.SingletonPool
 import com.twitter.finagle.server._
-import com.twitter.finagle.stats.{StatsReceiver, NullStatsReceiver}
 import com.twitter.finagle.tracing._
 import com.twitter.finagle.transport.Transport
 import com.twitter.util.Future
@@ -74,8 +73,7 @@ object Mux extends Client[mux.Request, mux.Response] with Server[mux.Request, mu
       transport: Transport[CB, CB]
     ): Service[mux.Request, mux.Response] with Acting = {
       val param.Stats(sr) = params[param.Stats]
-      val param.Label(name) = params[param.Label]
-      new mux.ClientDispatcher(name, transport, sr)
+      new mux.ClientDispatcher(transport, sr)
     }
   }
 
