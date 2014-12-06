@@ -104,7 +104,8 @@ jar_library(name = 'scalastyle',
 
 jar_library(name = 'scrooge-gen',
             jars = [
-              jar(org='com.twitter', name='scrooge-generator_2.10', rev='3.16.2-TWOTEN')
+              # This version matches what is currently in science.
+              jar(org='com.twitter', name='scrooge-generator_2.10', rev='20141113130215-4ea5481')
             ])
 
 jar_library(name = 'twitter-webcoretools',
