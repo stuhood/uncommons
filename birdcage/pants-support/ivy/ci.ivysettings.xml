@@ -4,7 +4,7 @@
   <property name="ivy.cache.dir" value="${env.PANTS_IVY_CACHE_DIR}" override="false"/>
   <property name="new_artifacts" value="${env.WORKSPACE}/new_artifacts"/>
 
-  <settings defaultResolver="chain-repos"/>
+  <settings defaultResolver="chain-repos" defaultTimeout="10000"/>
 
   <credentials host="artifactory.twitter.biz"
                realm="Artifactory Realm"
