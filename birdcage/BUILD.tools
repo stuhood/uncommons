@@ -39,7 +39,7 @@ jar_library(name = 'benchmark-caliper-0.5',
                 .exclude(org='com.google.guava', name='guava'),
             ],
             dependencies=[
-              '3rdparty:guava',
+              '3rdparty/jvm/com/google/guava',
               # The tool lib needs to stay lockstep with the 3rdparty dep benchmark writers will
               # use so we favor 3rdparty here as the central edit / viewing spot.
               '3rdparty:caliper'
