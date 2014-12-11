@@ -102,7 +102,7 @@ jar_library(name='flockdb-thrift',
     jar('com.twitter', 'flockdb-thrift', '0.0.12').intransitive(),
   ],
   dependencies=[
-    '3rdparty:commons-lang',
+    '3rdparty/jvm/commons-lang',
     '3rdparty:libthrift-0.5.0',
     '3rdparty:slf4j-api',
     'finagle/finagle-core',
