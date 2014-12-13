@@ -1,2 +1,84 @@
-.repo.d/
+# This was already in source/.gitignore.
+.repo.d
+
+# These things were in both birdcage/.gitignore and science/.gitignore.
 .DS_Store
+*.pyc
+GTAGS
+.idea
+hooks.pex
+GPATH
+GRTAGS
+GSYMS
+.pants.d
+*.iml
+*.ipr
+*.iws
+*#
+.#*
+*~
+pants.pex
+.pex
+.pants.run
+.classpath
+.project
+.settings
+_build/
+dist
+target
+
+# These were only present in birdcage/.gitignore, but they seem reasonably applicable to both.
+*.sublime-workspace
+*.sublime-project
+sbt-launch.jar
+sbt-launch-0.7.4.jar
+TAGS
+.reviewboardrc
+.*.sw[a-z]
+.*~
+.classpath.txt
+.coverage
+.scala
+.worksheet
+project/boot
+project/plugins/project
+project/plugins/src_managed
+*.tmproj
+*.pex
+.cache
+.ensime
+.ensime.msg.counter
+.gcprof
+.ivy2
+.ivyjars
+.native
+.pids
+.run_classpath
+deploy_profile
+ensime_port
+git.properties
+server/deploy-cache
+
+# These were only present in science/.gitignore, but they seem reasonably applicable to both.
+.twkeys
+dot.twkeys
+*.swp
+.python
+htmlcov
+.pydevproject
+.coverage*
+*.hprof
+.build.properties
+.pants.stats
+.factorypath
+codegen/classes
+out
+scalding/data
+
+# science was already ignoring *.class files whereas birdcage wasn't. We
+# probably do want to ignore *.class files with the exception of certain
+# *.class files that both science and birdcage have added explicitly.
+*.class
+
+# Any new things that should be ignored by science, birdcage, etc. should
+# go here.
