@@ -84,7 +84,7 @@ jar_library(name='scala-zookeeper-client',
     jar(org='com.twitter', name='scala-zookeeper-client', rev='3.0.2').intransitive().with_sources(),
   ],
   dependencies=[
-    '3rdparty:zookeeper',
+    '3rdparty/jvm/org/apache/zookeeper',
     'ostrich'
   ]
 )
