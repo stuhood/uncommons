@@ -2,7 +2,7 @@
 # jackson-annotations has 'provided' scope and we need to include them explicitly.
 jar_library(name='jackson-module-scala',
   jars=[
-    scala_jar(org='com.fasterxml.jackson.module', name='jackson-module-scala', rev='2.3.1')
+    scala_jar(org='com.fasterxml.jackson.module', name='jackson-module-scala', rev='2.4.4')
       .with_sources()
     ],
   dependencies=[
