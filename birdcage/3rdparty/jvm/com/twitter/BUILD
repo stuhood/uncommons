@@ -125,7 +125,7 @@ jar_library(name='gizzard-thrift',
   ]
 )
 
-consume_thrift_libraries('com.twitter', 'ads-tv-thrift', '20141210110025-e937aca', '20141210110025-e937aca', 'ads_tv', 'ads_tv-thrift-scala')
+consume_thrift_libraries('com.twitter', 'ads-tv-thrift', '20141212185909-ce99f5b', '20141212185909-ce99f5b', 'ads_tv', 'ads_tv-thrift-scala')
 
 make_lib('thriftstore-thrift', '0.0.5')
 make_lib('ml', '0.1.6')
