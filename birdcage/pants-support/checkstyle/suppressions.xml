@@ -30,25 +30,16 @@
   <suppress files="eventbus/thrift/src/test/java/.*.java" checks=".*"/>
   <suppress files="expandodo/caps/src/main/java/.*.java" checks=".*"/>
   <suppress files="expandodo/caps/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-core/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-core/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-example/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-http/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-httpx/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-kestrel/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-kestrel/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-kestrelx/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-memcached/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-memcached/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-memcachedx/src/main/java/.*.java" checks=".*"/>
-  <suppress files="finagle-memcachedx/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-mux/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-protobuf/src/test/scala/.*.java" checks=".*"/>
-  <suppress files="finagle-redis/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-swift/src/main/java/.*.java" checks=".*"/>
+
+  <suppress files="finagle-core/src/main/java/com/twitter/finagle/jsr166y/.*.java" checks=".*"/>
+  <suppress files="finagle-core/src/test/java/.*.java" checks="IllegalCatch|Javadoc"/>
+  <suppress files="finagle-kestrel/src/main/java/.*.java" checks="IllegalCatch"/>
+  <suppress files="finagle-kestrelx/src/main/java/.*.java" checks="IllegalCatch"/>
+  <suppress files="finagle-memcached/src/main/java/.*.java" checks="Javadoc"/>
+  <suppress files="finagle-memcachedx/src/main/java/.*.java" checks="Javadoc"/>
+  <suppress files="finagle-swift/src/main/java/.*.java" checks="Javadoc"/>
   <suppress files="finagle-thrift/src/main/java/.*.java" checks=".*"/>
   <suppress files="finagle-thrift/src/test/java/.*.java" checks=".*"/>
-  <suppress files="finagle-thriftmux/src/test/java/.*.java" checks=".*"/>
   <suppress files="finatra/finatra/finatra-http/src/main/java/.*.java" checks=".*"/>
   <suppress files="finatra/finatra/finatra-jackson/src/main/java/.*.java" checks=".*"/>
   <suppress files="finatra/finatra/finatra-http/src/main/java/.*.java" checks=".*"/>
