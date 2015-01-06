@@ -1,0 +1,148 @@
+<scalastyle commentFilter="enabled">
+  <name>Twitter Scala configuration</name>
+  <!--
+    The scalastyle rule definitions defined at: http://www.scalastyle.org/rules-0.6.0.html
+  -->
+
+  <!-- Requires that when either Object#equals or Object#hashCode are overridden,
+       both are overridden.
+
+       Rationale: Many data structures use the fact that equal objects have equal hash codes.
+                  See http://findbugs.sourceforge.net/bugDescriptions.html#HE_EQUALS_NO_HASHCODE
+                  for more information.
+  -->
+  <check class="org.scalastyle.scalariform.EqualsHashCodeChecker" level="error" enabled="true"/>
+
+
+  <!-- Prevents overriding the Object#equals method with parameter type which is a subtype of
+     java.lang.Object.
+
+     Rationale: This method may or may not be called when Object#equals is invoked.
+                See http://findbugs.sourceforge.net/bugDescriptions.html#EQ_ABSTRACT_SELF
+                for more information.
+     Alternative: override Object#equals(java.lang.Object).
+  -->
+  <check class="org.scalastyle.scalariform.CovariantEqualsChecker" level="error" enabled="true"/>
+
+  <!-- Prohibits certain imports from being used. Here is a list of the currently prohibited
+       packages, why they are prohibited, and possibly some alternatives:
+
+       org.apache.commons.httpclient: Due to a problem with network isolation in mesos and
+       particular bind/connect patterns, this import is forbidden. See ASFMESOS-1437.
+  -->
+  <check class="org.scalastyle.scalariform.IllegalImportsChecker" level="error" enabled="true">
+    <parameters>
+      <parameter name="illegalImports"><![CDATA[org.apache.commons.httpclient]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prohibits methods, but not functions, from having more than a certain number of parameters.
+
+       Rationale: Risk of interplay between different variables increases exponentially with their
+                  number, as does cognitive load.
+       Alternative: Encapsulate like concepts within a struct or class.
+  -->
+  <check class="org.scalastyle.scalariform.ParameterNumberChecker" level="error" enabled="true">
+    <parameters>
+      <parameter name="maxParameters"><![CDATA[8]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prohibits usage of hardcoded constants that are not named vals.
+
+       Rationale: The use of the actual constant, instead of a named value, obscures the developers'
+                  intent in using that value.
+       Alternative: Factor the constant out into a new val (not var).
+  -->
+  <check class="org.scalastyle.scalariform.MagicNumberChecker" level="error" enabled="true">
+    <parameters>
+      <parameter name="ignore"><![CDATA[-1,0,1,2,3]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prohibits the use of the return keyword.
+
+       Rationale: The JVM uses exceptions for control flow with the return keyword. Constructs that
+                  wrap or otherwise catch exceptions have a good possibility of introducing
+                  very subtle errors.
+       Alternative: Use functional programming or use a "while" check on a boolean to introduce
+                    the desired control flow.
+  -->
+  <check class="org.scalastyle.scalariform.ReturnChecker" level="error" enabled="true"/>
+
+  <!-- Prohibits overriding the finalize method.
+
+       Rationale: When the finalize method is called by the garbage collector is not controllable
+                  from within the JVM. This can lead to nondeterministic behavior and very difficult
+                  bugs.
+       Alternative: Let the garbage collector do its job. You can exert some additional control
+                    by using specific Reference types that the java.lang.ref package provides if
+                    you really need to.
+  -->
+  <check class="org.scalastyle.scalariform.NoFinalizeChecker" level="error" enabled="true"/>
+
+  <!-- Prevents methods that have too much branching.
+
+       Rationale: High cyclomatic complexity indicates a section of code that is hard to test.
+       Alternative: Break the code up into smaller, more modular pieces, with less control flow
+                    in each.
+  -->
+  <check class="org.scalastyle.scalariform.CyclomaticComplexityChecker" level="error" enabled="true">
+    <parameters>
+      <parameter name="maximum"><![CDATA[10]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prevents the usage of lower case "l" as variable names and in Long initializations.
+
+       Rationale: The letter l looks like numeral 1.
+       Alternative: Use upper cased L.
+  -->
+  <check class="org.scalastyle.scalariform.UppercaseLChecker" level="error" enabled="true"/>
+
+  <!-- Requires that public methods have their type declared.
+
+       Rationale: Type declarations aid in readability, and help reduce compile times.
+  -->
+  <check class="org.scalastyle.scalariform.PublicMethodsHaveTypeChecker" level="error" enabled="true">
+    <parameters>
+      <!-- Overridden declarations are included in this check. -->
+      <parameter name="ignoreOverride"><![CDATA[false]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prohibits use of java.lang.Deprecated.
+
+       Rationale: Code uniformity.
+       Alternative: Use `@scala.deprecated`.
+  -->
+  <check class="org.scalastyle.scalariform.DeprecatedJavaChecker" level="error" enabled="true"/>
+
+  <!-- Checks for multiple occurrences of the same string literal within a single file.
+
+      Rationale: Code duplication makes maintenance more difficult.
+      Alternative: Replace the multiple occurrences with a constant.
+  -->
+  <check class="org.scalastyle.scalariform.MultipleStringLiteralsChecker" level="error" enabled="true">
+    <parameters>
+      <parameter name="allowed"><![CDATA[2]]></parameter>
+      <parameter name="ignoreRegex"><![CDATA[^""$]]></parameter>
+    </parameters>
+  </check>
+
+  <!-- Prevents procedure declarations in scala (def myfun {}) with no equals sign.
+
+       Rationale: A procedure style declaration can cause confusion - the developer may have simply
+                  forgotten to add a '=', and now their method returns Unit rather than the inferred
+                  type:
+
+                  def foo() { println("hello"); 5 }
+                  def foo() = { println("hello"); 5 }
+
+                  This checker raises an error with the first line.
+
+       Alternative: Use an explicit return type, or add a '=' before the body.
+  -->
+  <check class="org.scalastyle.scalariform.ProcedureDeclarationChecker" level="error" enabled="true"/>
+
+</scalastyle>
