@@ -2,3 +2,6 @@
 # of SimpleDateFormat objects to go through here.
 util\/util-core\/src\/main\/scala\/com\/twitter\/util\/TwitterDateFormat\.scala
 translation\/src\/main\/scala\/com\/twitter\/translation\/TwitterDateFormat\.scala
+
+# TODO: remove this (CHIP-169)
+macaw-swift\/web-platform\/src\/main\/scala\/com\/twitter\/web\/platform\/view\/mixin\/Timestamps.scala
