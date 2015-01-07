@@ -1,1 +1,4 @@
-.*\.scala
+# TwitterDateFormat factories for "safe" SimpleDateFormat objects. We want all construction
+# of SimpleDateFormat objects to go through here.
+util\/util-core\/src\/main\/scala\/com\/twitter\/util\/TwitterDateFormat\.scala
+translation\/src\/main\/scala\/com\/twitter\/translation\/TwitterDateFormat\.scala

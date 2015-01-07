@@ -1,3 +1,13 @@
 <scalastyle commentFilter="enabled">
   <name>Default Scalastyle configuration</name>
+  <!-- Disallow SimpleDateFormat as a reaction to 
+     https://jira.twitter.biz/browse/IM-1652
+     It's wrapped in a util that prevents misuse
+     of week-year.
+  -->
+  <check enabled="true" class="org.scalastyle.file.RegexChecker" level="error">
+    <parameters>
+      <parameter name="regex">SimpleDateFormat\(</parameter>
+    </parameters>
+  </check>
 </scalastyle>
