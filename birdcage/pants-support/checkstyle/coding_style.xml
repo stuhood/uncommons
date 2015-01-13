@@ -257,13 +257,14 @@ com.twitter. Each group should be separated by a single blank line." />
       <module name="IllegalToken">
         <property name="tokens" value="LITERAL_NATIVE"/>
       </module>
-      <!-- Disallow SimpleDateFormat as a reaction to 
+      <!-- Disallow SimpleDateFormat as a reaction to
            https://jira.twitter.biz/browse/IM-1652
            It's wrapped in a util that prevents misuse
            of week-year.
       -->
       <module name="IllegalType">
         <property name="illegalClassNames" value="java.text.SimpleDateFormat"/>
+        <property name="format" value="^_DISABLE$"/>
       </module>
       <!-- TODO(John Sirois): Modify this rule to pass on enhanced try statements
            in java7 like it does for for loops -->
