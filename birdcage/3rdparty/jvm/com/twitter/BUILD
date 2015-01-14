@@ -160,3 +160,9 @@ jar_library(name='self_unsuspension_thrift_scala',
     'util/util-logging',
   ],
 )
+
+idl_jar_thrift_library(name='nsfw-thrift-scala',
+  thrift_jar=thrift_jar('com.twitter', 'nsfw-thrift-only', '0.0.4'),
+  language='scala',
+  rpc_style='finagle',
+)
