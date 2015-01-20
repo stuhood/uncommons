@@ -106,12 +106,12 @@ SCROOGE_VERSION='20141113130215-4ea5481'
 jar_library(name = 'scrooge-gen',
             jars = [
               # This version matches what is currently in science.
-              jar(org='com.twitter', name='scrooge-generator_2.10', rev=SCROOGE_VERSION)
+              scala_jar(org='com.twitter', name='scrooge-generator', rev=SCROOGE_VERSION)
             ])
 
 jar_library(name = 'scrooge-linter',
             jars = [
-              jar(org='com.twitter', name='scrooge-linter_2.10', rev=SCROOGE_VERSION)
+              scala_jar(org='com.twitter', name='scrooge-linter', rev=SCROOGE_VERSION)
             ])
 
 jar_library(name = 'twitter-webcoretools',
