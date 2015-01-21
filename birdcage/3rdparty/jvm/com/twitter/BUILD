@@ -166,3 +166,5 @@ idl_jar_thrift_library(name='nsfw-thrift-scala',
   language='scala',
   rpc_style='finagle',
 )
+
+make_lib('geolitecity', '1.0')
