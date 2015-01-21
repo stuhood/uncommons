@@ -1,4 +1,4 @@
-package com.twitter.finagle.util
+package com.twitter.util
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
@@ -17,5 +17,9 @@ object Throwables {
     }
 
     rec(ex, ArrayBuffer.empty)
+  }
+
+  object RootCause {
+    def unapply(e: Throwable): Option[Throwable] = Option(e.getCause)
   }
 }
