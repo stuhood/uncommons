@@ -23,7 +23,7 @@ bijection_lib('thrift',
     exclude(org='org.apache.thrift', name='libthrift'),
   ],
   additional_deps=[
-    '3rdparty:libthrift-0.5.0',
+    '3rdparty/jvm/org/apache/thrift:libthrift-0.5.0',
   ],
 )
 bijection_lib('avro')
@@ -51,7 +51,7 @@ bijection_lib('scrooge',
     'scrooge/scrooge-serializer',
     'scrooge/scrooge-runtime',
     'util/util-core',
-    '3rdparty:libthrift-0.5.0',
+    '3rdparty/jvm/org/apache/thrift:libthrift-0.5.0',
   ]
 )
 
@@ -72,6 +72,6 @@ bijection_lib('netty',
     exclude(org='org.jboss.netty', name='netty'),
   ],
   additional_deps=[
-    '3rdparty:netty',
+    '3rdparty/jvm/io/netty',
   ],
 )

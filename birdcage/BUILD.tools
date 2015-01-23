@@ -42,7 +42,7 @@ jar_library(name = 'benchmark-caliper-0.5',
               '3rdparty/jvm/com/google/guava',
               # The tool lib needs to stay lockstep with the 3rdparty dep benchmark writers will
               # use so we favor 3rdparty here as the central edit / viewing spot.
-              '3rdparty:caliper'
+              '3rdparty/jvm/com/google/caliper'
             ])
 
 jar_library(name = 'benchmark-java-allocation-instrumenter-2.1',
