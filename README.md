@@ -12,6 +12,12 @@ projects hosted in the repo. Example:
 
     cd birdcage
     # test one project
-    ./pants compile util/util-core::
+    ./pants test util/util-core::
     # compile all projects
     ./pants compile ::
+
+### What's with the name?
+
+[twitter/commons](http://github.com/twitter/commons) was the first monorepo open sourced by
+Twitter, and in the near future we'll merge the repositories to provide a holistic view of
+Twitter open source projects that are built with pants.
